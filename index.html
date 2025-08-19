@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTB Writeups | Cybersecurity Portfolio</title>
+    <title>HTB Writeups | PLSCARRYME - Cybersecurity Portfolio</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -199,10 +200,22 @@
             text-transform: uppercase;
         }
 
-        .difficulty.easy { background: #28a745; }
-        .difficulty.medium { background: #ffc107; color: #000; }
-        .difficulty.hard { background: #dc3545; }
-        .difficulty.insane { background: #6f42c1; }
+        .difficulty.easy {
+            background: #28a745;
+        }
+
+        .difficulty.medium {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .difficulty.hard {
+            background: #dc3545;
+        }
+
+        .difficulty.insane {
+            background: #6f42c1;
+        }
 
         .writeup-meta {
             display: flex;
@@ -299,6 +312,24 @@
             transform: scale(1.2);
         }
 
+        /* Loading Animation */
+        .loading {
+            color: #9fef00;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .hero h1 {
@@ -334,10 +365,11 @@
         }
     </style>
 </head>
+
 <body>
     <header>
         <nav class="container">
-            <a href="#" class="logo"><i class="fas fa-terminal"></i> HTB Writeups</a>
+            <a href="#" class="logo"><i class="fas fa-terminal"></i> PLSCARRYME - HTB Writeups</a>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#writeups">Writeups</a></li>
@@ -350,25 +382,25 @@
     <section class="hero" id="home">
         <div class="container">
             <div class="hero-content">
-                <h1>Cybersecurity Writeups</h1>
-                <p>Documenting my journey through HackTheBox challenges and penetration testing methodologies</p>
-                
+                <h1>Cybersecurity Journey</h1>
+                <p>Documenting my HackTheBox progression and penetration testing methodologies</p>
+
                 <div class="stats">
                     <div class="stat">
-                        <span class="stat-number" id="boxes-pwned">Loading...</span>
+                        <span class="stat-number loading" id="boxes-pwned">Loading...</span>
                         <span class="stat-label">Boxes Pwned</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-number" id="writeups-count">15</span>
+                        <span class="stat-number loading" id="writeups-count">Loading...</span>
                         <span class="stat-label">Writeups Published</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-number" id="htb-rank">Loading...</span>
+                        <span class="stat-number loading" id="htb-rank">Loading...</span>
                         <span class="stat-label">HTB Rank</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-number" id="htb-points">Loading...</span>
-                        <span class="stat-label">Points</span>
+                        <span class="stat-number loading" id="htb-score">Loading...</span>
+                        <span class="stat-label">Final Score</span>
                     </div>
                 </div>
             </div>
@@ -378,134 +410,75 @@
     <main class="container">
         <section id="writeups">
             <h2 class="section-title">Latest Writeups</h2>
-            
+
             <div class="writeups-grid">
                 <!-- Writeup Card 1 -->
                 <article class="writeup-card">
                     <div class="writeup-header">
-                        <h3 class="writeup-title">Keeper</h3>
-                        <span class="difficulty easy">Easy</span>
+                        <h3 class="writeup-title">🐶 Puppy</h3>
+                        <span class="difficulty medium">Medium</span>
                     </div>
-                    
+
                     <div class="writeup-meta">
-                        <span><i class="fas fa-calendar"></i> Jan 15, 2025</span>
-                        <span><i class="fas fa-desktop"></i> Linux</span>
-                        <span><i class="fas fa-clock"></i> 2 hours</span>
+                        <span><i class="fas fa-calendar"></i> Jun 9, 2025</span>
+                        <span><i class="fas fa-desktop"></i> Window</span>
+                        <span><i class="fas fa-clock"></i> 16 hours 😩</span>
                     </div>
-                    
+
                     <p class="writeup-description">
-                        A straightforward Linux box featuring web application enumeration, credential harvesting, and privilege escalation through KeePass database exploitation.
+                        Complete Active Directory takeover through BloodHound analysis, ACL abuse, KeePass exploitation,
+                        DPAPI extraction, and DCSync attacks.
                     </p>
-                    
+
                     <div class="writeup-tags">
-                        <span class="tag">Web Enumeration</span>
+                        <span class="tag">Active Directory</span>
+                        <span class="tag">BloodHound</span>
                         <span class="tag">KeePass</span>
-                        <span class="tag">SSH</span>
-                        <span class="tag">CVE-2023-32784</span>
+                        <span class="tag">DPAPI</span>
+                        <span class="tag">DCSync</span>
                     </div>
-                    
-                    <a href="#" class="read-more">Read Writeup</a>
+
+                    <a href="puppy-writeup.html" class="read-more">Read Writeup</a>
                 </article>
 
                 <!-- Writeup Card 2 -->
-                <article class="writeup-card">
+                <div class="writeup-card coming-soon">
                     <div class="writeup-header">
-                        <h3 class="writeup-title">Pilgrimage</h3>
-                        <span class="difficulty medium">Medium</span>
+                        <h3>🚧 More Writeups Coming Soon</h3>
+                        <div class="writeup-meta">
+                            <span class="difficulty tbd">TBD</span>
+                            <span class="platform">😉</span>
+                        </div>
                     </div>
-                    
-                    <div class="writeup-meta">
-                        <span><i class="fas fa-calendar"></i> Jan 10, 2025</span>
-                        <span><i class="fas fa-desktop"></i> Linux</span>
-                        <span><i class="fas fa-clock"></i> 4 hours</span>
+                    <div class="writeup-content">
+                        <p>Currently working on additional HTB machine writeups. Check back soon for more detailed
+                            walkthroughs!</p>
+                        <div class="tags">
+                            <span class="tag">In Progress</span>
+                        </div>
                     </div>
-                    
-                    <p class="writeup-description">
-                        ImageMagick exploitation leading to file read, followed by malware analysis and cron job manipulation for privilege escalation.
-                    </p>
-                    
-                    <div class="writeup-tags">
-                        <span class="tag">ImageMagick</span>
-                        <span class="tag">LFI</span>
-                        <span class="tag">Malware Analysis</span>
-                        <span class="tag">Cron Jobs</span>
-                    </div>
-                    
-                    <a href="#" class="read-more">Read Writeup</a>
-                </article>
-
-                <!-- Writeup Card 3 -->
-                <article class="writeup-card">
-                    <div class="writeup-header">
-                        <h3 class="writeup-title">Authority</h3>
-                        <span class="difficulty hard">Hard</span>
-                    </div>
-                    
-                    <div class="writeup-meta">
-                        <span><i class="fas fa-calendar"></i> Jan 5, 2025</span>
-                        <span><i class="fas fa-desktop"></i> Windows</span>
-                        <span><i class="fas fa-clock"></i> 6 hours</span>
-                    </div>
-                    
-                    <p class="writeup-description">
-                        Active Directory exploitation featuring LDAP injection, certificate abuse, and ESC1 privilege escalation attack.
-                    </p>
-                    
-                    <div class="writeup-tags">
-                        <span class="tag">Active Directory</span>
-                        <span class="tag">LDAP Injection</span>
-                        <span class="tag">Certificate Abuse</span>
-                        <span class="tag">ESC1</span>
-                    </div>
-                    
-                    <a href="#" class="read-more">Read Writeup</a>
-                </article>
-
-                <!-- Writeup Card 4 -->
-                <article class="writeup-card">
-                    <div class="writeup-header">
-                        <h3 class="writeup-title">MonitorsTwo</h3>
-                        <span class="difficulty medium">Medium</span>
-                    </div>
-                    
-                    <div class="writeup-meta">
-                        <span><i class="fas fa-calendar"></i> Dec 28, 2024</span>
-                        <span><i class="fas fa-desktop"></i> Linux</span>
-                        <span><i class="fas fa-clock"></i> 3 hours</span>
-                    </div>
-                    
-                    <p class="writeup-description">
-                        Docker container escape through Cacti RCE vulnerability, database enumeration, and SUID binary exploitation.
-                    </p>
-                    
-                    <div class="writeup-tags">
-                        <span class="tag">Docker</span>
-                        <span class="tag">Cacti RCE</span>
-                        <span class="tag">Container Escape</span>
-                        <span class="tag">SUID</span>
-                    </div>
-                    
-                    <a href="#" class="read-more">Read Writeup</a>
-                </article>
+                </div>
             </div>
         </section>
 
         <section class="about" id="about">
-            <h2 class="section-title">About Me</h2>
+            <h2 class="section-title">About My Journey</h2>
             <p>
-                Passionate cybersecurity enthusiast documenting my penetration testing journey. 
-                I focus on detailed methodologies, tool usage, and lessons learned from each challenge.
-                My goal is to share knowledge and demonstrate practical skills in offensive security.
+                Welcome to my cybersecurity learning journey! I'm documenting my progression through HackTheBox
+                challenges
+                as I build practical skills in penetration testing and offensive security. Each writeup includes
+                detailed
+                methodologies, tool usage, and lessons learned to help others on similar paths.
             </p>
-            
+
             <div class="skills">
-                <span class="skill">Penetration Testing</span>
-                <span class="skill">Web Application Security</span>
+                <span class="skill">Web Application Testing</span>
                 <span class="skill">Network Enumeration</span>
-                <span class="skill">Active Directory</span>
                 <span class="skill">Linux Privilege Escalation</span>
-                <span class="skill">Windows Exploitation</span>
-                <span class="skill">Binary Analysis</span>
+                <span class="skill">Vulnerability Assessment</span>
+                <span class="skill">Hash Cracking</span>
+                <span class="skill">Database Exploitation</span>
+                <span class="skill">CVE Research</span>
                 <span class="skill">OSCP Preparation</span>
             </div>
         </section>
@@ -514,19 +487,88 @@
     <footer id="contact">
         <div class="container">
             <div class="social-links">
-                <a href="https://github.com/yourusername" target="_blank"><i class="fab fa-github"></i></a>
-                <a href="https://linkedin.com/in/yourusername" target="_blank"><i class="fab fa-linkedin"></i></a>
-                <a href="https://app.hackthebox.com/profile/yourprofile" target="_blank"><i class="fas fa-cube"></i></a>
-                <a href="mailto:your.email@example.com"><i class="fas fa-envelope"></i></a>
+                <a href="https://github.com/ADN314" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://linkedin.com/in/yourprofile" target="_blank" title="LinkedIn"><i
+                        class="fab fa-linkedin"></i></a>
+                <a href="https://app.hackthebox.com/profile/1779650" target="_blank" title="HTB Profile"><i
+                        class="fas fa-cube"></i></a>
+                <a href="mailto:your.email@example.com" title="Email"><i class="fas fa-envelope"></i></a>
             </div>
-            <p>&copy; 2025 HTB Writeups. All rights reserved. | Built with ❤️ for the cybersecurity community</p>
+            <p>&copy; 2025 PLSCARRYME - HTB Writeups. Built for the cybersecurity community 🔐</p>
         </div>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
-    
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
     <script>
+        // HTB Stats Integration using JSON file
+        async function loadHTBStats() {
+            try {
+                console.log('Loading HTB stats from JSON file...');
+                const response = await fetch('./htb-stats.json?t=' + Date.now()); // Cache busting
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch stats file');
+                }
+
+                const stats = await response.json();
+                console.log('Stats loaded:', stats);
+                updateStatsDisplay(stats);
+
+            } catch (error) {
+                console.log('Failed to load JSON stats, using fallback:', error);
+                // Fallback stats based on your current HTB profile
+                updateStatsDisplay({
+                    rank: 'Script Kiddie',
+                    finalScore: 7,
+                    boxes: 10,
+                    writeups: 4
+                });
+            }
+        }
+
+        // Update display with animation
+        function updateStatsDisplay(stats) {
+            // Remove loading class and animate stats
+            setTimeout(() => {
+                animateNumber(document.getElementById('boxes-pwned'), stats.boxes, '');
+                animateNumber(document.getElementById('writeups-count'), stats.writeups || 4, '');
+                animateText(document.getElementById('htb-rank'), stats.rank);
+                animateNumber(document.getElementById('htb-score'), stats.finalScore || stats.points || 7, '');
+            }, 500);
+        }
+
+        // Animation functions
+        function animateNumber(element, targetValue, suffix = '') {
+            element.classList.remove('loading');
+            const startValue = 0;
+            const duration = 1500;
+            const increment = targetValue / (duration / 16);
+            let currentValue = startValue;
+
+            const timer = setInterval(() => {
+                currentValue += increment;
+                if (currentValue >= targetValue) {
+                    element.textContent = targetValue.toLocaleString() + suffix;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(currentValue).toLocaleString() + suffix;
+                }
+            }, 16);
+        }
+
+        function animateText(element, text) {
+            element.classList.remove('loading');
+            element.style.opacity = '0';
+            setTimeout(() => {
+                element.textContent = text;
+                element.style.opacity = '1';
+                element.style.transition = 'opacity 0.3s ease';
+            }, 200);
+        }
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -562,7 +604,7 @@
         function typeWriter(element, text, speed = 100) {
             let i = 0;
             element.innerHTML = '';
-            
+
             function type() {
                 if (i < text.length) {
                     element.innerHTML += text.charAt(i);
@@ -573,79 +615,28 @@
             type();
         }
 
-        // Initialize typing effect on load
+        // Initialize everything on load
         window.addEventListener('load', () => {
             const heroTitle = document.querySelector('.hero h1');
             const originalText = heroTitle.textContent;
             typeWriter(heroTitle, originalText, 100);
-            
-            // Load HTB stats
-            loadHTBStats();
+
+            // Load HTB stats after a short delay
+            setTimeout(loadHTBStats, 1000);
         });
 
-        // HTB Stats Integration
-        async function loadHTBStats() {
-            const userId = 'YOUR_HTB_USER_ID'; // Replace with your actual HTB user ID
-            const apiToken = 'YOUR_HTB_API_TOKEN'; // Optional: for authenticated requests
-            
-            try {
-                // Method 1: Using HTB's public API (if available)
-                // Note: HTB's API access is limited, so this might not work without proper authentication
-                
-                // Method 2: Fallback to manual stats or cached data
-                const stats = await getHTBStats(userId);
-                updateStatsDisplay(stats);
-                
-            } catch (error) {
-                console.log('Using fallback stats');
-                // Fallback to manually updated stats
-                updateStatsDisplay({
-                    rank: 'Pro Hacker',
-                    points: 1337,
-                    boxes: 25,
-                    respect: 85
-                });
-            }
-        }
-
-        async function getHTBStats(userId) {
-            // This is a simplified example - actual HTB API integration would require proper authentication
-            // For now, we'll use a cached/manual approach
-            
-            // You could also scrape your profile page or use a serverless function
-            // to fetch data from HTB and store it in a JSON file in your repo
-            
-            try {
-                // Try to fetch from a JSON file you manually update
-                const response = await fetch('./htb-stats.json');
-                if (response.ok) {
-                    return await response.json();
-                }
-            } catch (error) {
-                console.log('Could not fetch stats file');
-            }
-            
-            // Return default/fallback stats
-            return {
-                rank: 'Pro Hacker',
-                points: 1337,
-                boxes: 25,
-                respect: 85
-            };
-        }
-
-        function updateStatsDisplay(stats) {
-            document.getElementById('boxes-pwned').textContent = stats.boxes + '+';
-            document.getElementById('htb-rank').textContent = stats.rank;
-            document.getElementById('htb-points').textContent = stats.points.toLocaleString();
-        }
-
-        // Update stats manually (call this function when your stats change)
-        function updateStats(newStats) {
+        // Manual update function for console debugging
+        function manualUpdateStats(newStats) {
             updateStatsDisplay(newStats);
-            // Optionally save to localStorage for persistence
-            localStorage.setItem('htb-stats', JSON.stringify(newStats));
+            console.log('Stats updated manually:', newStats);
+        }
+
+        // Refresh stats function
+        function refreshHTBStats() {
+            console.log('Refreshing HTB stats...');
+            loadHTBStats();
         }
     </script>
 </body>
+
 </html>
