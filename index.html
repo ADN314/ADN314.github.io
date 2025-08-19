@@ -1,1 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTB Writeups | Cybersecurity Portfolio</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #9fef00;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #9fef00;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #9fef00;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23333" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #9fef00;
+            text-shadow: 0 0 20px rgba(159, 239, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #9fef00;
+            display: block;
+        }
+
+        .stat-label {
+            opacity: 0.8;
+        }
+
+        /* Main Content */
+        main {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #9fef00;
+        }
+
+        /* Writeups Grid */
+        .writeups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .writeup-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(159, 239, 0, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .writeup-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(159, 239, 0, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .writeup-card:hover::before {
+            left: 100%;
+        }
+
+        .writeup-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(159, 239, 0, 0.2);
+            border-color: #9fef00;
+        }
+
+        .writeup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .writeup-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #9fef00;
+        }
+
+        .difficulty {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .difficulty.easy { background: #28a745; }
+        .difficulty.medium { background: #ffc107; color: #000; }
+        .difficulty.hard { background: #dc3545; }
+        .difficulty.insane { background: #6f42c1; }
+
+        .writeup-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .writeup-description {
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .writeup-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            background: rgba(159, 239, 0, 0.2);
+            color: #9fef00;
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .read-more {
+            background: linear-gradient(45deg, #9fef00, #7bc800);
+            color: #000;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .read-more:hover {
+            transform: scale(1.05);
+        }
+
+        /* About Section */
+        .about {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3rem;
+            border-radius: 12px;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .skill {
+            background: rgba(159, 239, 0, 0.1);
+            border: 1px solid #9fef00;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            color: #9fef00;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid rgba(159, 239, 0, 0.3);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .social-links a {
+            color: #9fef00;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: scale(1.2);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .writeups-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Code blocks */
+        pre {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        code {
+            color: #9fef00;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo"><i class="fas fa-terminal"></i> HTB Writeups</a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#writeups">Writeups</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Cybersecurity Writeups</h1>
+                <p>Documenting my journey through HackTheBox challenges and penetration testing methodologies</p>
+                
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-number" id="boxes-pwned">Loading...</span>
+                        <span class="stat-label">Boxes Pwned</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" id="writeups-count">15</span>
+                        <span class="stat-label">Writeups Published</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" id="htb-rank">Loading...</span>
+                        <span class="stat-label">HTB Rank</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" id="htb-points">Loading...</span>
+                        <span class="stat-label">Points</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+        <section id="writeups">
+            <h2 class="section-title">Latest Writeups</h2>
+            
+            <div class="writeups-grid">
+                <!-- Writeup Card 1 -->
+                <article class="writeup-card">
+                    <div class="writeup-header">
+                        <h3 class="writeup-title">Keeper</h3>
+                        <span class="difficulty easy">Easy</span>
+                    </div>
+                    
+                    <div class="writeup-meta">
+                        <span><i class="fas fa-calendar"></i> Jan 15, 2025</span>
+                        <span><i class="fas fa-desktop"></i> Linux</span>
+                        <span><i class="fas fa-clock"></i> 2 hours</span>
+                    </div>
+                    
+                    <p class="writeup-description">
+                        A straightforward Linux box featuring web application enumeration, credential harvesting, and privilege escalation through KeePass database exploitation.
+                    </p>
+                    
+                    <div class="writeup-tags">
+                        <span class="tag">Web Enumeration</span>
+                        <span class="tag">KeePass</span>
+                        <span class="tag">SSH</span>
+                        <span class="tag">CVE-2023-32784</span>
+                    </div>
+                    
+                    <a href="#" class="read-more">Read Writeup</a>
+                </article>
+
+                <!-- Writeup Card 2 -->
+                <article class="writeup-card">
+                    <div class="writeup-header">
+                        <h3 class="writeup-title">Pilgrimage</h3>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    
+                    <div class="writeup-meta">
+                        <span><i class="fas fa-calendar"></i> Jan 10, 2025</span>
+                        <span><i class="fas fa-desktop"></i> Linux</span>
+                        <span><i class="fas fa-clock"></i> 4 hours</span>
+                    </div>
+                    
+                    <p class="writeup-description">
+                        ImageMagick exploitation leading to file read, followed by malware analysis and cron job manipulation for privilege escalation.
+                    </p>
+                    
+                    <div class="writeup-tags">
+                        <span class="tag">ImageMagick</span>
+                        <span class="tag">LFI</span>
+                        <span class="tag">Malware Analysis</span>
+                        <span class="tag">Cron Jobs</span>
+                    </div>
+                    
+                    <a href="#" class="read-more">Read Writeup</a>
+                </article>
+
+                <!-- Writeup Card 3 -->
+                <article class="writeup-card">
+                    <div class="writeup-header">
+                        <h3 class="writeup-title">Authority</h3>
+                        <span class="difficulty hard">Hard</span>
+                    </div>
+                    
+                    <div class="writeup-meta">
+                        <span><i class="fas fa-calendar"></i> Jan 5, 2025</span>
+                        <span><i class="fas fa-desktop"></i> Windows</span>
+                        <span><i class="fas fa-clock"></i> 6 hours</span>
+                    </div>
+                    
+                    <p class="writeup-description">
+                        Active Directory exploitation featuring LDAP injection, certificate abuse, and ESC1 privilege escalation attack.
+                    </p>
+                    
+                    <div class="writeup-tags">
+                        <span class="tag">Active Directory</span>
+                        <span class="tag">LDAP Injection</span>
+                        <span class="tag">Certificate Abuse</span>
+                        <span class="tag">ESC1</span>
+                    </div>
+                    
+                    <a href="#" class="read-more">Read Writeup</a>
+                </article>
+
+                <!-- Writeup Card 4 -->
+                <article class="writeup-card">
+                    <div class="writeup-header">
+                        <h3 class="writeup-title">MonitorsTwo</h3>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+                    
+                    <div class="writeup-meta">
+                        <span><i class="fas fa-calendar"></i> Dec 28, 2024</span>
+                        <span><i class="fas fa-desktop"></i> Linux</span>
+                        <span><i class="fas fa-clock"></i> 3 hours</span>
+                    </div>
+                    
+                    <p class="writeup-description">
+                        Docker container escape through Cacti RCE vulnerability, database enumeration, and SUID binary exploitation.
+                    </p>
+                    
+                    <div class="writeup-tags">
+                        <span class="tag">Docker</span>
+                        <span class="tag">Cacti RCE</span>
+                        <span class="tag">Container Escape</span>
+                        <span class="tag">SUID</span>
+                    </div>
+                    
+                    <a href="#" class="read-more">Read Writeup</a>
+                </article>
+            </div>
+        </section>
+
+        <section class="about" id="about">
+            <h2 class="section-title">About Me</h2>
+            <p>
+                Passionate cybersecurity enthusiast documenting my penetration testing journey. 
+                I focus on detailed methodologies, tool usage, and lessons learned from each challenge.
+                My goal is to share knowledge and demonstrate practical skills in offensive security.
+            </p>
+            
+            <div class="skills">
+                <span class="skill">Penetration Testing</span>
+                <span class="skill">Web Application Security</span>
+                <span class="skill">Network Enumeration</span>
+                <span class="skill">Active Directory</span>
+                <span class="skill">Linux Privilege Escalation</span>
+                <span class="skill">Windows Exploitation</span>
+                <span class="skill">Binary Analysis</span>
+                <span class="skill">OSCP Preparation</span>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="social-links">
+                <a href="https://github.com/yourusername" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://linkedin.com/in/yourusername" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://app.hackthebox.com/profile/yourprofile" target="_blank"><i class="fas fa-cube"></i></a>
+                <a href="mailto:your.email@example.com"><i class="fas fa-envelope"></i></a>
+            </div>
+            <p>&copy; 2025 HTB Writeups. All rights reserved. | Built with ❤️ for the cybersecurity community</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add loading animation to cards
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        document.querySelectorAll('.writeup-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Dynamic typing effect for hero title
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Initialize typing effect on load
+        window.addEventListener('load', () => {
+            const heroTitle = document.querySelector('.hero h1');
+            const originalText = heroTitle.textContent;
+            typeWriter(heroTitle, originalText, 100);
+            
+            // Load HTB stats
+            loadHTBStats();
+        });
+
+        // HTB Stats Integration
+        async function loadHTBStats() {
+            const userId = 'YOUR_HTB_USER_ID'; // Replace with your actual HTB user ID
+            const apiToken = 'YOUR_HTB_API_TOKEN'; // Optional: for authenticated requests
+            
+            try {
+                // Method 1: Using HTB's public API (if available)
+                // Note: HTB's API access is limited, so this might not work without proper authentication
+                
+                // Method 2: Fallback to manual stats or cached data
+                const stats = await getHTBStats(userId);
+                updateStatsDisplay(stats);
+                
+            } catch (error) {
+                console.log('Using fallback stats');
+                // Fallback to manually updated stats
+                updateStatsDisplay({
+                    rank: 'Pro Hacker',
+                    points: 1337,
+                    boxes: 25,
+                    respect: 85
+                });
+            }
+        }
+
+        async function getHTBStats(userId) {
+            // This is a simplified example - actual HTB API integration would require proper authentication
+            // For now, we'll use a cached/manual approach
+            
+            // You could also scrape your profile page or use a serverless function
+            // to fetch data from HTB and store it in a JSON file in your repo
+            
+            try {
+                // Try to fetch from a JSON file you manually update
+                const response = await fetch('./htb-stats.json');
+                if (response.ok) {
+                    return await response.json();
+                }
+            } catch (error) {
+                console.log('Could not fetch stats file');
+            }
+            
+            // Return default/fallback stats
+            return {
+                rank: 'Pro Hacker',
+                points: 1337,
+                boxes: 25,
+                respect: 85
+            };
+        }
+
+        function updateStatsDisplay(stats) {
+            document.getElementById('boxes-pwned').textContent = stats.boxes + '+';
+            document.getElementById('htb-rank').textContent = stats.rank;
+            document.getElementById('htb-points').textContent = stats.points.toLocaleString();
+        }
+
+        // Update stats manually (call this function when your stats change)
+        function updateStats(newStats) {
+            updateStatsDisplay(newStats);
+            // Optionally save to localStorage for persistence
+            localStorage.setItem('htb-stats', JSON.stringify(newStats));
+        }
+    </script>
+</body>
+</html>
