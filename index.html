@@ -412,7 +412,7 @@
             <h2 class="section-title">Latest Writeups</h2>
 
             <div class="writeups-grid">
-                <!-- Writeup Card 1 -->
+                <!-- Writeup Card 1 - Puppy -->
                 <article class="writeup-card">
                     <div class="writeup-header">
                         <h3 class="writeup-title">🐶 Puppy</h3>
@@ -421,8 +421,8 @@
 
                     <div class="writeup-meta">
                         <span><i class="fas fa-calendar"></i> Jun 9, 2025</span>
-                        <span><i class="fas fa-desktop"></i> Window</span>
-                        <span><i class="fas fa-clock"></i> 16 hours 😩</span>
+                        <span><i class="fas fa-desktop"></i> Windows</span>
+                        <span><i class="fas fa-clock"></i> 6 hours</span>
                     </div>
 
                     <p class="writeup-description">
@@ -441,7 +441,37 @@
                     <a href="puppy-writeup.html" class="read-more">Read Writeup</a>
                 </article>
 
-                <!-- Writeup Card 2 -->
+                <!-- Writeup Card 2 - Voleur -->
+                <article class="writeup-card">
+                    <div class="writeup-header">
+                        <h3 class="writeup-title">🔒 Voleur</h3>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+
+                    <div class="writeup-meta">
+                        <span><i class="fas fa-calendar"></i> Jul 9, 2025</span>
+                        <span><i class="fas fa-desktop"></i> Windows</span>
+                        <span><i class="fas fa-clock"></i> 8 hours</span>
+                    </div>
+
+                    <p class="writeup-description">
+                        Complex Active Directory attack involving Kerberos authentication, Excel credential extraction, 
+                        Kerberoasting, deleted object recovery, DPAPI exploitation, WSL abuse, and NTDS database extraction.
+                    </p>
+
+                    <div class="writeup-tags">
+                        <span class="tag">Kerberos</span>
+                        <span class="tag">LDAP</span>
+                        <span class="tag">DPAPI</span>
+                        <span class="tag">Kerberoasting</span>
+                        <span class="tag">WSL</span>
+                        <span class="tag">NTDS</span>
+                    </div>
+
+                    <a href="voleur/voleur-writeup.html" class="read-more">Read Writeup</a>
+                </article>
+
+                <!-- Coming Soon Card -->
                 <div class="writeup-card coming-soon">
                     <div class="writeup-header">
                         <h3>🚧 More Writeups Coming Soon</h3>
@@ -480,6 +510,8 @@
                 <span class="skill">Database Exploitation</span>
                 <span class="skill">CVE Research</span>
                 <span class="skill">OSCP Preparation</span>
+                <span class="skill">Active Directory</span>
+                <span class="skill">DPAPI Exploitation</span>
             </div>
         </section>
     </main>
@@ -519,12 +551,12 @@
 
             } catch (error) {
                 console.log('Failed to load JSON stats, using fallback:', error);
-                // Fallback stats based on your current HTB profile
+                // Fallback stats - updated to reflect 2 writeups now
                 updateStatsDisplay({
                     rank: 'Script Kiddie',
                     finalScore: 7,
                     boxes: 10,
-                    writeups: 4
+                    writeups: 2  // Updated from 4 to 2 since you have Puppy and Voleur
                 });
             }
         }
@@ -534,7 +566,7 @@
             // Remove loading class and animate stats
             setTimeout(() => {
                 animateNumber(document.getElementById('boxes-pwned'), stats.boxes, '');
-                animateNumber(document.getElementById('writeups-count'), stats.writeups || 4, '');
+                animateNumber(document.getElementById('writeups-count'), stats.writeups || 2, '');
                 animateText(document.getElementById('htb-rank'), stats.rank);
                 animateNumber(document.getElementById('htb-score'), stats.finalScore || stats.points || 7, '');
             }, 500);
