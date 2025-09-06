@@ -441,7 +441,7 @@
                     <a href="puppy-writeup.html" class="read-more">Read Writeup</a>
                 </article>
 
-                <!-- Writeup Card 2 - Voleur -->
+                <!-- Writeup Card 3 - Voleur -->
                 <article class="writeup-card">
                     <div class="writeup-header">
                         <h3 class="writeup-title">🔒 Voleur</h3>
@@ -469,6 +469,35 @@
                     </div>
 
                     <a href="voleur/voleur-writeup.html" class="read-more">Read Writeup</a>
+                </article>
+
+                <!-- Writeup Card 2 - Previous -->
+                <article class="writeup-card">
+                    <div class="writeup-header">
+                        <h3 class="writeup-title">⏮️ Previous</h3>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+
+                    <div class="writeup-meta">
+                        <span><i class="fas fa-calendar"></i> Aug 31, 2025</span>
+                        <span><i class="fas fa-desktop"></i> Linux</span>
+                        <span><i class="fas fa-clock"></i> 4 hours</span>
+                    </div>
+
+                    <p class="writeup-description">
+                        Next.js authentication bypass through middleware vulnerability, Local File Inclusion exploitation, 
+                        credential extraction, and Terraform provider override privilege escalation to root.
+                    </p>
+
+                    <div class="writeup-tags">
+                        <span class="tag">Next.js</span>
+                        <span class="tag">CVE-2025-29927</span>
+                        <span class="tag">LFI</span>
+                        <span class="tag">Terraform</span>
+                        <span class="tag">sudo</span>
+                    </div>
+
+                    <a href="previous/previous-writeup.html" class="read-more">Read Writeup</a>
                 </article>
 
                 <!-- Coming Soon Card -->
@@ -520,7 +549,7 @@
         <div class="container">
             <div class="social-links">
                 <a href="https://github.com/ADN314" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-                <a href="https://linkedin.com/in/yourprofile" target="_blank" title="LinkedIn"><i
+                <a href="https://www.linkedin.com/in/anh-duy-nguyen-8240a2343/" target="_blank" title="LinkedIn"><i
                         class="fab fa-linkedin"></i></a>
                 <a href="https://app.hackthebox.com/profile/1779650" target="_blank" title="HTB Profile"><i
                         class="fas fa-cube"></i></a>
@@ -551,12 +580,12 @@
 
             } catch (error) {
                 console.log('Failed to load JSON stats, using fallback:', error);
-                // Fallback stats - updated to reflect 2 writeups now
+                // Fallback stats - updated to reflect 3 writeups now
                 updateStatsDisplay({
                     rank: 'Script Kiddie',
                     finalScore: 7,
                     boxes: 10,
-                    writeups: 2  // Updated from 4 to 2 since you have Puppy and Voleur
+                    writeups: 3
                 });
             }
         }
@@ -566,7 +595,7 @@
             // Remove loading class and animate stats
             setTimeout(() => {
                 animateNumber(document.getElementById('boxes-pwned'), stats.boxes, '');
-                animateNumber(document.getElementById('writeups-count'), stats.writeups || 2, '');
+                animateNumber(document.getElementById('writeups-count'), stats.writeups || 3, '');
                 animateText(document.getElementById('htb-rank'), stats.rank);
                 animateNumber(document.getElementById('htb-score'), stats.finalScore || stats.points || 7, '');
             }, 500);
