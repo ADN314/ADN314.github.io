@@ -20,6 +20,24 @@
             color: #e0e0e0;
             line-height: 1.6;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Interactive Background Canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Ensure content is above canvas */
+        header, main, footer {
+            position: relative;
+            z-index: 1;
         }
 
         .container {
@@ -366,7 +384,11 @@
     </style>
 </head>
 
+
 <body>
+    <!-- Interactive Background Canvas -->
+    <canvas id="particle-canvas"></canvas>
+    
     <header>
         <nav class="container">
             <a href="#" class="logo"><i class="fas fa-terminal"></i> PLSCARRYME - HTB Writeups</a>
@@ -562,6 +584,34 @@
                     <a href="Expressway/expressway-writeup.html" class="read-more">Read Writeup</a>
                 </article>
                 
+                <!-- Signed writeup card -->
+                <article class="writeup-card">
+                    <div class="writeup-header">
+                        <h3 class="writeup-title">🔐 Signed</h3>
+                        <span class="difficulty medium">Medium</span>
+                    </div>
+
+                    <div class="writeup-meta">
+                        <span><i class="fas fa-calendar"></i> Oct 18, 2025</span>
+                        <span><i class="fas fa-desktop"></i> Windows</span>
+                        <span><i class="fas fa-clock"></i> 4 hours</span>
+                    </div>
+
+                    <p class="writeup-description">
+                        Classic Active Directory exploitation chain leveraging certificate-based authentication, Kerberos 
+                        Silver Ticket forgery, MSSQL xp_cmdshell abuse, and privilege escalation through manipulated group memberships.
+                    </p>
+
+                    <div class="writeup-tags">
+                        <span class="tag">Active Directory</span>
+                        <span class="tag">Kerberos</span>
+                        <span class="tag">Silver Ticket</span>
+                        <span class="tag">MSSQL</span>
+                        <span class="tag">Certificate Auth</span>
+                    </div>
+
+                    <a href="Signed/signed-writeup.html" class="read-more">Read Writeup</a>
+                </article>
                 <!-- Coming Soon Card -->
                 <div class="writeup-card coming-soon">
                     <div class="writeup-header">
@@ -759,6 +809,163 @@
             console.log('Refreshing HTB stats...');
             loadHTBStats();
         }
+    </script>
+</body>
+
+
+    <!-- Interactive Particle Background Script -->
+    <script>
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 150 };
+        let animationId;
+        
+        // Set canvas size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Mouse movement tracker
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+        
+        window.addEventListener('mouseout', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+        
+        // Particle class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+            }
+            
+            draw() {
+                ctx.fillStyle = 'rgba(159, 239, 0, 0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+            
+            update() {
+                // Gentle floating animation
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Bounce off edges
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+                
+                // Mouse interaction
+                if (mouse.x != null && mouse.y != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    let forceDirectionX = dx / distance;
+                    let forceDirectionY = dy / distance;
+                    let maxDistance = mouse.radius;
+                    let force = (maxDistance - distance) / maxDistance;
+                    let directionX = forceDirectionX * force * this.density * 0.6;
+                    let directionY = forceDirectionY * force * this.density * 0.6;
+                    
+                    if (distance < mouse.radius) {
+                        this.x -= directionX;
+                        this.y -= directionY;
+                    }
+                }
+            }
+        }
+        
+        // Initialize particles
+        function initParticles() {
+            particles = [];
+            const numberOfParticles = Math.floor((canvas.width * canvas.height) / 15000);
+            for (let i = 0; i < numberOfParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+        
+        // Connect particles with lines
+        function connect() {
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a + 1; b < particles.length; b++) {
+                    let dx = particles[a].x - particles[b].x;
+                    let dy = particles[a].y - particles[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 120) {
+                        let opacity = 1 - (distance / 120);
+                        ctx.strokeStyle = `rgba(159, 239, 0, ${opacity * 0.3})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+        
+        // Mouse hover effect - connect to nearby particles
+        function connectMouse() {
+            if (mouse.x == null || mouse.y == null) return;
+            
+            for (let i = 0; i < particles.length; i++) {
+                let dx = mouse.x - particles[i].x;
+                let dy = mouse.y - particles[i].y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < mouse.radius) {
+                    let opacity = 1 - (distance / mouse.radius);
+                    ctx.strokeStyle = `rgba(159, 239, 0, ${opacity * 0.6})`;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(mouse.x, mouse.y);
+                    ctx.lineTo(particles[i].x, particles[i].y);
+                    ctx.stroke();
+                }
+            }
+        }
+        
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            
+            connect();
+            connectMouse();
+            
+            animationId = requestAnimationFrame(animate);
+        }
+        
+        // Initialize and start
+        initParticles();
+        animate();
+        
+        // Reinitialize particles on resize
+        window.addEventListener('resize', () => {
+            initParticles();
+        });
     </script>
 </body>
 
