@@ -80,10 +80,26 @@
             color: #e0e0e0;
             text-decoration: none;
             transition: color 0.3s ease;
+            position: relative;
         }
 
         .nav-links a:hover {
             color: #9fef00;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #9fef00;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         /* Hero Section */
@@ -146,6 +162,120 @@
             opacity: 0.8;
         }
 
+        /* Journey Navigation Buttons */
+        .journey-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .journey-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 1.5rem 2.5rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .journey-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(159, 239, 0, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .journey-btn:hover::before {
+            left: 100%;
+        }
+
+        .journey-btn.redteam {
+            border-color: #dc3545;
+        }
+
+        .journey-btn.redteam:hover {
+            background: rgba(220, 53, 69, 0.2);
+            box-shadow: 0 0 30px rgba(220, 53, 69, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .journey-btn.blueteam {
+            border-color: #0d6efd;
+        }
+
+        .journey-btn.blueteam:hover {
+            background: rgba(13, 110, 253, 0.2);
+            box-shadow: 0 0 30px rgba(13, 110, 253, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .journey-btn.forensics {
+            border-color: #6f42c1;
+        }
+
+        .journey-btn.forensics:hover {
+            background: rgba(111, 66, 193, 0.2);
+            box-shadow: 0 0 30px rgba(111, 66, 193, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .journey-btn.active {
+            transform: translateY(-5px);
+        }
+
+        .journey-btn.redteam.active {
+            background: rgba(220, 53, 69, 0.2);
+            box-shadow: 0 0 30px rgba(220, 53, 69, 0.4);
+        }
+
+        .journey-btn.blueteam.active {
+            background: rgba(13, 110, 253, 0.2);
+            box-shadow: 0 0 30px rgba(13, 110, 253, 0.4);
+        }
+
+        .journey-btn.forensics.active {
+            background: rgba(111, 66, 193, 0.2);
+            box-shadow: 0 0 30px rgba(111, 66, 193, 0.4);
+        }
+
+        .journey-btn i {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .journey-btn.redteam i {
+            color: #dc3545;
+        }
+
+        .journey-btn.blueteam i {
+            color: #0d6efd;
+        }
+
+        .journey-btn.forensics i {
+            color: #6f42c1;
+        }
+
+        .journey-btn h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .journey-btn p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
         /* Main Content */
         main {
             padding: 3rem 0;
@@ -156,6 +286,139 @@
             margin-bottom: 2rem;
             text-align: center;
             color: #9fef00;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Blue Team Section Specific Styles */
+        .blueteam-section {
+            background: linear-gradient(135deg, rgba(13, 110, 253, 0.1), rgba(13, 110, 253, 0.05));
+            border: 2px solid rgba(13, 110, 253, 0.3);
+            border-radius: 15px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .blueteam-section .section-title {
+            color: #0d6efd;
+        }
+
+        /* Forensics Section Specific Styles */
+        .forensics-section {
+            background: linear-gradient(135deg, rgba(111, 66, 193, 0.1), rgba(111, 66, 193, 0.05));
+            border: 2px solid rgba(111, 66, 193, 0.3);
+            border-radius: 15px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .forensics-section .section-title {
+            color: #6f42c1;
+        }
+
+        /* Journey Cards */
+        .journey-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .journey-card.blueteam {
+            border-left-color: #0d6efd;
+        }
+
+        .journey-card.forensics {
+            border-left-color: #6f42c1;
+        }
+
+        .journey-card:hover {
+            transform: translateX(10px);
+            box-shadow: -5px 5px 20px rgba(159, 239, 0, 0.1);
+        }
+
+        .journey-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .journey-card.blueteam h3 {
+            color: #0d6efd;
+        }
+
+        .journey-card.forensics h3 {
+            color: #6f42c1;
+        }
+
+        .journey-card p {
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        /* Tools Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .tool-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            border-color: #9fef00;
+        }
+
+        .tool-card i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .tool-card.blueteam i {
+            color: #0d6efd;
+        }
+
+        .tool-card.forensics i {
+            color: #6f42c1;
+        }
+
+        .tool-card h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-card p {
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
 
         /* Writeups Grid */
@@ -337,12 +600,9 @@
         }
 
         @keyframes pulse {
-
-            0%,
-            100% {
+            0%, 100% {
                 opacity: 1;
             }
-
             50% {
                 opacity: 0.5;
             }
@@ -366,6 +626,15 @@
             .writeups-grid {
                 grid-template-columns: 1fr;
             }
+
+            .journey-nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .journey-btn {
+                min-width: auto;
+            }
         }
 
         /* Code blocks */
@@ -384,17 +653,16 @@
     </style>
 </head>
 
-
 <body>
     <!-- Interactive Background Canvas -->
     <canvas id="particle-canvas"></canvas>
     
     <header>
         <nav class="container">
-            <a href="#" class="logo"><i class="fas fa-terminal"></i> PLSCARRYME - HTB Writeups</a>
+            <a href="#" class="logo"><i class="fas fa-terminal"></i> PLSCARRYME - Cybersecurity Portfolio</a>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
-                <li><a href="#writeups">Writeups</a></li>
+                <li><a href="#journey">Journey</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
@@ -405,7 +673,7 @@
         <div class="container">
             <div class="hero-content">
                 <h1>Cybersecurity Journey</h1>
-                <p>Documenting my HackTheBox progression and penetration testing methodologies</p>
+                <p>Exploring offensive security, defensive operations, and digital forensics</p>
 
                 <div class="stats">
                     <div class="stat">
@@ -429,12 +697,32 @@
         </div>
     </section>
 
-    <main class="container">
-        <section id="writeups">
-            <h2 class="section-title">Latest Writeups</h2>
+    <main class="container" id="journey">
+        <!-- Journey Navigation -->
+        <div class="journey-nav">
+            <div class="journey-btn redteam active" onclick="switchJourney('redteam')">
+                <i class="fas fa-user-secret"></i>
+                <h3>Red Team</h3>
+                <p>Offensive Security</p>
+            </div>
+            <div class="journey-btn blueteam" onclick="switchJourney('blueteam')">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Blue Team</h3>
+                <p>Defensive Operations</p>
+            </div>
+            <div class="journey-btn forensics" onclick="switchJourney('forensics')">
+                <i class="fas fa-search"></i>
+                <h3>Digital Forensics</h3>
+                <p>Incident Analysis</p>
+            </div>
+        </div>
+
+        <!-- Red Team Section -->
+        <section id="redteam-content" class="content-section active">
+            <h2 class="section-title">Red Team - HTB Writeups</h2>
 
             <div class="writeups-grid">
-                <!-- Writeup Card 1 - Puppy -->
+                <!-- Puppy -->
                 <article class="writeup-card">
                     <div class="writeup-header">
                         <h3 class="writeup-title">🐶 Puppy</h3>
@@ -463,7 +751,7 @@
                     <a href="puppy-writeup.html" class="read-more">Read Writeup</a>
                 </article>
 
-                <!-- Writeup Card 3 - Voleur -->
+                <!-- Voleur -->
                 <article class="writeup-card">
                     <div class="writeup-header">
                         <h3 class="writeup-title">🔒 Voleur</h3>
@@ -494,7 +782,7 @@
                     <a href="voleur/voleur-writeup.html" class="read-more">Read Writeup</a>
                 </article>
 
-                <!-- Writeup Card 2 - Previous -->
+                <!-- Previous -->
                 <article class="writeup-card">
                     <div class="writeup-header">
                         <h3 class="writeup-title">⏮️ Previous</h3>
@@ -555,7 +843,7 @@
                     <a href="soulmate/soulmate-writeup.html" class="read-more">Read Writeup</a>
                 </article>
                 
-                <!-- Expressway writeup card -->
+                <!-- Expressway -->
                 <article class="writeup-card">
                     <div class="writeup-header">
                         <h3 class="writeup-title">🚀 Expressway</h3>
@@ -584,7 +872,7 @@
                     <a href="Expressway/expressway-writeup.html" class="read-more">Read Writeup</a>
                 </article>
                 
-                <!-- Signed writeup card -->
+                <!-- Signed -->
                 <article class="writeup-card">
                     <div class="writeup-header">
                         <h3 class="writeup-title">🔐 Signed</h3>
@@ -612,47 +900,211 @@
 
                     <a href="Signed/signed-writeup.html" class="read-more">Read Writeup</a>
                 </article>
-                <!-- Coming Soon Card -->
-                <div class="writeup-card coming-soon">
-                    <div class="writeup-header">
-                        <h3>🚧 More Writeups Coming Soon</h3>
-                        <div class="writeup-meta">
-                            <span class="difficulty tbd">TBD</span>
-                            <span class="platform">😉</span>
-                        </div>
+            </div>
+        </section>
+
+        <!-- Blue Team Section -->
+        <section id="blueteam-content" class="content-section">
+            <div class="blueteam-section">
+                <h2 class="section-title"><i class="fas fa-shield-alt"></i> Blue Team Journey</h2>
+                
+                <div class="journey-card blueteam">
+                    <h3><i class="fas fa-flag-checkered"></i> Starting My Defensive Security Path</h3>
+                    <p>
+                        After spending time breaking into systems as a red teamer, I've developed a deep appreciation 
+                        for the defensive side of cybersecurity. Understanding attack methodologies has given me unique 
+                        insights into how to better defend against them. My blue team journey focuses on threat detection, 
+                        incident response, and building resilient security architectures.
+                    </p>
+                </div>
+
+                <div class="journey-card blueteam">
+                    <h3><i class="fas fa-bullseye"></i> Current Focus Areas</h3>
+                    <p>
+                        I'm currently developing skills in Security Information and Event Management (SIEM), working with 
+                        tools like Splunk and Elastic Stack to detect and analyze threats. My red team experience helps 
+                        me understand what attackers look for and how to create better detection rules. I'm also diving 
+                        into threat hunting methodologies, learning to proactively search for Indicators of Compromise (IOCs) 
+                        before they escalate into full incidents.
+                    </p>
+                </div>
+
+                <div class="journey-card blueteam">
+                    <h3><i class="fas fa-network-wired"></i> Network Defense & Monitoring</h3>
+                    <p>
+                        Network security monitoring is a crucial skill I'm building. Using tools like Wireshark and 
+                        Security Onion, I'm learning to identify malicious traffic patterns, understand normal baseline 
+                        behaviors, and spot anomalies that indicate compromise. My goal is to become proficient in 
+                        detecting everything from simple port scans to sophisticated C2 communications.
+                    </p>
+                </div>
+
+                <div class="journey-card blueteam">
+                    <h3><i class="fas fa-procedures"></i> Incident Response Framework</h3>
+                    <p>
+                        I'm studying incident response methodologies following the NIST framework: Preparation, Detection, 
+                        Analysis, Containment, Eradication, and Recovery. Understanding the full lifecycle of an incident 
+                        and how to effectively coordinate response efforts is essential. I'm practicing creating runbooks 
+                        and playbooks for common attack scenarios I've encountered from the offensive side.
+                    </p>
+                </div>
+
+                <h3 style="text-align: center; color: #0d6efd; margin: 3rem 0 2rem 0;">
+                    <i class="fas fa-tools"></i> Blue Team Arsenal
+                </h3>
+
+                <div class="tools-grid">
+                    <div class="tool-card blueteam">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>SIEM Platforms</h4>
+                        <p>Splunk, ELK Stack, QRadar</p>
                     </div>
-                    <div class="writeup-content">
-                        <p>Currently working on additional HTB machine writeups. Check back soon for more detailed
-                            walkthroughs!</p>
-                        <div class="tags">
-                            <span class="tag">In Progress</span>
-                        </div>
+                    <div class="tool-card blueteam">
+                        <i class="fas fa-network-wired"></i>
+                        <h4>Network Monitoring</h4>
+                        <p>Wireshark, Zeek, Suricata</p>
+                    </div>
+                    <div class="tool-card blueteam">
+                        <i class="fas fa-shield-virus"></i>
+                        <h4>EDR Solutions</h4>
+                        <p>CrowdStrike, SentinelOne, Velociraptor</p>
+                    </div>
+                    <div class="tool-card blueteam">
+                        <i class="fas fa-bug"></i>
+                        <h4>Threat Intelligence</h4>
+                        <p>MISP, TheHive, OpenCTI</p>
+                    </div>
+                    <div class="tool-card blueteam">
+                        <i class="fas fa-code"></i>
+                        <h4>Automation</h4>
+                        <p>SOAR, Python Scripts, PowerShell</p>
+                    </div>
+                    <div class="tool-card blueteam">
+                        <i class="fas fa-search-plus"></i>
+                        <h4>Log Analysis</h4>
+                        <p>Graylog, Logstash, Sysmon</p>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Digital Forensics Section -->
+        <section id="forensics-content" class="content-section">
+            <div class="forensics-section">
+                <h2 class="section-title"><i class="fas fa-search"></i> Digital Forensics Journey</h2>
+                
+                <div class="journey-card forensics">
+                    <h3><i class="fas fa-microscope"></i> The Art of Digital Investigation</h3>
+                    <p>
+                        Digital forensics fascinates me because it's like being a detective in the digital world. 
+                        Every incident leaves traces, and learning to find, preserve, and analyze these artifacts is 
+                        both challenging and rewarding. My forensics journey combines technical skills with methodical 
+                        investigation techniques to uncover the truth behind security incidents.
+                    </p>
+                </div>
+
+                <div class="journey-card forensics">
+                    <h3><i class="fas fa-hdd"></i> Disk & Memory Forensics</h3>
+                    <p>
+                        I'm developing expertise in analyzing disk images and memory dumps to recover deleted files, 
+                        examine browser history, extract credentials, and reconstruct attacker activity. Working with 
+                        tools like Autopsy and FTK, I'm learning proper evidence handling procedures and chain of custody 
+                        protocols. Memory forensics with Volatility has opened my eyes to how much information persists 
+                        in RAM, from running processes to network connections and encryption keys.
+                    </p>
+                </div>
+
+                <div class="journey-card forensics">
+                    <h3><i class="fas fa-file-code"></i> Malware Analysis Fundamentals</h3>
+                    <p>
+                        Understanding malware behavior is crucial for forensic investigations. I'm learning both static 
+                        and dynamic analysis techniques to dissect malicious software, understand its capabilities, and 
+                        identify Indicators of Compromise (IOCs). Tools like IDA Pro, Ghidra, and various sandboxes help 
+                        me reverse engineer malware samples safely and document their behavior patterns.
+                    </p>
+                </div>
+
+                <div class="journey-card forensics">
+                    <h3><i class="fas fa-clock"></i> Timeline Analysis & Reconstruction</h3>
+                    <p>
+                        Creating accurate timelines of events is essential in forensics. I'm mastering the use of various 
+                        timestamp artifacts from file system metadata (MAC times), Windows Registry, event logs, and 
+                        application artifacts to build comprehensive attack timelines. Tools like Plaso and log2timeline 
+                        help me correlate events across multiple systems and identify the full scope of incidents.
+                    </p>
+                </div>
+
+                <div class="journey-card forensics">
+                    <h3><i class="fas fa-mobile-alt"></i> Mobile & Cloud Forensics</h3>
+                    <p>
+                        As attacks increasingly target mobile devices and cloud infrastructure, I'm expanding my skills 
+                        into these domains. Learning to extract and analyze data from iOS and Android devices, as well 
+                        as investigating cloud-based incidents in AWS, Azure, and GCP environments, represents the future 
+                        of digital forensics. Understanding cloud logs, API calls, and mobile app artifacts is becoming 
+                        essential.
+                    </p>
+                </div>
+
+                <h3 style="text-align: center; color: #6f42c1; margin: 3rem 0 2rem 0;">
+                    <i class="fas fa-toolbox"></i> Forensics Toolkit
+                </h3>
+
+                <div class="tools-grid">
+                    <div class="tool-card forensics">
+                        <i class="fas fa-hard-drive"></i>
+                        <h4>Disk Forensics</h4>
+                        <p>Autopsy, FTK Imager, EnCase</p>
+                    </div>
+                    <div class="tool-card forensics">
+                        <i class="fas fa-memory"></i>
+                        <h4>Memory Analysis</h4>
+                        <p>Volatility, Rekall, WinDbg</p>
+                    </div>
+                    <div class="tool-card forensics">
+                        <i class="fas fa-virus"></i>
+                        <h4>Malware Analysis</h4>
+                        <p>IDA Pro, Ghidra, x64dbg</p>
+                    </div>
+                    <div class="tool-card forensics">
+                        <i class="fas fa-file-archive"></i>
+                        <h4>File Analysis</h4>
+                        <p>Binwalk, Exiftool, strings</p>
+                    </div>
+                    <div class="tool-card forensics">
+                        <i class="fas fa-network-wired"></i>
+                        <h4>Network Forensics</h4>
+                        <p>Wireshark, NetworkMiner, tcpdump</p>
+                    </div>
+                    <div class="tool-card forensics">
+                        <i class="fas fa-clock"></i>
+                        <h4>Timeline Tools</h4>
+                        <p>Plaso, log2timeline, Timesketch</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
         <section class="about" id="about">
             <h2 class="section-title">About My Journey</h2>
             <p>
-                Welcome to my cybersecurity learning journey! I'm documenting my progression through HackTheBox
-                challenges
-                as I build practical skills in penetration testing and offensive security. Each writeup includes
-                detailed
-                methodologies, tool usage, and lessons learned to help others on similar paths.
+                Welcome to my cybersecurity learning journey! I'm documenting my progression across red team offensive 
+                security, blue team defensive operations, and digital forensics. Each aspect complements the others - 
+                understanding attacks makes me a better defender, defensive knowledge improves my attack strategies, 
+                and forensics ties everything together by revealing the full story of what happened.
             </p>
 
             <div class="skills">
-                <span class="skill">Web Application Testing</span>
-                <span class="skill">Network Enumeration</span>
-                <span class="skill">Linux Privilege Escalation</span>
-                <span class="skill">Vulnerability Assessment</span>
-                <span class="skill">Hash Cracking</span>
-                <span class="skill">Database Exploitation</span>
-                <span class="skill">CVE Research</span>
-                <span class="skill">OSCP Preparation</span>
+                <span class="skill">Penetration Testing</span>
                 <span class="skill">Active Directory</span>
-                <span class="skill">DPAPI Exploitation</span>
+                <span class="skill">SIEM & Log Analysis</span>
+                <span class="skill">Incident Response</span>
+                <span class="skill">Threat Hunting</span>
+                <span class="skill">Digital Forensics</span>
+                <span class="skill">Malware Analysis</span>
+                <span class="skill">Network Security</span>
+                <span class="skill">Linux & Windows</span>
+                <span class="skill">Python & PowerShell</span>
             </div>
         </section>
     </main>
@@ -667,20 +1119,37 @@
                         class="fas fa-cube"></i></a>
                 <a href="mailto:your.email@example.com" title="Email"><i class="fas fa-envelope"></i></a>
             </div>
-            <p>&copy; 2025 PLSCARRYME - HTB Writeups. Built for the cybersecurity community 🔐</p>
+            <p>&copy; 2025 PLSCARRYME - Cybersecurity Portfolio. Built for the cybersecurity community 🔐</p>
         </div>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 
     <script>
-        // HTB Stats Integration using JSON file
+        // Journey switching functionality
+        function switchJourney(journey) {
+            // Update button states
+            document.querySelectorAll('.journey-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.journey-btn.${journey}`).classList.add('active');
+
+            // Update content visibility
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(`${journey}-content`).classList.add('active');
+
+            // Scroll to journey section smoothly
+            document.getElementById('journey').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // HTB Stats Integration
         async function loadHTBStats() {
             try {
                 console.log('Loading HTB stats from JSON file...');
-                const response = await fetch('./htb-stats.json?t=' + Date.now()); // Cache busting
+                const response = await fetch('./htb-stats.json?t=' + Date.now());
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch stats file');
@@ -692,28 +1161,24 @@
 
             } catch (error) {
                 console.log('Failed to load JSON stats, using fallback:', error);
-                // Fallback stats - updated to reflect 3 writeups now
                 updateStatsDisplay({
                     rank: 'Script Kiddie',
                     finalScore: 36,
                     boxes: 14,
-                    writeups: 5
+                    writeups: 6
                 });
             }
         }
 
-        // Update display with animation
         function updateStatsDisplay(stats) {
-            // Remove loading class and animate stats
             setTimeout(() => {
                 animateNumber(document.getElementById('boxes-pwned'), stats.boxes, '');
-                animateNumber(document.getElementById('writeups-count'), stats.writeups || 3, '');
+                animateNumber(document.getElementById('writeups-count'), stats.writeups || 6, '');
                 animateText(document.getElementById('htb-rank'), stats.rank);
-                animateNumber(document.getElementById('htb-score'), stats.finalScore || stats.points || 7, '');
+                animateNumber(document.getElementById('htb-score'), stats.finalScore || stats.points || 36, '');
             }, 500);
         }
 
-        // Animation functions
         function animateNumber(element, targetValue, suffix = '') {
             element.classList.remove('loading');
             const startValue = 0;
@@ -742,7 +1207,7 @@
             }, 200);
         }
 
-        // Smooth scrolling for navigation links
+        // Smooth scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -756,7 +1221,7 @@
             });
         });
 
-        // Add loading animation to cards
+        // Card animation observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -766,14 +1231,14 @@
             });
         });
 
-        document.querySelectorAll('.writeup-card').forEach(card => {
+        document.querySelectorAll('.writeup-card, .journey-card').forEach(card => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(20px)';
             card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(card);
         });
 
-        // Dynamic typing effect for hero title
+        // Dynamic typing effect
         function typeWriter(element, text, speed = 100) {
             let i = 0;
             element.innerHTML = '';
@@ -788,41 +1253,21 @@
             type();
         }
 
-        // Initialize everything on load
+        // Initialize on load
         window.addEventListener('load', () => {
             const heroTitle = document.querySelector('.hero h1');
             const originalText = heroTitle.textContent;
             typeWriter(heroTitle, originalText, 100);
-
-            // Load HTB stats after a short delay
             setTimeout(loadHTBStats, 1000);
         });
 
-        // Manual update function for console debugging
-        function manualUpdateStats(newStats) {
-            updateStatsDisplay(newStats);
-            console.log('Stats updated manually:', newStats);
-        }
-
-        // Refresh stats function
-        function refreshHTBStats() {
-            console.log('Refreshing HTB stats...');
-            loadHTBStats();
-        }
-    </script>
-</body>
-
-
-    <!-- Interactive Particle Background Script -->
-    <script>
+        // Interactive Particle Background
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d');
         
         let particles = [];
         let mouse = { x: null, y: null, radius: 150 };
-        let animationId;
         
-        // Set canvas size
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -831,7 +1276,6 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
         
-        // Mouse movement tracker
         window.addEventListener('mousemove', (event) => {
             mouse.x = event.x;
             mouse.y = event.y;
@@ -842,7 +1286,6 @@
             mouse.y = null;
         });
         
-        // Particle class
         class Particle {
             constructor() {
                 this.x = Math.random() * canvas.width;
@@ -864,15 +1307,12 @@
             }
             
             update() {
-                // Gentle floating animation
                 this.x += this.vx;
                 this.y += this.vy;
                 
-                // Bounce off edges
                 if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
                 if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
                 
-                // Mouse interaction
                 if (mouse.x != null && mouse.y != null) {
                     let dx = mouse.x - this.x;
                     let dy = mouse.y - this.y;
@@ -892,7 +1332,6 @@
             }
         }
         
-        // Initialize particles
         function initParticles() {
             particles = [];
             const numberOfParticles = Math.floor((canvas.width * canvas.height) / 15000);
@@ -901,7 +1340,6 @@
             }
         }
         
-        // Connect particles with lines
         function connect() {
             for (let a = 0; a < particles.length; a++) {
                 for (let b = a + 1; b < particles.length; b++) {
@@ -922,7 +1360,6 @@
             }
         }
         
-        // Mouse hover effect - connect to nearby particles
         function connectMouse() {
             if (mouse.x == null || mouse.y == null) return;
             
@@ -943,7 +1380,6 @@
             }
         }
         
-        // Animation loop
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
@@ -955,14 +1391,12 @@
             connect();
             connectMouse();
             
-            animationId = requestAnimationFrame(animate);
+            requestAnimationFrame(animate);
         }
         
-        // Initialize and start
         initParticles();
         animate();
         
-        // Reinitialize particles on resize
         window.addEventListener('resize', () => {
             initParticles();
         });
