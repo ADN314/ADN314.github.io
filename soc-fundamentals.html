@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Operations Fundamental | PLSCARRYME</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --blue: #4d94ff;
+            --blue-dark: #0d6efd;
+            --blue-glow: rgba(13, 110, 253, 0.35);
+            --blue-subtle: rgba(13, 110, 253, 0.1);
+            --bg: #0a0d12;
+            --bg2: #0f1318;
+            --surface: rgba(255,255,255,0.04);
+            --surface2: rgba(255,255,255,0.07);
+            --text: #d4dbe8;
+            --muted: #7a8799;
+            --border: rgba(77, 148, 255, 0.18);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* ── NAV ── */
+        header {
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid var(--blue-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #9fef00;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--blue-subtle);
+            box-shadow: 0 0 15px var(--blue-glow);
+        }
+
+        /* ── HERO ── */
+        .writeup-hero {
+            background: linear-gradient(135deg, #0a0d12 0%, #0d1620 50%, #091422 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 3.5rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .writeup-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(13,110,253,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .writeup-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(13,110,253,0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge.blue { background: var(--blue-dark); color: #fff; }
+        .badge.outline { border: 1px solid var(--border); color: var(--muted); background: transparent; }
+
+        .writeup-hero h1 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            color: var(--blue);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            line-height: 1.2;
+            text-shadow: 0 0 40px rgba(77,148,255,0.3);
+        }
+
+        .writeup-hero p.subtitle {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 700px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .hero-meta i { color: var(--blue); }
+
+        /* ── LAYOUT ── */
+        .content-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .content-wrap { grid-template-columns: 1fr; }
+            .sidebar { order: -1; }
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            position: sticky;
+            top: 90px;
+        }
+
+        .sidebar-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-card h4 {
+            color: var(--blue);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list li {
+            border-left: 2px solid var(--border);
+            padding: 0.4rem 0 0.4rem 0.9rem;
+            margin-bottom: 0.2rem;
+            transition: border-color 0.2s;
+        }
+
+        .toc-list li:hover { border-color: var(--blue); }
+
+        .toc-list a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: color 0.2s;
+        }
+
+        .toc-list a:hover { color: var(--blue); }
+
+        .skill-pill {
+            display: inline-block;
+            background: var(--blue-subtle);
+            color: var(--blue);
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            margin: 0.2rem;
+        }
+
+        /* ── MAIN CONTENT ── */
+        .section-block {
+            margin-bottom: 3.5rem;
+        }
+
+        .section-block h2 {
+            font-size: 1.6rem;
+            color: var(--blue);
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .section-block h3 {
+            font-size: 1.15rem;
+            color: #a8c8ff;
+            margin: 1.8rem 0 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-block p {
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        /* ── ALERT ANATOMY ── */
+        .alert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .alert-field {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .alert-field:hover {
+            border-color: var(--blue-dark);
+            background: var(--surface2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px var(--blue-glow);
+        }
+
+        .alert-field .field-icon {
+            font-size: 1.4rem;
+            color: var(--blue);
+            margin-bottom: 0.6rem;
+            display: block;
+        }
+
+        .alert-field h4 {
+            color: #c8daff;
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .alert-field p {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* ── CLASSIFICATION TABLE ── */
+        .class-table-wrap {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead th {
+            background: rgba(13,110,253,0.15);
+            color: var(--blue);
+            padding: 0.9rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--blue-dark);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+        }
+
+        tbody td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            vertical-align: top;
+        }
+
+        tbody tr:hover td { background: var(--surface); }
+
+        .class-label {
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            white-space: nowrap;
+        }
+
+        .tp { background: rgba(40,167,69,0.2); color: #5acd7a; border: 1px solid rgba(40,167,69,0.3); }
+        .fp { background: rgba(255,193,7,0.15); color: #ffc107; border: 1px solid rgba(255,193,7,0.3); }
+        .nmi { background: rgba(108,117,125,0.2); color: #adb5bd; border: 1px solid rgba(108,117,125,0.3); }
+        .tn { background: rgba(13,202,240,0.15); color: #0dcaf0; border: 1px solid rgba(13,202,240,0.3); }
+        .fn { background: rgba(220,53,69,0.2); color: #ff6b7a; border: 1px solid rgba(220,53,69,0.3); }
+
+        /* ── MINDSET CARDS ── */
+        .mindset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .mindset-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.3rem;
+            border-left: 3px solid var(--blue-dark);
+            transition: all 0.3s;
+        }
+
+        .mindset-card:hover {
+            transform: translateX(4px);
+            box-shadow: -4px 0 20px var(--blue-glow);
+        }
+
+        .mindset-card h4 {
+            color: var(--blue);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .mindset-card p {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* ── WORKFLOW STEPS ── */
+        .workflow-steps {
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .workflow-steps::before {
+            content: '';
+            position: absolute;
+            left: 22px;
+            top: 28px;
+            bottom: 28px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--blue-dark), transparent);
+        }
+
+        .step {
+            display: flex;
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+
+        .step-num {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            background: var(--blue-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #fff;
+            box-shadow: 0 0 20px var(--blue-glow);
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-body {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            flex: 1;
+            transition: all 0.3s;
+        }
+
+        .step-body:hover {
+            background: var(--surface2);
+            border-color: var(--blue-dark);
+        }
+
+        .step-body h4 {
+            color: #c8daff;
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .step-body p {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* ── SCREENSHOT BLOCKS ── */
+        .screenshot-block {
+            margin: 1.5rem 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .screenshot-block .caption-bar {
+            background: rgba(13,110,253,0.12);
+            border-bottom: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .screenshot-block img {
+            width: 100%;
+            display: block;
+        }
+
+        /* ── CASE STUDY ── */
+        .case-box {
+            background: linear-gradient(135deg, rgba(13,110,253,0.08), rgba(13,110,253,0.04));
+            border: 1px solid rgba(13,110,253,0.3);
+            border-radius: 14px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .case-box h3 {
+            color: var(--blue);
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .alert-block {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(77,148,255,0.2);
+            border-radius: 10px;
+            padding: 1.2rem 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.9;
+        }
+
+        .alert-key { color: var(--blue); font-weight: 700; }
+        .alert-val { color: #c8daff; }
+        .alert-highlight { color: #ff8c8c; }
+
+        /* ── RECOMMENDATION ── */
+        .rec-steps {
+            counter-reset: rec;
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .rec-steps li {
+            counter-increment: rec;
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+            align-items: flex-start;
+        }
+
+        .rec-steps li::before {
+            content: counter(rec);
+            background: var(--blue-subtle);
+            color: var(--blue);
+            border: 1px solid var(--border);
+            min-width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-top: 0.1rem;
+        }
+
+        .rec-steps li .rec-content h5 {
+            color: #c8daff;
+            margin-bottom: 0.3rem;
+            font-size: 0.95rem;
+        }
+
+        .rec-steps li .rec-content p {
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        /* ── KEY TAKEAWAYS ── */
+        .takeaway-box {
+            background: linear-gradient(135deg, rgba(40,167,69,0.06), rgba(13,110,253,0.06));
+            border: 1px solid rgba(90,205,122,0.2);
+            border-radius: 12px;
+            padding: 1.8rem;
+            margin-top: 2rem;
+        }
+
+        .takeaway-box h3 {
+            color: #5acd7a;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .takeaway-box ul {
+            list-style: none;
+        }
+
+        .takeaway-box li {
+            padding: 0.4rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+            color: var(--text);
+            font-size: 0.93rem;
+        }
+
+        .takeaway-box li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #5acd7a;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: rgba(0,0,0,0.8);
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 2rem 1.5rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        footer a { color: var(--blue); text-decoration: none; }
+
+        /* Scroll progress */
+        #progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #0d6efd, #4d94ff);
+            z-index: 9999;
+            width: 0%;
+            transition: width 0.1s;
+        }
+    </style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header>
+    <nav>
+        <a href="index.html" class="logo"><i class="fas fa-terminal"></i> ANDY - Cybersecurity Portfolio</a>
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+    </nav>
+</header>
+
+<!-- Hero -->
+<div class="writeup-hero">
+    <div class="hero-inner">
+        <div class="hero-badges">
+            <span class="badge blue"><i class="fas fa-shield-alt"></i> &nbsp;Blue Team</span>
+            <span class="badge outline">SOC Operations</span>
+            <span class="badge outline">Jan 5, 2026</span>
+        </div>
+        <h1>Security Operations Fundamental</h1>
+        <p class="subtitle">
+            A structured breakdown of alert anatomy, classification methodology, SOC analyst mindset,
+            and the full detection-to-feedback operational workflow — anchored by a real-world impossible travel case study.
+        </p>
+        <div class="hero-meta">
+            <span><i class="fas fa-layer-group"></i> Core Theory</span>
+            <span><i class="fas fa-list-check"></i> 5 Sections</span>
+            <span><i class="fas fa-tag"></i> Alert Triage · SIEM · Incident Response</span>
+        </div>
+    </div>
+</div>
+
+<!-- Main layout -->
+<div class="content-wrap">
+
+    <!-- Article -->
+    <article>
+
+        <!-- 1. Alert Structure -->
+        <div class="section-block" id="s1">
+            <h2><i class="fas fa-bell"></i> 1. Structure of a Security Alert</h2>
+            <p>
+                A high-quality alert must supply enough structured data for an analyst to answer the <strong style="color: var(--blue);">5W1H</strong> questions —
+                Who, What, When, Where, Why, and How. Without this, even a real threat can be misclassified or actioned too slowly.
+                Below are the eight mandatory fields every alert should carry.
+            </p>
+
+            <div class="screenshot-block">
+                <div class="caption-bar"><i class="fas fa-image"></i> 5W1H Alert Framework</div>
+                <img src="Homework - Day 2 (05 01 2026)/image.png" alt="5W1H framework diagram" loading="lazy">
+            </div>
+
+            <div class="alert-grid">
+                <div class="alert-field">
+                    <span class="field-icon"><i class="fas fa-tag"></i></span>
+                    <h4>Alert Name / Rule ID</h4>
+                    <p>A concise, unambiguous name paired with the exact logic or condition that fired the rule.</p>
+                </div>
+                <div class="alert-field">
+                    <span class="field-icon"><i class="fas fa-user"></i></span>
+                    <h4>Source</h4>
+                    <p>Origin of the activity — a User account, a Host name, or a source IP address.</p>
+                </div>
+                <div class="alert-field">
+                    <span class="field-icon"><i class="fas fa-bullseye"></i></span>
+                    <h4>Destination</h4>
+                    <p>Target of the activity — a Service, Domain, or destination IP address.</p>
+                </div>
+                <div class="alert-field">
+                    <span class="field-icon"><i class="fas fa-clock"></i></span>
+                    <h4>Timestamp</h4>
+                    <p>Both when the event occurred and when the alert was generated — these can differ due to ingestion latency.</p>
+                </div>
+                <div class="alert-field">
+                    <span class="field-icon"><i class="fas fa-check-circle"></i></span>
+                    <h4>Action</h4>
+                    <p>The outcome: <em>Allowed</em>, <em>Blocked</em>, <em>Succeeded</em>, or <em>Failed</em>.</p>
+                </div>
+                <div class="alert-field">
+                    <span class="field-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                    <h4>Severity</h4>
+                    <p>Seriousness level: Critical → High → Medium → Low → Informational.</p>
+                </div>
+                <div class="alert-field">
+                    <span class="field-icon"><i class="fas fa-fingerprint"></i></span>
+                    <h4>Artifacts / IOCs</h4>
+                    <p>Tangible evidence: URLs, file hashes, process names, malicious IPs, registry keys.</p>
+                </div>
+                <div class="alert-field">
+                    <span class="field-icon"><i class="fas fa-info-circle"></i></span>
+                    <h4>Context</h4>
+                    <p>Is the user a VIP? Is the asset internet-facing or critical? Context determines true impact.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Alert Classification -->
+        <div class="section-block" id="s2">
+            <h2><i class="fas fa-sitemap"></i> 2. Alert Classification</h2>
+            <p>
+                Every alert a SOC analyst reviews must be assigned one of five classifications.
+                Getting this right directly determines whether a real threat gets contained or ignored —
+                and whether your detection rules stay clean or generate noise.
+            </p>
+
+            <div class="screenshot-block">
+                <div class="caption-bar"><i class="fas fa-image"></i> Classification Matrix Overview</div>
+                <img src="Homework - Day 2 (05 01 2026)/image 1.png" alt="Alert classification matrix" loading="lazy">
+            </div>
+
+            <div class="class-table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Classification</th>
+                            <th>Definition</th>
+                            <th>Required Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="class-label tp">True Positive (TP)</span></td>
+                            <td>A real, confirmed malicious behaviour backed by evidence.</td>
+                            <td><strong>Contain</strong> the threat and <strong>escalate</strong> to Tier 2/3 or the IR team immediately.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="class-label fp">False Positive (FP)</span></td>
+                            <td>A false alarm — legitimate activity incorrectly flagged as a threat.</td>
+                            <td><strong>Tune</strong> the detection rule or <strong>whitelist</strong> the activity to reduce future noise.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="class-label nmi">Need More Info (NMI)</span></td>
+                            <td>Insufficient data available to reach a confident conclusion.</td>
+                            <td><strong>Collect</strong> additional logs or <strong>verify</strong> with the user or IT department.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="class-label tn">True Negative (TN)</span></td>
+                            <td>System is healthy; no alert fired and no real threat exists.</td>
+                            <td>No action required — this is normal, healthy operation.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="class-label fn">False Negative (FN) ⚠️</span></td>
+                            <td><strong>Most dangerous outcome</strong>: a real attack is in progress but the system fails to alert.</td>
+                            <td><strong>Improve detection coverage</strong> — close the blind spot that allowed this to go undetected.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p style="font-size:0.9rem; color: var(--muted); margin-top: 0.8rem;">
+                <i class="fas fa-lightbulb" style="color: var(--blue);"></i>
+                &nbsp;False Negatives are the most dangerous because they are invisible by definition — you only discover them after a breach.
+                Regular purple-team exercises and coverage reviews help surface these gaps proactively.
+            </p>
+        </div>
+
+        <!-- 3. Analyst Mindset -->
+        <div class="section-block" id="s3">
+            <h2><i class="fas fa-brain"></i> 3. SOC Analyst Mindset & Principles</h2>
+            <p>
+                Technical skills get you to the door — mindset gets you through it. These four principles separate analysts
+                who close incidents cleanly from those who either escalate everything or miss the real threats.
+            </p>
+
+            <div class="screenshot-block">
+                <div class="caption-bar"><i class="fas fa-image"></i> Analyst Mindset Framework</div>
+                <img src="Homework - Day 2 (05 01 2026)/image 2.png" alt="SOC analyst mindset diagram" loading="lazy">
+            </div>
+
+            <div class="mindset-grid">
+                <div class="mindset-card">
+                    <h4><i class="fas fa-balance-scale"></i> Evidence over Emotion</h4>
+                    <p>Never classify an alert based on gut feel or instinct. Every verdict must be traceable to concrete evidence in the log data.</p>
+                </div>
+                <div class="mindset-card">
+                    <h4><i class="fas fa-search-plus"></i> Context is King</h4>
+                    <p>A High-severity alert with zero context is less actionable than a Medium alert with rich contextual data. Always enrich before deciding.</p>
+                </div>
+                <div class="mindset-card">
+                    <h4><i class="fas fa-eye"></i> Maintain Visibility</h4>
+                    <p>Never disable a security control just to silence False Positives. Tune the rule instead — disabling a sensor creates an instant blind spot.</p>
+                </div>
+                <div class="mindset-card">
+                    <h4><i class="fas fa-users"></i> Collaboration</h4>
+                    <p>SOC work is a team sport. Don't silo yourself — escalate when uncertain, loop in Tier 2 early, and share findings with your team.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Operational Workflow -->
+        <div class="section-block" id="s4">
+            <h2><i class="fas fa-project-diagram"></i> 4. Operational Workflow</h2>
+            <p>
+                Every security alert follows an 8-step lifecycle from the triggering behaviour to the final feedback loop.
+                Understanding this pipeline helps analysts know exactly where they sit in the process — and what the next handoff looks like.
+            </p>
+
+            <div class="screenshot-block">
+                <div class="caption-bar"><i class="fas fa-image"></i> Alert Lifecycle — Step 1–2: Behavior & Log Generation</div>
+                <img src="Homework - Day 2 (05 01 2026)/image 3.png" alt="Alert lifecycle steps 1-2" loading="lazy">
+            </div>
+
+            <div class="workflow-steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-body">
+                        <h4>Behaviour</h4>
+                        <p>A user logs in, accesses a website, runs a process, or any other monitored action occurs in the environment.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-body">
+                        <h4>Log Generation</h4>
+                        <p>The behaviour is captured by security telemetry sources — EDR agents, firewall logs, cloud audit trails, identity providers.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-body">
+                        <h4>Collection & Normalisation</h4>
+                        <p>Raw logs are shipped to the <strong style="color:var(--blue)">SIEM</strong>, parsed, normalised into a consistent schema, and made queryable.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div class="step-body">
+                        <h4>Detection</h4>
+                        <p>SIEM rules match against the normalised data. Results are enriched with context — GeoIP lookups, VirusTotal reputation, asset criticality.</p>
+                    </div>
+                </div>
+
+                <div class="screenshot-block" style="margin: 0.5rem 0 1.2rem 3.8rem;">
+                    <div class="caption-bar"><i class="fas fa-image"></i> Detection & Enrichment Pipeline</div>
+                    <img src="Homework - Day 2 (05 01 2026)/image 4.png" alt="Detection pipeline" loading="lazy">
+                </div>
+
+                <div class="step">
+                    <div class="step-num">5</div>
+                    <div class="step-body">
+                        <h4>Alerting</h4>
+                        <p>A structured alert is generated: alert name, severity score, source/destination, and all extracted artifacts are attached.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">6</div>
+                    <div class="step-body">
+                        <h4>Triage</h4>
+                        <p>The Tier-1 analyst reviews the alert, gathers additional context, and builds an event timeline to understand scope.</p>
+                    </div>
+                </div>
+
+                <div class="screenshot-block" style="margin: 0.5rem 0 1.2rem 3.8rem;">
+                    <div class="caption-bar"><i class="fas fa-image"></i> Triage & Decision Phase</div>
+                    <img src="Homework - Day 2 (05 01 2026)/image 5.png" alt="Triage phase" loading="lazy">
+                </div>
+
+                <div class="step">
+                    <div class="step-num">7</div>
+                    <div class="step-body">
+                        <h4>Decision</h4>
+                        <p>A verdict is reached: <span class="class-label tp" style="font-size:0.8rem">TP</span> → escalate &amp; contain, <span class="class-label fp" style="font-size:0.8rem">FP</span> → tune, <span class="class-label nmi" style="font-size:0.8rem">NMI</span> → gather more data.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">8</div>
+                    <div class="step-body">
+                        <h4>Feedback Loop</h4>
+                        <p>Detection rules are tuned, playbooks updated, and whitelists refined — so the next similar event is handled faster and more accurately.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="screenshot-block">
+                <div class="caption-bar"><i class="fas fa-image"></i> Full Workflow Overview</div>
+                <img src="Homework - Day 2 (05 01 2026)/image 6.png" alt="Full SOC workflow" loading="lazy">
+            </div>
+
+            <div class="screenshot-block">
+                <div class="caption-bar"><i class="fas fa-image"></i> Feedback & Rule Tuning</div>
+                <img src="Homework - Day 2 (05 01 2026)/image 7.png" alt="Feedback loop diagram" loading="lazy">
+            </div>
+        </div>
+
+        <!-- 5. Case Study -->
+        <div class="section-block" id="s5">
+            <h2><i class="fas fa-flask"></i> 5. Case Study — Impossible Travel Detected</h2>
+            <p>
+                The following case demonstrates how the framework above applies to a realistic alert. An "Impossible Travel" alert
+                fires when the same account authenticates from two geographically separated locations within a time window that
+                makes physical travel impossible — a strong indicator of credential compromise or proxy abuse.
+            </p>
+
+            <div class="screenshot-block">
+                <div class="caption-bar"><i class="fas fa-image"></i> SOC-101 Alert — Initial Triage View</div>
+                <img src="Homework - Day 2 (05 01 2026)/image 8.png" alt="Impossible travel alert screenshot" loading="lazy">
+            </div>
+
+            <div class="case-box">
+                <h3><i class="fas fa-exclamation-circle"></i> Alert Details</h3>
+                <div class="alert-block">
+                    <div><span class="alert-key">Alert Name : </span><span class="alert-val">SOC-101 · Unusual Login — Impossible Travel Detected</span></div>
+                    <div><span class="alert-key">Source     : </span><span class="alert-val">Office network · Hanoi, Vietnam</span></div>
+                    <div><span class="alert-key">Destination: </span><span class="alert-val"><span class="alert-highlight">94.159.113.15</span> (Foreign country)</span></div>
+                    <div><span class="alert-key">Timestamp  : </span><span class="alert-val">Aug 07 2025, 09:13 AM</span></div>
+                    <div><span class="alert-key">Action     : </span><span class="alert-val">Login Successful ✓ (SIEM detected &amp; alerted)</span></div>
+                    <div><span class="alert-key">Severity   : </span><span class="alert-highlight">HIGH</span></div>
+                    <div><span class="alert-key">User       : </span><span class="alert-val">thuy.le@finova.one</span></div>
+                    <div><span class="alert-key">Delta      : </span><span class="alert-highlight">10 minutes between logins from two countries</span></div>
+                    <div><span class="alert-key">Context    : </span><span class="alert-val">Physical travel between locations in 10 mins is impossible → Credential compromise suspected</span></div>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-tasks"></i> Recommended Response Workflow</h3>
+
+            <ol class="rec-steps">
+                <li>
+                    <div class="rec-content">
+                        <h5>Auto-check IP reputation immediately</h5>
+                        <p>Run <code style="color:var(--blue)">94.159.113.15</code> through VirusTotal, AbuseIPDB, and Cisco Talos. Flag if the IP resolves to a known malicious exit node, Tor relay, or commercial VPN provider (NordVPN, ExpressVPN, etc.).</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="rec-content">
+                        <h5>Review user login history (last 30 days)</h5>
+                        <p>Does <code style="color:var(--blue)">thuy.le</code> regularly use a VPN or travel internationally? Check for any prior High-severity alerts on this account — failed logins followed by success, or unusual file access bursts.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="rec-content">
+                        <h5>Out-of-band verification with the user</h5>
+                        <p>Contact via a trusted channel (Teams, Slack, or phone call — never email, which may be compromised). Ask directly: <em>"Are you currently travelling or using a VPN for work purposes?"</em></p>
+                    </div>
+                </li>
+                <li>
+                    <div class="rec-content">
+                        <h5>Immediate containment if suspicious</h5>
+                        <p>If the IP is flagged or the user denies the activity: reset the password, revoke all active sessions across all devices, and enforce MFA re-enrollment. Do not wait for confirmation before containing.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="rec-content">
+                        <h5>Review post-login activity</h5>
+                        <p>What did the account do after the suspicious login? Look for mass data downloads, security setting changes, new account creation, or lateral movement to other systems. This determines scope and whether escalation to IR is needed.</p>
+                    </div>
+                </li>
+            </ol>
+        </div>
+
+        <!-- Takeaways -->
+        <div class="takeaway-box">
+            <h3><i class="fas fa-star"></i> Key Takeaways</h3>
+            <ul>
+                <li>Every alert needs the 8 structural fields to be actionable — missing context kills analyst speed.</li>
+                <li>False Negatives are silent killers; active detection gap reviews are as important as tuning FP noise.</li>
+                <li>Context beats severity — a Medium alert with rich context beats a Critical alert with nothing to go on.</li>
+                <li>Never disable a control to stop FP noise — tune the rule, preserve the visibility.</li>
+                <li>The feedback loop (Step 8) is what separates a maturing SOC from one that fights the same fires repeatedly.</li>
+                <li>Impossible Travel investigations must include out-of-band user verification before clearing or escalating.</li>
+            </ul>
+        </div>
+
+    </article>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-card">
+            <h4><i class="fas fa-list"></i> &nbsp;Table of Contents</h4>
+            <ul class="toc-list">
+                <li><a href="#s1">1. Alert Structure</a></li>
+                <li><a href="#s2">2. Alert Classification</a></li>
+                <li><a href="#s3">3. Analyst Mindset</a></li>
+                <li><a href="#s4">4. Operational Workflow</a></li>
+                <li><a href="#s5">5. Case Study</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-card">
+            <h4><i class="fas fa-tag"></i> &nbsp;Topics Covered</h4>
+            <span class="skill-pill">5W1H Framework</span>
+            <span class="skill-pill">Alert Triage</span>
+            <span class="skill-pill">TP / FP / FN</span>
+            <span class="skill-pill">SIEM</span>
+            <span class="skill-pill">Incident Response</span>
+            <span class="skill-pill">IOC Analysis</span>
+            <span class="skill-pill">IP Reputation</span>
+            <span class="skill-pill">Impossible Travel</span>
+            <span class="skill-pill">MFA</span>
+            <span class="skill-pill">Session Revocation</span>
+        </div>
+
+        <div class="sidebar-card">
+            <h4><i class="fas fa-tools"></i> &nbsp;Tools Referenced</h4>
+            <span class="skill-pill">VirusTotal</span>
+            <span class="skill-pill">AbuseIPDB</span>
+            <span class="skill-pill">Cisco Talos</span>
+            <span class="skill-pill">SIEM</span>
+            <span class="skill-pill">EDR</span>
+        </div>
+
+        <div class="sidebar-card">
+            <h4><i class="fas fa-link"></i> &nbsp;Series</h4>
+            <p style="font-size: 0.83rem; color: var(--muted); line-height: 1.6;">
+                <strong style="color: var(--blue);">Day 2</strong> — Security Operations Fundamental<br>
+                <span style="opacity:0.5;">Day 3 — Coming soon…</span>
+            </p>
+        </div>
+    </aside>
+
+</div>
+
+<footer>
+    <p>
+        <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        &nbsp;·&nbsp;
+        PLSCARRYME Cybersecurity Portfolio &copy; 2025
+    </p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script>
+    // Scroll progress bar
+    window.addEventListener('scroll', () => {
+        const doc = document.documentElement;
+        const scrolled = doc.scrollTop / (doc.scrollHeight - doc.clientHeight) * 100;
+        document.getElementById('progress').style.width = scrolled + '%';
+    });
+</script>
+</body>
+</html>
