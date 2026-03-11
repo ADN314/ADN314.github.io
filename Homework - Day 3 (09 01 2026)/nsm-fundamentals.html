@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Security Monitoring | PLSCARRYME</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue: #4d94ff;
+            --blue-dark: #0d6efd;
+            --blue-glow: rgba(13, 110, 253, 0.35);
+            --blue-subtle: rgba(13, 110, 253, 0.1);
+            --bg: #0a0d12;
+            --bg2: #0f1318;
+            --surface: rgba(255, 255, 255, 0.04);
+            --surface2: rgba(255, 255, 255, 0.07);
+            --text: #d4dbe8;
+            --muted: #7a8799;
+            --border: rgba(77, 148, 255, 0.18);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* ── NAV ── */
+        header {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid var(--blue-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--blue-subtle);
+            box-shadow: 0 0 15px var(--blue-glow);
+        }
+
+        /* ── HERO ── */
+        .writeup-hero {
+            background: linear-gradient(135deg, #0a0d12 0%, #0d1620 50%, #091422 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 3.5rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .writeup-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(13, 110, 253, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .writeup-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(13, 110, 253, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge.blue {
+            background: var(--blue-dark);
+            color: #fff;
+        }
+
+        .badge.outline {
+            border: 1px solid var(--border);
+            color: var(--muted);
+            background: transparent;
+        }
+
+        .writeup-hero h1 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            color: var(--blue);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            line-height: 1.2;
+            text-shadow: 0 0 40px rgba(77, 148, 255, 0.3);
+        }
+
+        .writeup-hero p.subtitle {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 700px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .hero-meta i {
+            color: var(--blue);
+        }
+
+        /* ── LAYOUT ── */
+        .content-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .content-wrap {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                order: -1;
+            }
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            position: sticky;
+            top: 90px;
+        }
+
+        .sidebar-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-card h4 {
+            color: var(--blue);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list li {
+            border-left: 2px solid var(--border);
+            padding: 0.4rem 0 0.4rem 0.9rem;
+            margin-bottom: 0.2rem;
+            transition: border-color 0.2s;
+        }
+
+        .toc-list li:hover {
+            border-color: var(--blue);
+        }
+
+        .toc-list a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: color 0.2s;
+        }
+
+        .toc-list a:hover {
+            color: var(--blue);
+        }
+
+        .skill-pill {
+            display: inline-block;
+            background: var(--blue-subtle);
+            color: var(--blue);
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            margin: 0.2rem;
+        }
+
+        /* ── MAIN CONTENT ── */
+        .section-block {
+            margin-bottom: 3.5rem;
+        }
+
+        .section-block h2 {
+            font-size: 1.6rem;
+            color: var(--blue);
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .section-block h3 {
+            font-size: 1.15rem;
+            color: #a8c8ff;
+            margin: 1.8rem 0 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-block p {
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        /* ── 4 QUESTIONS GRID ── */
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .question-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.4rem 1.2rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .question-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--blue-dark), var(--blue));
+        }
+
+        .question-card:hover {
+            border-color: var(--blue-dark);
+            background: var(--surface2);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 24px var(--blue-glow);
+        }
+
+        .question-card .q-label {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--blue);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px rgba(77, 148, 255, 0.4);
+        }
+
+        .question-card h4 {
+            color: #c8daff;
+            font-size: 0.88rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .question-card p {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* ── EVIDENCE TABLE ── */
+        .class-table-wrap {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead th {
+            background: rgba(13, 110, 253, 0.15);
+            color: var(--blue);
+            padding: 0.9rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--blue-dark);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+        }
+
+        tbody td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: top;
+        }
+
+        tbody tr:hover td {
+            background: var(--surface);
+        }
+
+        .evidence-label {
+            font-weight: 700;
+            padding: 0.2rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            white-space: nowrap;
+        }
+
+        .ev-pcap {
+            background: rgba(13, 110, 253, 0.2);
+            color: #4d94ff;
+            border: 1px solid rgba(13, 110, 253, 0.35);
+        }
+
+        .ev-flow {
+            background: rgba(13, 202, 240, 0.15);
+            color: #0dcaf0;
+            border: 1px solid rgba(13, 202, 240, 0.3);
+        }
+
+        .ev-meta {
+            background: rgba(40, 167, 69, 0.18);
+            color: #5acd7a;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        /* ── LOG CARDS ── */
+        .log-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+            margin: 1.5rem 0;
+        }
+
+        .log-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .log-card:hover {
+            border-color: var(--blue-dark);
+            background: var(--surface2);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px var(--blue-glow);
+        }
+
+        .log-card .log-type {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--blue);
+            background: var(--blue-subtle);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.25rem 0.6rem;
+            display: inline-block;
+            margin-bottom: 0.8rem;
+        }
+
+        .log-card h4 {
+            color: #c8daff;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .log-card p {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 0.8rem;
+        }
+
+        .log-card .use-case {
+            font-size: 0.8rem;
+            color: #5acd7a;
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid rgba(40, 167, 69, 0.25);
+            border-radius: 6px;
+            padding: 0.3rem 0.7rem;
+            display: inline-block;
+            margin-bottom: 0.8rem;
+        }
+
+        .log-fields {
+            list-style: none;
+            border-top: 1px solid var(--border);
+            padding-top: 0.8rem;
+            margin-top: 0.2rem;
+        }
+
+        .log-fields li {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.82rem;
+            margin-bottom: 0.3rem;
+            align-items: flex-start;
+        }
+
+        .log-fields li code {
+            font-family: 'Courier New', monospace;
+            color: var(--blue);
+            background: var(--blue-subtle);
+            border-radius: 4px;
+            padding: 0 0.3rem;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .log-fields li span {
+            color: var(--muted);
+        }
+
+        /* ── RED FLAG BOX ── */
+        .redflag-box {
+            background: rgba(220, 53, 69, 0.07);
+            border: 1px solid rgba(220, 53, 69, 0.25);
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            margin: 0.8rem 0;
+            font-size: 0.88rem;
+        }
+
+        .redflag-box .rf-title {
+            color: #ff6b7a;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .redflag-box ul {
+            list-style: none;
+        }
+
+        .redflag-box li {
+            color: #ffd4d8;
+            padding: 0.25rem 0;
+            padding-left: 1.1rem;
+            position: relative;
+            font-size: 0.85rem;
+        }
+
+        .redflag-box li::before {
+            content: '⚑';
+            position: absolute;
+            left: 0;
+            color: #ff6b7a;
+            font-size: 0.75rem;
+        }
+
+        /* ── INFO BOX ── */
+        .info-box {
+            background: linear-gradient(135deg, rgba(13, 110, 253, 0.08), rgba(13, 110, 253, 0.04));
+            border: 1px solid rgba(13, 110, 253, 0.3);
+            border-radius: 10px;
+            padding: 1rem 1.3rem;
+            margin: 1rem 0;
+            font-size: 0.88rem;
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+        }
+
+        .info-box i {
+            color: var(--blue);
+            font-size: 1rem;
+            margin-top: 0.15rem;
+            flex-shrink: 0;
+        }
+
+        .info-box p {
+            color: #a8c8ff;
+            margin: 0;
+            font-size: 0.88rem;
+        }
+
+        .info-box strong {
+            color: var(--blue);
+        }
+
+        /* ── PRO TIPS ── */
+        .pro-tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.2rem;
+            margin: 1.5rem 0;
+        }
+
+        .pro-tip-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 3px solid var(--blue-dark);
+            transition: all 0.3s;
+        }
+
+        .pro-tip-card:hover {
+            transform: translateX(4px);
+            box-shadow: -4px 0 20px var(--blue-glow);
+            background: var(--surface2);
+        }
+
+        .pro-tip-card .tip-num {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .pro-tip-card h4 {
+            color: #c8daff;
+            font-size: 0.97rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .pro-tip-card p {
+            font-size: 0.84rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .pro-tip-card .tip-code {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(77, 148, 255, 0.15);
+            border-radius: 6px;
+            padding: 0.5rem 0.8rem;
+            margin-top: 0.7rem;
+            font-size: 0.8rem;
+            color: #c8daff;
+            line-height: 1.6;
+        }
+
+        .tip-code .tck {
+            color: var(--blue);
+        }
+
+        .tip-code .tcv {
+            color: #5acd7a;
+        }
+
+        .tip-code .tca {
+            color: #ff8c8c;
+        }
+
+        /* ── STRENGTH / LIMITATION GRID ── */
+        .sl-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 700px) {
+            .sl-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sl-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.4rem;
+        }
+
+        .sl-card.strength {
+            border-top: 3px solid #5acd7a;
+        }
+
+        .sl-card.limitation {
+            border-top: 3px solid #ff6b7a;
+        }
+
+        .sl-card h4 {
+            font-size: 0.88rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sl-card.strength h4 {
+            color: #5acd7a;
+        }
+
+        .sl-card.limitation h4 {
+            color: #ff6b7a;
+        }
+
+        .sl-list {
+            list-style: none;
+        }
+
+        .sl-list li {
+            padding: 0.4rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+            font-size: 0.87rem;
+            color: var(--text);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .sl-list li:last-child {
+            border-bottom: none;
+        }
+
+        .sl-card.strength .sl-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #5acd7a;
+            font-weight: 700;
+        }
+
+        .sl-card.limitation .sl-list li::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: #ff6b7a;
+            font-weight: 700;
+        }
+
+        /* ── CODE BLOCKS ── */
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(77, 148, 255, 0.2);
+            border-radius: 10px;
+            padding: 1.2rem 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.84rem;
+            line-height: 2;
+            overflow-x: auto;
+        }
+
+        .ck {
+            color: var(--blue);
+            font-weight: 700;
+        }
+
+        .cv {
+            color: #c8daff;
+        }
+
+        .cc {
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        .chl {
+            color: #ff8c8c;
+        }
+
+        .cgr {
+            color: #5acd7a;
+        }
+
+        /* ── TAKEAWAYS ── */
+        .takeaway-box {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.06), rgba(13, 110, 253, 0.06));
+            border: 1px solid rgba(90, 205, 122, 0.2);
+            border-radius: 12px;
+            padding: 1.8rem;
+            margin-top: 2rem;
+        }
+
+        .takeaway-box h3 {
+            color: #5acd7a;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .takeaway-box ul {
+            list-style: none;
+        }
+
+        .takeaway-box li {
+            padding: 0.4rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+            color: var(--text);
+            font-size: 0.93rem;
+        }
+
+        .takeaway-box li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #5acd7a;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 2rem 1.5rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--blue);
+            text-decoration: none;
+        }
+
+        /* Scroll progress */
+        #progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #0d6efd, #4d94ff);
+            z-index: 9999;
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* Inline highlight */
+        code {
+            font-family: 'Courier New', monospace;
+            color: var(--blue);
+            background: var(--blue-subtle);
+            border-radius: 4px;
+            padding: 0.1rem 0.35rem;
+            font-size: 0.87em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="progress"></div>
+
+    <header>
+        <nav>
+            <a href="../index.html" class="logo"><i class="fas fa-terminal"></i> ANDY - Cybersecurity Portfolio</a>
+            <a href="../index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <div class="writeup-hero">
+        <div class="hero-inner">
+            <div class="hero-badges">
+                <span class="badge blue"><i class="fas fa-shield-alt"></i> &nbsp;Blue Team</span>
+                <span class="badge outline">Network Monitoring</span>
+                <span class="badge outline">Jan 9, 2026</span>
+            </div>
+            <h1>Network Security Monitoring (NSM)</h1>
+            <p class="subtitle">
+                A deep dive into NSM fundamentals — the three types of network evidence, Zeek log analysis,
+                detection techniques for beaconing, DNS tunneling, and JA3 fingerprinting, with pro-level hunting
+                workflows.
+            </p>
+            <div class="hero-meta">
+                <span><i class="fas fa-layer-group"></i> Core Theory</span>
+                <span><i class="fas fa-list-check"></i> 5 Sections</span>
+                <span><i class="fas fa-tag"></i> Zeek · NSM · Threat Hunting · C2 Detection</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main layout -->
+    <div class="content-wrap">
+
+        <article>
+
+            <!-- 1. What is NSM -->
+            <div class="section-block" id="s1">
+                <h2><i class="fas fa-satellite-dish"></i> 1. What is Network Security Monitoring?</h2>
+                <p>
+                    NSM is the <strong style="color:var(--blue)">continuous collection and analysis</strong> of network
+                    traces —
+                    packets, flows, and logs — to detect abnormal behaviour and support incident response.
+                    Where EDR tools watch what happens <em>on</em> an endpoint, NSM watches what happens
+                    <em>between</em> endpoints. The network, unlike a compromised host, cannot lie to you.
+                </p>
+                <p>
+                    NSM is built around answering four foundational questions about any suspicious activity.
+                    If you can answer all four, you have enough to scope the threat and begin response.
+                </p>
+
+                <div class="questions-grid">
+                    <div class="question-card">
+                        <div class="q-label">Who?</div>
+                        <h4>Identity</h4>
+                        <p>Source &amp; destination IPs, resolved hostnames, and associated user accounts.</p>
+                    </div>
+                    <div class="question-card">
+                        <div class="q-label">When?</div>
+                        <h4>Timeline</h4>
+                        <p>Exact timestamps, connection frequency, and periodicity patterns across time.</p>
+                    </div>
+                    <div class="question-card">
+                        <div class="q-label">How?</div>
+                        <h4>Protocol &amp; Port</h4>
+                        <p>Which protocols were used (DNS / HTTP / SMB) and over which port numbers.</p>
+                    </div>
+                    <div class="question-card">
+                        <div class="q-label">How much?</div>
+                        <h4>Volume</h4>
+                        <p>Bytes in / out, file sizes, connection count — data volume often reveals intent.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Types of Evidence -->
+            <div class="section-block" id="s2">
+                <h2><i class="fas fa-layer-group"></i> 2. The Three Types of Network Evidence</h2>
+                <p>
+                    Not all network data is equal. Each evidence type offers a different trade-off between
+                    <strong style="color:var(--blue)">detail</strong> and <strong
+                        style="color:var(--blue)">speed</strong>.
+                    Experienced analysts know when to pull which type — using the wrong one wastes time and can miss the
+                    signal entirely.
+                </p>
+
+                <div class="class-table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Detail Level</th>
+                                <th>Best For</th>
+                                <th>Analogy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="evidence-label ev-pcap">Packet (PCAP)</span></td>
+                                <td>Extremely High</td>
+                                <td>Deep forensics — seeing exactly what was inside the "envelope." Every byte of every
+                                    payload.</td>
+                                <td>Opening the letter and reading every word.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="evidence-label ev-flow">Flow</span></td>
+                                <td>Summary</td>
+                                <td>Fast threat hunting — tracking connections, ports, duration, and volume at scale
+                                    without storing full payloads.</td>
+                                <td>Reading the envelope: sender, recipient, weight, time.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="evidence-label ev-meta">Metadata / Logs</span></td>
+                                <td>Contextual</td>
+                                <td>Quick pivots — inspecting specific HTTP requests, DNS queries, or TLS negotiation
+                                    details.</td>
+                                <td>The post office's delivery manifest — structured, organised, searchable.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box">
+                    <i class="fas fa-lightbulb"></i>
+                    <p>
+                        <strong>When to use what:</strong> Start with Flows and Metadata/Logs to identify the suspicious
+                        host and timeframe (fast).
+                        Then pull the PCAP only for the specific connection you've already scoped (targeted). Pulling
+                        full PCAPs first is slow, storage-heavy, and noisy.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 3. Tools Landscape -->
+            <div class="section-block" id="s3">
+                <h2><i class="fas fa-tools"></i> 3. NSM Tools Landscape</h2>
+                <p>
+                    NSM has a well-established ecosystem split between open-source powerhouses and commercial platforms
+                    that typically build on top of them. Understanding both sides matters when you're working in
+                    enterprise
+                    environments where either may be deployed.
+                </p>
+
+                <div class="class-table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Tool</th>
+                                <th>Key Strength</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="evidence-label ev-meta">Open-Source</span></td>
+                                <td><strong style="color:#c8daff">Zeek</strong> (formerly Bro)</td>
+                                <td>Interprets raw traffic into structured, protocol-aware logs. The foundation of
+                                    modern NSM.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="evidence-label ev-meta">Open-Source</span></td>
+                                <td><strong style="color:#c8daff">Suricata</strong></td>
+                                <td>High-performance IDS/IPS with signature-based detection. Runs rules against live
+                                    traffic.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="evidence-label ev-meta">Open-Source</span></td>
+                                <td><strong style="color:#c8daff">Snort</strong></td>
+                                <td>The original open-source IDS. Widely supported ruleset ecosystem via Snort/Talos
+                                    rules.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="evidence-label ev-pcap">Commercial</span></td>
+                                <td><strong style="color:#c8daff">Corelight</strong></td>
+                                <td>Enterprise appliance built on Zeek — same logs, hardened hardware, centralised
+                                    management.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="evidence-label ev-pcap">Commercial</span></td>
+                                <td><strong style="color:#c8daff">Palo Alto Networks</strong></td>
+                                <td>Next-gen firewall with integrated App-ID, threat prevention, and DNS security.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="evidence-label ev-pcap">Commercial</span></td>
+                                <td><strong style="color:#c8daff">Fortinet</strong></td>
+                                <td>NGFW + UTM suite covering IDS, web filtering, and sandboxing in a unified platform.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4. Zeek Logs -->
+            <div class="section-block" id="s4">
+                <h2><i class="fas fa-file-code"></i> 4. Deep Dive — Zeek Logs</h2>
+                <p>
+                    Zeek doesn't just record traffic — it <strong style="color:var(--blue)">interprets</strong> it.
+                    Rather than storing raw packets, Zeek parses each protocol and writes structured, query-ready log
+                    files.
+                    This is what makes it the foundation of modern NSM pipelines.
+                </p>
+
+                <div class="log-grid">
+                    <!-- conn.log -->
+                    <div class="log-card">
+                        <span class="log-type">conn.log</span>
+                        <h4>The Connection Log</h4>
+                        <p>The backbone of NSM. Records every completed network connection — who talked to whom, for how
+                            long, and how much data moved in each direction.</p>
+                        <span class="use-case"><i class="fas fa-crosshairs"></i> &nbsp;Beaconing &amp; Port Scan
+                            Detection</span>
+                        <ul class="log-fields">
+                            <li><code>ts</code> <span>Timestamp of the connection start</span></li>
+                            <li><code>id.orig_h</code> <span>Originating (source) IP address</span></li>
+                            <li><code>id.resp_h</code> <span>Responding (destination) IP address</span></li>
+                            <li><code>duration</code> <span>How long the connection lasted</span></li>
+                            <li><code>orig_bytes</code> <span>Data volume sent by the source</span></li>
+                            <li><code>resp_bytes</code> <span>Data volume sent by the destination</span></li>
+                            <li><code>history</code> <span>TCP handshake story (e.g. <code>ShAdDaf</code>)</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- dns.log -->
+                    <div class="log-card">
+                        <span class="log-type">dns.log</span>
+                        <h4>The Domain Log</h4>
+                        <p>Captures every DNS query and response. DNS is the phone book of the internet — and attackers
+                            abuse it constantly to reach C2 infrastructure or exfiltrate data.</p>
+                        <span class="use-case"><i class="fas fa-crosshairs"></i> &nbsp;DNS Tunneling &amp; DGA
+                            Detection</span>
+                        <ul class="log-fields">
+                            <li><code>query</code> <span>The domain name being looked up</span></li>
+                            <li><code>qtype_name</code> <span>Record type (A, AAAA, TXT, MX…)</span></li>
+                            <li><code>answers</code> <span>The resolved IPs or CNAME returned</span></li>
+                            <li><code>rcode_name</code> <span>Response code — watch for <code>NXDOMAIN</code></span>
+                            </li>
+                        </ul>
+                        <div class="redflag-box" style="margin-top:0.8rem">
+                            <div class="rf-title"><i class="fas fa-flag"></i> Red Flags</div>
+                            <ul>
+                                <li><strong>NXDOMAIN storms</strong> — DGA malware cycling through generated domains
+                                </li>
+                                <li><strong>Strange TLDs</strong> — <code>.onion</code> in a corporate log is a massive
+                                    red flag</li>
+                                <li><strong>Long subdomains</strong> — 60+ char queries often indicate DNS tunneling
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- http.log -->
+                    <div class="log-card">
+                        <span class="log-type">http.log</span>
+                        <h4>The Web Log</h4>
+                        <p>Records every HTTP transaction — host, URI, request method, response code, and user agent.
+                            Essential for tracking payload downloads and web-based C2 communication.</p>
+                        <span class="use-case"><i class="fas fa-crosshairs"></i> &nbsp;Payload Downloads &amp; Web
+                            C2</span>
+                        <ul class="log-fields">
+                            <li><code>host</code> <span>The HTTP Host header value</span></li>
+                            <li><code>uri</code> <span>The requested path and query string</span></li>
+                            <li><code>method</code> <span>GET / POST / PUT (POST = data exfil risk)</span></li>
+                            <li><code>user_agent</code> <span>Browser/tool string — malware often fakes or omits
+                                    this</span></li>
+                            <li><code>resp_mime_types</code> <span>File type served — watch for <code>.exe</code>,
+                                    <code>.ps1</code></span></li>
+                        </ul>
+                    </div>
+
+                    <!-- ssl.log -->
+                    <div class="log-card">
+                        <span class="log-type">ssl.log</span>
+                        <h4>The TLS/SSL Log</h4>
+                        <p>Captures TLS handshake metadata for encrypted traffic. Even though you can't read the
+                            payload, you can fingerprint the client from how it negotiates encryption.</p>
+                        <span class="use-case"><i class="fas fa-crosshairs"></i> &nbsp;Encrypted C2 &amp; JA3
+                            Fingerprinting</span>
+                        <ul class="log-fields">
+                            <li><code>server_name</code> <span>SNI field — domain inside the TLS handshake</span></li>
+                            <li><code>ja3</code> <span>Client TLS fingerprint hash</span></li>
+                            <li><code>ja3s</code> <span>Server TLS response fingerprint</span></li>
+                            <li><code>validation_status</code> <span>Certificate validity state</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3><i class="fas fa-history"></i> The <code>history</code> Field — Reading TCP Stories</h3>
+                <p>
+                    The <code>history</code> field in <code>conn.log</code> encodes the full lifecycle of a TCP
+                    connection
+                    as a sequence of letters. Learning to read it is one of the fastest ways to spot scanning, stealthy
+                    connections, and abnormal session teardowns without needing a PCAP.
+                </p>
+
+                <div class="code-block">
+                    <span class="ck">S</span> → <span class="cv">SYN sent</span> <span class="cc"># Connection initiated
+                        by client</span><br>
+                    <span class="ck">h</span> → <span class="cv">SYN-ACK received</span> <span class="cc"># Server
+                        acknowledged — port is open</span><br>
+                    <span class="ck">A</span> → <span class="cv">ACK sent</span> <span class="cc"># Three-way handshake
+                        complete</span><br>
+                    <span class="ck">d</span> → <span class="cv">Data transferred</span> <span class="cc"># Payload
+                        bytes exchanged</span><br>
+                    <span class="ck">f</span> → <span class="cv">FIN sent</span> <span class="cc"># Normal, clean
+                        session close</span><br>
+                    <span class="ck">R</span> → <span class="cv">RST received</span> <span class="cc"># Abrupt reset —
+                        port closed or filtered</span><br><br>
+                    <span class="cc"># Port scan signature: many connections with just 'S' (no reply)</span><br>
+                    <span class="chl">history = "S"</span> <span class="cc">→ SYN sent, NO SYN-ACK = closed/filtered
+                        port</span><br>
+                    <span class="cc"># Hundreds of these from one IP = active port scan in progress</span>
+                </div>
+
+                <div class="info-box">
+                    <i class="fas fa-lightbulb"></i>
+                    <p>
+                        <strong>Beaconing memory trick:</strong> Look at the <code>ts</code> field in
+                        <code>conn.log</code>.
+                        If a connection recurs at an unnervingly consistent interval — say exactly every 5 minutes
+                        (08:01, 08:06, 08:11…) — that regularity is the signature. Humans don't communicate on rigid
+                        schedules. Malware does.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 5. Strengths & Pro Tips -->
+            <div class="section-block" id="s5">
+                <h2><i class="fas fa-graduation-cap"></i> 5. Strengths, Limitations &amp; Pro Techniques</h2>
+
+                <div class="sl-grid">
+                    <div class="sl-card strength">
+                        <h4><i class="fas fa-check-circle"></i> Strengths</h4>
+                        <ul class="sl-list">
+                            <li>Detects threats even when the endpoint is compromised and "lying" to your EDR</li>
+                            <li>Provides neutral, tamper-resistant evidence — the network doesn't lie</li>
+                            <li>Defines the "Blast Radius" — how far a threat spread across the environment</li>
+                            <li>Effective against lateral movement, exfiltration, and C2 communication</li>
+                            <li>Retroactive analysis — stored logs let you investigate past timeframes</li>
+                        </ul>
+                    </div>
+                    <div class="sl-card limitation">
+                        <h4><i class="fas fa-exclamation-circle"></i> Limitations</h4>
+                        <ul class="sl-list">
+                            <li><strong>TLS Encryption:</strong> Can see <em>who</em> is talking, but not <em>what</em>
+                                they are saying</li>
+                            <li><strong>No Process Data:</strong> Cannot identify which <code>.exe</code> initiated a
+                                connection — need EDR for that</li>
+                            <li><strong>Storage Cost:</strong> Full PCAP retention at scale is extremely
+                                storage-intensive</li>
+                            <li><strong>Blind to Host:</strong> In-memory malware that never hits the wire is invisible
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3><i class="fas fa-rocket"></i> Pro Hunting Techniques</h3>
+
+                <div class="pro-tips-grid">
+
+                    <div class="pro-tip-card">
+                        <div class="tip-num">Technique 01</div>
+                        <h4><i class="fas fa-link" style="color:var(--blue);margin-right:0.4rem"></i> UID Correlation —
+                            The Holy Grail</h4>
+                        <p>
+                            Every single connection across all Zeek logs shares a <code>uid</code> field.
+                            Found a suspicious domain in <code>dns.log</code>? Grab its UID and grep every other log for
+                            it.
+                            You'll instantly see the <code>conn.log</code> entry (data volume) and any
+                            <code>http.log</code> request (what was downloaded).
+                        </p>
+                        <div class="tip-code">
+                            <span class="tck">grep</span> <span class="tcv">"CH9p9b266YvXqT847"</span> *.log<br>
+                            <span class="cc"># Links dns → conn → http for a single event</span>
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-card">
+                        <div class="tip-num">Technique 02</div>
+                        <h4><i class="fas fa-heartbeat" style="color:var(--blue);margin-right:0.4rem"></i> Beaconing
+                            Detection with Standard Deviation</h4>
+                        <p>
+                            Malware beacons home at regular intervals. Humans are never that consistent.
+                            Calculate the <strong>standard deviation</strong> of time intervals between connections to a
+                            single external IP.
+                            Near-zero jitter = automated. Use <strong>RITA</strong> (Real Intelligence Threat Analytics)
+                            to automate this at scale.
+                        </p>
+                        <div class="tip-code">
+                            <span class="cc"># What you're looking for:</span><br>
+                            <span class="tck">stdev(intervals)</span> → <span class="tcv">~0</span> <span class="tca">←
+                                Malware beacon</span><br>
+                            <span class="tck">stdev(intervals)</span> → <span class="tcv">high</span> <span class="cc">←
+                                Human / random</span>
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-card">
+                        <div class="tip-num">Technique 03</div>
+                        <h4><i class="fas fa-text-width" style="color:var(--blue);margin-right:0.4rem"></i> DNS
+                            Tunneling — Query Length Analysis</h4>
+                        <p>
+                            Attackers encode exfiltrated data inside DNS query strings to bypass firewalls.
+                            Normal domain queries are short. Tunneled queries are extremely long.
+                            Sort your <code>dns.log</code> by query length descending and anything over ~60 characters
+                            warrants scrutiny.
+                        </p>
+                        <div class="tip-code">
+                            <span class="cc"># Normal DNS query:</span><br>
+                            <span class="tcv">google.com</span> <span class="cc">(10 chars)</span><br><br>
+                            <span class="cc"># Tunneling signature:</span><br>
+                            <span class="tca">v3a4f1b2...topsecret.evil.com</span> <span class="cc">(100+ chars)</span>
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-card">
+                        <div class="tip-num">Technique 04</div>
+                        <h4><i class="fas fa-fingerprint" style="color:var(--blue);margin-right:0.4rem"></i> JA3
+                            Fingerprinting for Encrypted C2</h4>
+                        <p>
+                            When TLS hides the payload, JA3 fingerprints the <em>process</em>.
+                            A JA3 hash is derived from how the client negotiates TLS — cipher suites, extensions,
+                            elliptic curves.
+                            Even if malware changes its C2 IP or domain, its JA3 hash typically stays constant.
+                            Known-bad hashes (e.g. Cobalt Strike) are publicly listed.
+                        </p>
+                        <div class="tip-code">
+                            <span class="cc"># In ssl.log:</span><br>
+                            <span class="tck">ja3</span> = <span class="tca">"72a7c94f55441fac..."</span><br>
+                            <span class="cc"># Cross-reference with threat intel feeds</span>
+                        </div>
+                    </div>
+
+                    <div class="pro-tip-card">
+                        <div class="tip-num">Technique 05</div>
+                        <h4><i class="fas fa-ban" style="color:var(--blue);margin-right:0.4rem"></i> NXDOMAIN Storms —
+                            DGA Hunting</h4>
+                        <p>
+                            Domain Generation Algorithms (DGAs) make malware resilient — they algorithmically generate
+                            hundreds of domain names and try each until one resolves to an active C2. The symptom
+                            in <code>dns.log</code>: a burst of <code>NXDOMAIN</code> responses from a single host,
+                            often with pseudo-random looking domain names.
+                        </p>
+                        <div class="tip-code">
+                            <span class="cc"># Hunt: high NXDOMAIN rate per source IP</span><br>
+                            <span class="tck">rcode_name</span> == <span class="tca">"NXDOMAIN"</span><br>
+                            <span class="cc"># Group by orig_h, sort by count desc</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Strengths recap info box -->
+                <div class="info-box" style="margin-top: 1.5rem">
+                    <i class="fas fa-book"></i>
+                    <p>
+                        <strong>Further reading:</strong> The official
+                        <strong>Zeek Quickstart Guide</strong> covers UID correlation in depth. For automated beaconing
+                        detection,
+                        <strong>Active Countermeasures' RITA</strong> is the go-to open-source tool.
+                        JA3 hashes can be validated against the <strong>Salesforce Engineering JA3 GitHub</strong>
+                        repository.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Takeaways -->
+            <div class="takeaway-box">
+                <h3><i class="fas fa-star"></i> Key Takeaways</h3>
+                <ul>
+                    <li>NSM answers the four questions every analyst needs: Who, When, How, and How much.</li>
+                    <li>Start with Flows/Metadata to scope fast — pull PCAPs only for targeted, confirmed leads.</li>
+                    <li>Zeek's UID is the analyst's superpower: one hash links a suspicious event across every log type
+                        simultaneously.</li>
+                    <li>The <code>history</code> field in <code>conn.log</code> tells the complete TCP story — a string
+                        of <code>S</code> with no reply is a port scan.</li>
+                    <li>Beaconing looks like inhuman regularity — near-zero standard deviation in connection intervals.
+                    </li>
+                    <li>DNS is not just a lookup protocol for attackers — watch for NXDOMAIN storms (DGA) and long query
+                        strings (tunneling).</li>
+                    <li>JA3 fingerprints let you identify malware families in encrypted traffic without ever seeing the
+                        payload.</li>
+                    <li>NSM and EDR are complementary — the network sees what the endpoint hides, and the endpoint sees
+                        what the network can't.</li>
+                </ul>
+            </div>
+
+        </article>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h4><i class="fas fa-list"></i> &nbsp;Table of Contents</h4>
+                <ul class="toc-list">
+                    <li><a href="#s1">1. What is NSM?</a></li>
+                    <li><a href="#s2">2. Types of Evidence</a></li>
+                    <li><a href="#s3">3. Tools Landscape</a></li>
+                    <li><a href="#s4">4. Zeek Log Deep Dive</a></li>
+                    <li><a href="#s5">5. Pro Techniques</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-card">
+                <h4><i class="fas fa-tag"></i> &nbsp;Topics Covered</h4>
+                <span class="skill-pill">NSM</span>
+                <span class="skill-pill">Zeek</span>
+                <span class="skill-pill">conn.log</span>
+                <span class="skill-pill">dns.log</span>
+                <span class="skill-pill">http.log</span>
+                <span class="skill-pill">ssl.log</span>
+                <span class="skill-pill">Beaconing</span>
+                <span class="skill-pill">C2 Detection</span>
+                <span class="skill-pill">DNS Tunneling</span>
+                <span class="skill-pill">DGA</span>
+                <span class="skill-pill">JA3 Fingerprint</span>
+                <span class="skill-pill">PCAP</span>
+                <span class="skill-pill">Threat Hunting</span>
+            </div>
+
+            <div class="sidebar-card">
+                <h4><i class="fas fa-tools"></i> &nbsp;Tools Referenced</h4>
+                <span class="skill-pill">Zeek</span>
+                <span class="skill-pill">Suricata</span>
+                <span class="skill-pill">Snort</span>
+                <span class="skill-pill">RITA</span>
+                <span class="skill-pill">Corelight</span>
+                <span class="skill-pill">Palo Alto</span>
+                <span class="skill-pill">Wireshark</span>
+            </div>
+
+            <div class="sidebar-card">
+                <h4><i class="fas fa-external-link-alt"></i> &nbsp;References</h4>
+                <p style="font-size:0.82rem; color:var(--muted); line-height:1.8;">
+                    <a href="https://docs.zeek.org/en/current/quickstart.html" target="_blank"
+                        style="color:var(--blue); text-decoration:none;">Zeek Quickstart Guide</a><br>
+                    <a href="https://docs.zeek.org/en/master/logs/conn.html" target="_blank"
+                        style="color:var(--blue); text-decoration:none;">Zeek conn.log Reference</a><br>
+                    <a href="https://www.activecountermeasures.com/free-tools/rita/" target="_blank"
+                        style="color:var(--blue); text-decoration:none;">RITA — Active Countermeasures</a><br>
+                    <a href="https://github.com/salesforce/ja3" target="_blank"
+                        style="color:var(--blue); text-decoration:none;">JA3 Fingerprinting — Salesforce</a><br>
+                    <a href="https://www.sans.org/white-papers/34002/" target="_blank"
+                        style="color:var(--blue); text-decoration:none;">SANS: Detecting DNS Tunneling</a>
+                </p>
+            </div>
+
+            <div class="sidebar-card" id="series-nav-card">
+                <h4><i class="fas fa-link"></i> &nbsp;Series</h4>
+                <div id="series-nav-list">
+                    <span style="color:var(--muted);font-size:0.82rem;">Loading…</span>
+                </div>
+            </div>
+
+            <script>
+                (function () {
+                    const CURRENT_ID = 'nsm-fundamentals';
+                    const REGISTRY_URL = '../blueteam-writeups.json';
+
+                    fetch(REGISTRY_URL + '?t=' + Date.now())
+                        .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+                        .then(writeups => {
+                            const thisPage = writeups.find(w => w.id === CURRENT_ID);
+                            if (!thisPage) return;
+
+                            const seriesItems = writeups
+                                .filter(w => w.series === thisPage.series)
+                                .sort((a, b) => a.day - b.day);
+
+                            const container = document.getElementById('series-nav-list');
+                            container.innerHTML = '';
+
+                            seriesItems.forEach(item => {
+                                const isCurrent = item.id === CURRENT_ID;
+                                const p = document.createElement('p');
+                                p.style.cssText = 'font-size:0.83rem; line-height:1.9; margin:0;';
+
+                                if (isCurrent) {
+                                    p.innerHTML = `
+                        <strong style="color:var(--blue)">Day ${item.day}</strong>
+                        <span style="color:var(--text)"> — ${item.title}</span>
+                        <span style="
+                            display:inline-block;
+                            background:rgba(13,110,253,0.15);
+                            color:#4d94ff;
+                            border:1px solid rgba(13,110,253,0.3);
+                            border-radius:10px;
+                            padding:0 0.45rem;
+                            font-size:0.7rem;
+                            margin-left:0.3rem;
+                            vertical-align:middle;
+                        ">YOU ARE HERE</span>`;
+                                } else {
+                                    p.innerHTML = `<a href="${item.url}" style="color:var(--blue);text-decoration:none;">
+                        <strong>Day ${item.day}</strong> — ${item.title}
+                    </a>`;
+                                }
+                                container.appendChild(p);
+                            });
+
+                            const maxDay = Math.max(...seriesItems.map(w => w.day));
+                            if (thisPage.day === maxDay) {
+                                const p = document.createElement('p');
+                                p.style.cssText = 'font-size:0.83rem;line-height:1.9;margin:0;opacity:0.4;';
+                                p.textContent = `Day ${maxDay + 1} — Coming soon…`;
+                                container.appendChild(p);
+                            }
+                        })
+                        .catch(() => {
+                            document.getElementById('series-nav-list').innerHTML =
+                                '<span style="color:var(--muted);font-size:0.82rem;">Could not load series.</span>';
+                        });
+                })();
+            </script>
+        </aside>
+
+    </div>
+
+    <footer>
+        <p>
+            <a href="../index.html"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+            &nbsp;·&nbsp;
+            PLSCARRYME Cybersecurity Portfolio &copy; 2025
+        </p>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const doc = document.documentElement;
+            const scrolled = doc.scrollTop / (doc.scrollHeight - doc.clientHeight) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+    </script>
+</body>
+
+</html>
