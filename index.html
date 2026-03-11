@@ -33,7 +33,9 @@
             pointer-events: none;
         }
 
-        header, main, footer {
+        header,
+        main,
+        footer {
             position: relative;
             z-index: 1;
         }
@@ -194,22 +196,34 @@
             left: 100%;
         }
 
-        .journey-btn.redteam { border-color: #dc3545; }
-        .journey-btn.redteam:hover, .journey-btn.redteam.active {
+        .journey-btn.redteam {
+            border-color: #dc3545;
+        }
+
+        .journey-btn.redteam:hover,
+        .journey-btn.redteam.active {
             background: rgba(220, 53, 69, 0.2);
             box-shadow: 0 0 30px rgba(220, 53, 69, 0.4);
             transform: translateY(-5px);
         }
 
-        .journey-btn.blueteam { border-color: #0d6efd; }
-        .journey-btn.blueteam:hover, .journey-btn.blueteam.active {
+        .journey-btn.blueteam {
+            border-color: #0d6efd;
+        }
+
+        .journey-btn.blueteam:hover,
+        .journey-btn.blueteam.active {
             background: rgba(13, 110, 253, 0.2);
             box-shadow: 0 0 30px rgba(13, 110, 253, 0.4);
             transform: translateY(-5px);
         }
 
-        .journey-btn.forensics { border-color: #6f42c1; }
-        .journey-btn.forensics:hover, .journey-btn.forensics.active {
+        .journey-btn.forensics {
+            border-color: #6f42c1;
+        }
+
+        .journey-btn.forensics:hover,
+        .journey-btn.forensics.active {
             background: rgba(111, 66, 193, 0.2);
             box-shadow: 0 0 30px rgba(111, 66, 193, 0.4);
             transform: translateY(-5px);
@@ -221,12 +235,27 @@
             margin-bottom: 0.5rem;
         }
 
-        .journey-btn.redteam i { color: #dc3545; }
-        .journey-btn.blueteam i { color: #0d6efd; }
-        .journey-btn.forensics i { color: #6f42c1; }
+        .journey-btn.redteam i {
+            color: #dc3545;
+        }
 
-        .journey-btn h3 { font-size: 1.3rem; margin-bottom: 0.3rem; }
-        .journey-btn p { font-size: 0.9rem; opacity: 0.8; }
+        .journey-btn.blueteam i {
+            color: #0d6efd;
+        }
+
+        .journey-btn.forensics i {
+            color: #6f42c1;
+        }
+
+        .journey-btn h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .journey-btn p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
 
         main {
             padding: 3rem 0;
@@ -239,6 +268,11 @@
             color: #9fef00;
         }
 
+        #redteam-content .section-title {
+            color: #ff6b7a;
+            text-shadow: 0 0 20px rgba(220, 53, 69, 0.4);
+        }
+
         .content-section {
             display: none;
             animation: fadeIn 0.6s ease;
@@ -249,8 +283,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ===== WRITEUP CARDS (shared red + blue) ===== */
@@ -282,7 +323,9 @@
             transition: left 0.5s ease;
         }
 
-        .writeup-card:hover::before { left: 100%; }
+        .writeup-card:hover::before {
+            left: 100%;
+        }
 
         .writeup-card:hover {
             transform: translateY(-5px);
@@ -318,6 +361,33 @@
             border-color: #6f42c1;
         }
 
+        .writeup-card.red-card {
+            border-color: rgba(220, 53, 69, 0.25);
+        }
+
+        .writeup-card.red-card::before {
+            background: linear-gradient(90deg, transparent, rgba(220, 53, 69, 0.12), transparent);
+        }
+
+        .writeup-card.red-card:hover {
+            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.25);
+            border-color: #dc3545;
+        }
+
+        .writeup-title.red {
+            color: #ff6b7a;
+        }
+
+        .tag.red-tag {
+            background: rgba(220, 53, 69, 0.2);
+            color: #ff6b7a;
+        }
+
+        .read-more.red-btn {
+            background: linear-gradient(45deg, #dc3545, #b02a37);
+            color: #fff;
+        }
+
         .writeup-header {
             display: flex;
             justify-content: space-between;
@@ -331,8 +401,13 @@
             color: #9fef00;
         }
 
-        .writeup-title.blue { color: #4d94ff; }
-        .writeup-title.purple { color: #a78bfa; }
+        .writeup-title.blue {
+            color: #4d94ff;
+        }
+
+        .writeup-title.purple {
+            color: #a78bfa;
+        }
 
         .difficulty {
             padding: 0.25rem 0.75rem;
@@ -342,12 +417,30 @@
             text-transform: uppercase;
         }
 
-        .difficulty.easy { background: #28a745; }
-        .difficulty.medium { background: #ffc107; color: #000; }
-        .difficulty.hard { background: #dc3545; }
-        .difficulty.insane { background: #6f42c1; }
-        .difficulty.soc { background: #0d6efd; }
-        .difficulty.forensics-badge { background: #6f42c1; }
+        .difficulty.easy {
+            background: #28a745;
+        }
+
+        .difficulty.medium {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .difficulty.hard {
+            background: #dc3545;
+        }
+
+        .difficulty.insane {
+            background: #6f42c1;
+        }
+
+        .difficulty.soc {
+            background: #0d6efd;
+        }
+
+        .difficulty.forensics-badge {
+            background: #6f42c1;
+        }
 
         .writeup-meta {
             display: flex;
@@ -400,7 +493,9 @@
             transition: transform 0.2s ease;
         }
 
-        .read-more:hover { transform: scale(1.05); }
+        .read-more:hover {
+            transform: scale(1.05);
+        }
 
         .read-more.blue-btn {
             background: linear-gradient(45deg, #0d6efd, #0a58ca);
@@ -464,10 +559,24 @@
             transition: all 0.3s ease;
         }
 
-        .journey-card.forensics { border-left-color: #6f42c1; }
-        .journey-card:hover { transform: translateX(10px); }
-        .journey-card.forensics h3 { color: #a78bfa; font-size: 1.5rem; margin-bottom: 1rem; }
-        .journey-card p { opacity: 0.9; line-height: 1.8; }
+        .journey-card.forensics {
+            border-left-color: #6f42c1;
+        }
+
+        .journey-card:hover {
+            transform: translateX(10px);
+        }
+
+        .journey-card.forensics h3 {
+            color: #a78bfa;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .journey-card p {
+            opacity: 0.9;
+            line-height: 1.8;
+        }
 
         .tools-grid {
             display: grid;
@@ -485,11 +594,29 @@
             border: 1px solid transparent;
         }
 
-        .tool-card:hover { transform: translateY(-5px); border-color: #9fef00; }
-        .tool-card i { font-size: 3rem; margin-bottom: 1rem; display: block; }
-        .tool-card.forensics i { color: #6f42c1; }
-        .tool-card h4 { margin-bottom: 0.5rem; }
-        .tool-card p { font-size: 0.9rem; opacity: 0.8; }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            border-color: #9fef00;
+        }
+
+        .tool-card i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .tool-card.forensics i {
+            color: #6f42c1;
+        }
+
+        .tool-card h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-card p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
 
         .about {
             background: rgba(255, 255, 255, 0.05);
@@ -535,7 +662,9 @@
             transition: transform 0.3s ease;
         }
 
-        .social-links a:hover { transform: scale(1.2); }
+        .social-links a:hover {
+            transform: scale(1.2);
+        }
 
         .loading {
             color: #9fef00;
@@ -543,17 +672,43 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
 
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2rem; }
-            .stats { flex-direction: column; gap: 1rem; }
-            .nav-links { display: none; }
-            .writeups-grid { grid-template-columns: 1fr; }
-            .journey-nav { flex-direction: column; gap: 1rem; }
-            .journey-btn { min-width: auto; }
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .writeups-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .journey-nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .journey-btn {
+                min-width: auto;
+            }
         }
 
         pre {
@@ -564,7 +719,10 @@
             margin: 1rem 0;
         }
 
-        code { color: #9fef00; font-family: 'Courier New', monospace; }
+        code {
+            color: #9fef00;
+            font-family: 'Courier New', monospace;
+        }
     </style>
 </head>
 
@@ -633,9 +791,9 @@
         <section id="redteam-content" class="content-section active">
             <h2 class="section-title">Red Team — HTB Writeups</h2>
             <div class="writeups-grid">
-                <article class="writeup-card">
+                <article class="writeup-card red-card">
                     <div class="writeup-header">
-                        <h3 class="writeup-title">🐶 Puppy</h3>
+                        <h3 class="writeup-title red">🐶 Puppy</h3>
                         <span class="difficulty medium">Medium</span>
                     </div>
                     <div class="writeup-meta">
@@ -643,20 +801,21 @@
                         <span><i class="fas fa-desktop"></i> Windows</span>
                         <span><i class="fas fa-clock"></i> 6 hours</span>
                     </div>
-                    <p class="writeup-description">Complete Active Directory takeover through BloodHound analysis, ACL abuse, KeePass exploitation, DPAPI extraction, and DCSync attacks.</p>
+                    <p class="writeup-description">Complete Active Directory takeover through BloodHound analysis, ACL
+                        abuse, KeePass exploitation, DPAPI extraction, and DCSync attacks.</p>
                     <div class="writeup-tags">
-                        <span class="tag">Active Directory</span>
-                        <span class="tag">BloodHound</span>
-                        <span class="tag">KeePass</span>
-                        <span class="tag">DPAPI</span>
-                        <span class="tag">DCSync</span>
+                        <span class="tag red-tag">Active Directory</span>
+                        <span class="tag red-tag">BloodHound</span>
+                        <span class="tag red-tag">KeePass</span>
+                        <span class="tag red-tag">DPAPI</span>
+                        <span class="tag red-tag">DCSync</span>
                     </div>
-                    <a href="puppy-writeup.html" class="read-more">Read Writeup</a>
+                    <a href="puppy-writeup.html" class="read-more red-btn">Read Writeup</a>
                 </article>
 
-                <article class="writeup-card">
+                <article class="writeup-card red-card">
                     <div class="writeup-header">
-                        <h3 class="writeup-title">🔒 Voleur</h3>
+                        <h3 class="writeup-title red">🔒 Voleur</h3>
                         <span class="difficulty medium">Medium</span>
                     </div>
                     <div class="writeup-meta">
@@ -664,21 +823,23 @@
                         <span><i class="fas fa-desktop"></i> Windows</span>
                         <span><i class="fas fa-clock"></i> 8 hours</span>
                     </div>
-                    <p class="writeup-description">Complex Active Directory attack involving Kerberos authentication, Excel credential extraction, Kerberoasting, deleted object recovery, DPAPI exploitation, WSL abuse, and NTDS database extraction.</p>
+                    <p class="writeup-description">Complex Active Directory attack involving Kerberos authentication,
+                        Excel credential extraction, Kerberoasting, deleted object recovery, DPAPI exploitation, WSL
+                        abuse, and NTDS database extraction.</p>
                     <div class="writeup-tags">
-                        <span class="tag">Kerberos</span>
-                        <span class="tag">LDAP</span>
-                        <span class="tag">DPAPI</span>
-                        <span class="tag">Kerberoasting</span>
-                        <span class="tag">WSL</span>
-                        <span class="tag">NTDS</span>
+                        <span class="tag red-tag">Kerberos</span>
+                        <span class="tag red-tag">LDAP</span>
+                        <span class="tag red-tag">DPAPI</span>
+                        <span class="tag red-tag">Kerberoasting</span>
+                        <span class="tag red-tag">WSL</span>
+                        <span class="tag red-tag">NTDS</span>
                     </div>
-                    <a href="voleur/voleur-writeup.html" class="read-more">Read Writeup</a>
+                    <a href="voleur/voleur-writeup.html" class="read-more red-btn">Read Writeup</a>
                 </article>
 
-                <article class="writeup-card">
+                <article class="writeup-card red-card">
                     <div class="writeup-header">
-                        <h3 class="writeup-title">⏮️ Previous</h3>
+                        <h3 class="writeup-title red">⏮️ Previous</h3>
                         <span class="difficulty medium">Medium</span>
                     </div>
                     <div class="writeup-meta">
@@ -686,20 +847,22 @@
                         <span><i class="fas fa-desktop"></i> Linux</span>
                         <span><i class="fas fa-clock"></i> 8 hours</span>
                     </div>
-                    <p class="writeup-description">Next.js authentication bypass through middleware vulnerability, Local File Inclusion exploitation, credential extraction, and Terraform provider override privilege escalation to root.</p>
+                    <p class="writeup-description">Next.js authentication bypass through middleware vulnerability, Local
+                        File Inclusion exploitation, credential extraction, and Terraform provider override privilege
+                        escalation to root.</p>
                     <div class="writeup-tags">
-                        <span class="tag">Next.js</span>
-                        <span class="tag">CVE-2025-29927</span>
-                        <span class="tag">LFI</span>
-                        <span class="tag">Terraform</span>
-                        <span class="tag">sudo</span>
+                        <span class="tag red-tag">Next.js</span>
+                        <span class="tag red-tag">CVE-2025-29927</span>
+                        <span class="tag red-tag">LFI</span>
+                        <span class="tag red-tag">Terraform</span>
+                        <span class="tag red-tag">sudo</span>
                     </div>
-                    <a href="previous/previous-writeup.html" class="read-more">Read Writeup</a>
+                    <a href="previous/previous-writeup.html" class="read-more red-btn">Read Writeup</a>
                 </article>
 
-                <article class="writeup-card">
+                <article class="writeup-card red-card">
                     <div class="writeup-header">
-                        <h3 class="writeup-title">💕 Soulmate</h3>
+                        <h3 class="writeup-title red">💕 Soulmate</h3>
                         <span class="difficulty easy">Easy</span>
                     </div>
                     <div class="writeup-meta">
@@ -707,21 +870,23 @@
                         <span><i class="fas fa-desktop"></i> Linux</span>
                         <span><i class="fas fa-clock"></i> 4 hours</span>
                     </div>
-                    <p class="writeup-description">Complete machine compromise through CrushFTP CVE-2025-31161 authentication bypass, user creation, file upload exploitation, credential extraction from Erlang scripts, and privilege escalation via local SSH service running as root.</p>
+                    <p class="writeup-description">Complete machine compromise through CrushFTP CVE-2025-31161
+                        authentication bypass, user creation, file upload exploitation, credential extraction from
+                        Erlang scripts, and privilege escalation via local SSH service running as root.</p>
                     <div class="writeup-tags">
-                        <span class="tag">CVE-2025-31161</span>
-                        <span class="tag">CrushFTP</span>
-                        <span class="tag">File Upload</span>
-                        <span class="tag">Erlang SSH</span>
-                        <span class="tag">Credential Extraction</span>
-                        <span class="tag">PHP Shell</span>
+                        <span class="tag red-tag">CVE-2025-31161</span>
+                        <span class="tag red-tag">CrushFTP</span>
+                        <span class="tag red-tag">File Upload</span>
+                        <span class="tag red-tag">Erlang SSH</span>
+                        <span class="tag red-tag">Credential Extraction</span>
+                        <span class="tag red-tag">PHP Shell</span>
                     </div>
-                    <a href="soulmate/soulmate-writeup.html" class="read-more">Read Writeup</a>
+                    <a href="soulmate/soulmate-writeup.html" class="read-more red-btn">Read Writeup</a>
                 </article>
 
-                <article class="writeup-card">
+                <article class="writeup-card red-card">
                     <div class="writeup-header">
-                        <h3 class="writeup-title">🚀 Expressway</h3>
+                        <h3 class="writeup-title red">🚀 Expressway</h3>
                         <span class="difficulty easy">Easy</span>
                     </div>
                     <div class="writeup-meta">
@@ -729,20 +894,22 @@
                         <span><i class="fas fa-desktop"></i> Linux</span>
                         <span><i class="fas fa-clock"></i> 2 hours</span>
                     </div>
-                    <p class="writeup-description">Straightforward attack path leveraging TFTP file discovery, IKE aggressive mode PSK extraction, offline cracking, and CVE-2025-32462 sudo privilege escalation for complete system compromise.</p>
+                    <p class="writeup-description">Straightforward attack path leveraging TFTP file discovery, IKE
+                        aggressive mode PSK extraction, offline cracking, and CVE-2025-32462 sudo privilege escalation
+                        for complete system compromise.</p>
                     <div class="writeup-tags">
-                        <span class="tag">TFTP</span>
-                        <span class="tag">IPsec/IKE</span>
-                        <span class="tag">PSK Cracking</span>
-                        <span class="tag">CVE-2025-32462</span>
-                        <span class="tag">Sudo Exploitation</span>
+                        <span class="tag red-tag">TFTP</span>
+                        <span class="tag red-tag">IPsec/IKE</span>
+                        <span class="tag red-tag">PSK Cracking</span>
+                        <span class="tag red-tag">CVE-2025-32462</span>
+                        <span class="tag red-tag">Sudo Exploitation</span>
                     </div>
-                    <a href="Expressway/expressway-writeup.html" class="read-more">Read Writeup</a>
+                    <a href="Expressway/expressway-writeup.html" class="read-more red-btn">Read Writeup</a>
                 </article>
 
-                <article class="writeup-card">
+                <article class="writeup-card red-card">
                     <div class="writeup-header">
-                        <h3 class="writeup-title">🔐 Signed</h3>
+                        <h3 class="writeup-title red">🔐 Signed</h3>
                         <span class="difficulty medium">Medium</span>
                     </div>
                     <div class="writeup-meta">
@@ -750,15 +917,17 @@
                         <span><i class="fas fa-desktop"></i> Windows</span>
                         <span><i class="fas fa-clock"></i> 4 hours</span>
                     </div>
-                    <p class="writeup-description">Classic Active Directory exploitation chain leveraging certificate-based authentication, Kerberos Silver Ticket forgery, MSSQL xp_cmdshell abuse, and privilege escalation through manipulated group memberships.</p>
+                    <p class="writeup-description">Classic Active Directory exploitation chain leveraging
+                        certificate-based authentication, Kerberos Silver Ticket forgery, MSSQL xp_cmdshell abuse, and
+                        privilege escalation through manipulated group memberships.</p>
                     <div class="writeup-tags">
-                        <span class="tag">Active Directory</span>
-                        <span class="tag">Kerberos</span>
-                        <span class="tag">Silver Ticket</span>
-                        <span class="tag">MSSQL</span>
-                        <span class="tag">Certificate Auth</span>
+                        <span class="tag red-tag">Active Directory</span>
+                        <span class="tag red-tag">Kerberos</span>
+                        <span class="tag red-tag">Silver Ticket</span>
+                        <span class="tag red-tag">MSSQL</span>
+                        <span class="tag red-tag">Certificate Auth</span>
                     </div>
-                    <a href="Signed/signed-writeup.html" class="read-more">Read Writeup</a>
+                    <a href="Signed/signed-writeup.html" class="read-more red-btn">Read Writeup</a>
                 </article>
             </div>
         </section>
@@ -767,7 +936,8 @@
         <section id="blueteam-content" class="content-section">
             <div class="blue-section-header">
                 <h2><i class="fas fa-shield-alt"></i> Blue Team — SOC Writeups & Operations</h2>
-                <p>Documenting defensive security knowledge, SOC workflows, detection methodology, and real-world triage case studies.</p>
+                <p>Documenting defensive security knowledge, SOC workflows, detection methodology, and real-world triage
+                    case studies.</p>
             </div>
 
             <div class="writeups-grid">
@@ -784,8 +954,10 @@
                         <span><i class="fas fa-clock"></i> Core Theory</span>
                     </div>
                     <p class="writeup-description">
-                        A structured breakdown of what makes a high-quality security alert, how to classify outcomes (TP/FP/NMI/FN),
-                        the SOC analyst mindset, the full 8-step detection-to-feedback workflow, and a real-world impossible travel case study.
+                        A structured breakdown of what makes a high-quality security alert, how to classify outcomes
+                        (TP/FP/NMI/FN),
+                        the SOC analyst mindset, the full 8-step detection-to-feedback workflow, and a real-world
+                        impossible travel case study.
                     </p>
                     <div class="writeup-tags">
                         <span class="tag blue-tag">Alert Triage</span>
@@ -795,7 +967,8 @@
                         <span class="tag blue-tag">Impossible Travel</span>
                         <span class="tag blue-tag">IOC Analysis</span>
                     </div>
-                    <a href="soc-fundamentals.html" class="read-more blue-btn">Read Writeup</a>
+                    <a href="Homework - Day 2 (05 01 2026)/soc-fundamentals.html" class="read-more blue-btn">Read
+                        Writeup</a>
                 </article>
 
                 <!-- Placeholder card — coming soon -->
@@ -809,7 +982,8 @@
                         <span><i class="fas fa-shield-alt"></i> Blue Team</span>
                     </div>
                     <p class="writeup-description">
-                        Future writeups will cover threat hunting methodologies, SIEM rule tuning, EDR deep visibility queries,
+                        Future writeups will cover threat hunting methodologies, SIEM rule tuning, EDR deep visibility
+                        queries,
                         and live incident response exercises from Locked Shields.
                     </p>
                     <div class="writeup-tags">
@@ -833,39 +1007,73 @@
 
             <div class="journey-card forensics">
                 <h3><i class="fas fa-microscope"></i> The Art of Digital Investigation</h3>
-                <p>Digital forensics fascinates me because it's like being a detective in the digital world. Every incident leaves traces, and learning to find, preserve, and analyze these artifacts is both challenging and rewarding. My forensics journey combines technical skills with methodical investigation techniques to uncover the truth behind security incidents.</p>
+                <p>Digital forensics fascinates me because it's like being a detective in the digital world. Every
+                    incident leaves traces, and learning to find, preserve, and analyze these artifacts is both
+                    challenging and rewarding. My forensics journey combines technical skills with methodical
+                    investigation techniques to uncover the truth behind security incidents.</p>
             </div>
 
             <div class="journey-card forensics">
                 <h3><i class="fas fa-hdd"></i> Disk & Memory Forensics</h3>
-                <p>I'm developing expertise in analyzing disk images and memory dumps to recover deleted files, examine browser history, extract credentials, and reconstruct attacker activity. Working with tools like Autopsy and FTK, I'm learning proper evidence handling procedures and chain of custody protocols. Memory forensics with Volatility has opened my eyes to how much information persists in RAM.</p>
+                <p>I'm developing expertise in analyzing disk images and memory dumps to recover deleted files, examine
+                    browser history, extract credentials, and reconstruct attacker activity. Working with tools like
+                    Autopsy and FTK, I'm learning proper evidence handling procedures and chain of custody protocols.
+                    Memory forensics with Volatility has opened my eyes to how much information persists in RAM.</p>
             </div>
 
             <div class="journey-card forensics">
                 <h3><i class="fas fa-file-code"></i> Malware Analysis Fundamentals</h3>
-                <p>Understanding malware behavior is crucial for forensic investigations. I'm learning both static and dynamic analysis techniques to dissect malicious software, understand its capabilities, and identify Indicators of Compromise (IOCs). Tools like IDA Pro, Ghidra, and various sandboxes help me reverse engineer malware samples safely and document their behavior patterns.</p>
+                <p>Understanding malware behavior is crucial for forensic investigations. I'm learning both static and
+                    dynamic analysis techniques to dissect malicious software, understand its capabilities, and identify
+                    Indicators of Compromise (IOCs). Tools like IDA Pro, Ghidra, and various sandboxes help me reverse
+                    engineer malware samples safely and document their behavior patterns.</p>
             </div>
 
             <div class="journey-card forensics">
                 <h3><i class="fas fa-clock"></i> Timeline Analysis & Reconstruction</h3>
-                <p>Creating accurate timelines of events is essential in forensics. I'm mastering timestamp artifacts from file system metadata (MAC times), Windows Registry, event logs, and application artifacts to build comprehensive attack timelines. Tools like Plaso and log2timeline help me correlate events across multiple systems and identify the full scope of incidents.</p>
+                <p>Creating accurate timelines of events is essential in forensics. I'm mastering timestamp artifacts
+                    from file system metadata (MAC times), Windows Registry, event logs, and application artifacts to
+                    build comprehensive attack timelines. Tools like Plaso and log2timeline help me correlate events
+                    across multiple systems and identify the full scope of incidents.</p>
             </div>
 
-            <h3 style="text-align: center; color: #a78bfa; margin: 3rem 0 2rem 0;"><i class="fas fa-toolbox"></i> Forensics Toolkit</h3>
+            <h3 style="text-align: center; color: #a78bfa; margin: 3rem 0 2rem 0;"><i class="fas fa-toolbox"></i>
+                Forensics Toolkit</h3>
             <div class="tools-grid">
-                <div class="tool-card forensics"><i class="fas fa-hard-drive"></i><h4>Disk Forensics</h4><p>Autopsy, FTK Imager, EnCase</p></div>
-                <div class="tool-card forensics"><i class="fas fa-memory"></i><h4>Memory Analysis</h4><p>Volatility, Rekall, WinDbg</p></div>
-                <div class="tool-card forensics"><i class="fas fa-virus"></i><h4>Malware Analysis</h4><p>IDA Pro, Ghidra, x64dbg</p></div>
-                <div class="tool-card forensics"><i class="fas fa-file-archive"></i><h4>File Analysis</h4><p>Binwalk, Exiftool, strings</p></div>
-                <div class="tool-card forensics"><i class="fas fa-network-wired"></i><h4>Network Forensics</h4><p>Wireshark, NetworkMiner, tcpdump</p></div>
-                <div class="tool-card forensics"><i class="fas fa-clock"></i><h4>Timeline Tools</h4><p>Plaso, log2timeline, Timesketch</p></div>
+                <div class="tool-card forensics"><i class="fas fa-hard-drive"></i>
+                    <h4>Disk Forensics</h4>
+                    <p>Autopsy, FTK Imager, EnCase</p>
+                </div>
+                <div class="tool-card forensics"><i class="fas fa-memory"></i>
+                    <h4>Memory Analysis</h4>
+                    <p>Volatility, Rekall, WinDbg</p>
+                </div>
+                <div class="tool-card forensics"><i class="fas fa-virus"></i>
+                    <h4>Malware Analysis</h4>
+                    <p>IDA Pro, Ghidra, x64dbg</p>
+                </div>
+                <div class="tool-card forensics"><i class="fas fa-file-archive"></i>
+                    <h4>File Analysis</h4>
+                    <p>Binwalk, Exiftool, strings</p>
+                </div>
+                <div class="tool-card forensics"><i class="fas fa-network-wired"></i>
+                    <h4>Network Forensics</h4>
+                    <p>Wireshark, NetworkMiner, tcpdump</p>
+                </div>
+                <div class="tool-card forensics"><i class="fas fa-clock"></i>
+                    <h4>Timeline Tools</h4>
+                    <p>Plaso, log2timeline, Timesketch</p>
+                </div>
             </div>
         </section>
 
         <!-- About -->
         <section class="about" id="about">
             <h2 class="section-title">About My Journey</h2>
-            <p>Welcome to my cybersecurity learning journey! I'm documenting my progression across red team offensive security, blue team defensive operations, and digital forensics. Each aspect complements the others — understanding attacks makes me a better defender, defensive knowledge improves my attack strategies, and forensics ties everything together by revealing the full story of what happened.</p>
+            <p>Welcome to my cybersecurity learning journey! I'm documenting my progression across red team offensive
+                security, blue team defensive operations, and digital forensics. Each aspect complements the others —
+                understanding attacks makes me a better defender, defensive knowledge improves my attack strategies, and
+                forensics ties everything together by revealing the full story of what happened.</p>
             <div class="skills">
                 <span class="skill">Penetration Testing</span>
                 <span class="skill">Active Directory</span>
@@ -885,8 +1093,10 @@
         <div class="container">
             <div class="social-links">
                 <a href="https://github.com/ADN314" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/anh-duy-nguyen-8240a2343/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                <a href="https://app.hackthebox.com/profile/1779650" target="_blank" title="HTB Profile"><i class="fas fa-cube"></i></a>
+                <a href="https://www.linkedin.com/in/anh-duy-nguyen-8240a2343/" target="_blank" title="LinkedIn"><i
+                        class="fab fa-linkedin"></i></a>
+                <a href="https://app.hackthebox.com/profile/1779650" target="_blank" title="HTB Profile"><i
+                        class="fas fa-cube"></i></a>
                 <a href="mailto:your.email@example.com" title="Email"><i class="fas fa-envelope"></i></a>
             </div>
             <p>&copy; 2025 PLSCARRYME - Cybersecurity Portfolio. Built for the cybersecurity community 🔐</p>
@@ -894,7 +1104,8 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script>
         function switchJourney(journey) {
             document.querySelectorAll('.journey-btn').forEach(btn => btn.classList.remove('active'));
@@ -902,6 +1113,7 @@
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.getElementById(`${journey}-content`).classList.add('active');
             document.getElementById('journey').scrollIntoView({ behavior: 'smooth' });
+            activeColor = journeyColors[journey];
         }
 
         async function loadHTBStats() {
@@ -998,6 +1210,12 @@
         const ctx = canvas.getContext('2d');
         let particles = [];
         let mouse = { x: null, y: null, radius: 150 };
+        const journeyColors = {
+            redteam: { r: 220, g: 53, b: 69 },   // red
+            blueteam: { r: 13, g: 110, b: 253 },   // blue
+            forensics: { r: 111, g: 66, b: 193 }    // purple
+        };
+        let activeColor = journeyColors.redteam;
 
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         resizeCanvas();
@@ -1015,7 +1233,8 @@
                 this.vy = (Math.random() - 0.5) * 0.5;
             }
             draw() {
-                ctx.fillStyle = 'rgba(159, 239, 0, 0.5)';
+                const { r, g, b } = activeColor;                    // ← replace
+                ctx.fillStyle = `rgba(${r},${g},${b},0.5)`;    // ← replace
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.closePath();
@@ -1047,9 +1266,10 @@
             for (let a = 0; a < particles.length; a++) {
                 for (let b = a + 1; b < particles.length; b++) {
                     let dx = particles[a].x - particles[b].x, dy = particles[a].y - particles[b].y;
-                    let d = Math.sqrt(dx*dx + dy*dy);
+                    let d = Math.sqrt(dx * dx + dy * dy);
                     if (d < 120) {
-                        ctx.strokeStyle = `rgba(159,239,0,${(1 - d/120) * 0.3})`;
+                        const { r, g, b: cb } = activeColor;
+                        ctx.strokeStyle = `rgba(${r},${g},${cb},${(1 - d / 120) * 0.3})`;
                         ctx.lineWidth = 1;
                         ctx.beginPath();
                         ctx.moveTo(particles[a].x, particles[a].y);
@@ -1064,9 +1284,10 @@
             if (mouse.x == null) return;
             for (let i = 0; i < particles.length; i++) {
                 let dx = mouse.x - particles[i].x, dy = mouse.y - particles[i].y;
-                let d = Math.sqrt(dx*dx + dy*dy);
+                let d = Math.sqrt(dx * dx + dy * dy);
                 if (d < mouse.radius) {
-                    ctx.strokeStyle = `rgba(159,239,0,${(1 - d/mouse.radius) * 0.6})`;
+                    const { r, g, b } = activeColor;
+                    ctx.strokeStyle = `rgba(${r},${g},${b},${(1 - d / mouse.radius) * 0.6})`;
                     ctx.lineWidth = 2;
                     ctx.beginPath();
                     ctx.moveTo(mouse.x, mouse.y);
@@ -1087,4 +1308,5 @@
         window.addEventListener('resize', initParticles);
     </script>
 </body>
+
 </html>
