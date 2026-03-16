@@ -1419,7 +1419,10 @@
                             vertical-align:middle;
                         ">YOU ARE HERE</span>`;
                                 } else {
-                                    p.innerHTML = `<a href="${item.url}" style="color:var(--blue);text-decoration:none;">
+                                    const depth = window.location.pathname.split('/').length - 2;
+                                    const prefix = depth > 0 ? '../'.repeat(depth) : '';
+
+                                    p.innerHTML = `<a href="${prefix}${item.url}" style="color:var(--blue);text-decoration:none;">
                         <strong>Day ${item.day}</strong> — ${item.title}
                     </a>`;
                                 }
