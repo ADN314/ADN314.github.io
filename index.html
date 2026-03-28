@@ -723,6 +723,92 @@
             color: #9fef00;
             font-family: 'Courier New', monospace;
         }
+
+        .writeups-grid.capped .writeup-card:nth-child(n+7) {
+            display: none;
+        }
+
+        .show-more-wrap {
+            text-align: center;
+            margin: 1.5rem 0 3rem;
+        }
+
+        .show-more-btn {
+            background: rgba(220, 53, 69, 0.12);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            color: #ff6b7a;
+            padding: 0.7rem 2rem;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .show-more-btn:hover {
+            background: rgba(220, 53, 69, 0.2);
+            box-shadow: 0 0 20px rgba(220, 53, 69, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .show-more-btn i {
+            margin-left: 0.4rem;
+            transition: transform 0.3s;
+        }
+
+        .show-more-btn.expanded i {
+            transform: rotate(180deg);
+        }
+
+        .search-wrap {
+            max-width: 520px;
+            margin: 2.5rem auto 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-wrap i {
+            position: absolute;
+            left: 16px;
+            color: #9fef00;
+            font-size: 0.95rem;
+            pointer-events: none;
+        }
+
+        .search-wrap input {
+            width: 100%;
+            padding: 0.85rem 1rem 0.85rem 2.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(159, 239, 0, 0.25);
+            border-radius: 12px;
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .search-wrap input::placeholder {
+            color: #666;
+        }
+
+        .search-wrap input:focus {
+            border-color: #9fef00;
+            box-shadow: 0 0 20px rgba(159, 239, 0, 0.15);
+        }
+
+        #search-count {
+            position: absolute;
+            right: 16px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .writeup-card.search-hidden {
+            display: none !important;
+        }
     </style>
 </head>
 
@@ -764,6 +850,12 @@
                         <span class="stat-label">Final Score</span>
                     </div>
                 </div>
+                <div class="search-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="writeup-search" placeholder="Search writeups... (e.g. Kerberos, LFI, SMB)"
+                        autocomplete="off" />
+                    <span id="search-count"></span>
+                </div>
             </div>
         </div>
     </section>
@@ -790,7 +882,7 @@
         <!-- ===== RED TEAM ===== -->
         <section id="redteam-content" class="content-section active">
             <h2 class="section-title">Red Team — HTB Writeups</h2>
-            <div class="writeups-grid">
+            <div class="writeups-grid capped" id="htb-grid">
                 <article class="writeup-card red-card">
                     <div class="writeup-header">
                         <h3 class="writeup-title red">🐶 Puppy</h3>
@@ -929,6 +1021,36 @@
                     </div>
                     <a href="Signed/signed-writeup.html" class="read-more red-btn">Read Writeup</a>
                 </article>
+
+                <article class="writeup-card red-card">
+                    <div class="writeup-header">
+                        <h3 class="writeup-title red">🏢 Active</h3>
+                        <span class="difficulty easy">Easy</span>
+                    </div>
+                    <div class="writeup-meta">
+                        <span><i class="fas fa-calendar"></i> Mar 2026</span>
+                        <span><i class="fas fa-desktop"></i> Windows</span>
+                        <span><i class="fas fa-clock"></i> 3 hours</span>
+                    </div>
+                    <p class="writeup-description">Classic Active Directory attack chain:
+                        anonymous SMB enumeration exposes a GPP credentials file
+                        on the Replication share, decrypted cPassword provides
+                        domain user access, and Kerberoasting the Administrator
+                        SPN yields a SYSTEM shell via PsExec.</p>
+                    <div class="writeup-tags">
+                        <span class="tag red-tag">Active Directory</span>
+                        <span class="tag red-tag">SMB</span>
+                        <span class="tag red-tag">GPP cPassword</span>
+                        <span class="tag red-tag">Kerberoasting</span>
+                        <span class="tag red-tag">PsExec</span>
+                    </div>
+                    <a href="Active/active-writeup.html" class="read-more red-btn">Read Writeup</a>
+                </article>
+            </div>
+            <div class="show-more-wrap" id="show-more-wrap">
+                <button class="show-more-btn" id="show-more-btn" onclick="toggleWriteups()">
+                    Show More <i class="fas fa-chevron-down"></i>
+                </button>
             </div>
             <!-- ── Academy / Skills Assessments sub-header ── -->
             <div class="rt-subsection-header" style="margin-top: 2.5rem;">
@@ -1178,10 +1300,15 @@
         function switchJourney(journey) {
             document.querySelectorAll('.journey-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelector(`.journey-btn.${journey}`).classList.add('active');
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.content-section').forEach(s => {
+                s.classList.remove('active');
+                s.style.display = '';  // ← clear any inline style from search
+            });
             document.getElementById(`${journey}-content`).classList.add('active');
             document.getElementById('journey').scrollIntoView({ behavior: 'smooth' });
             activeColor = journeyColors[journey];
+            document.getElementById('writeup-search').value = '';
+            document.getElementById('search-count').textContent = '';
         }
 
         async function loadHTBStats() {
@@ -1374,6 +1501,78 @@
 
         initParticles(); animate();
         window.addEventListener('resize', initParticles);
+
+        function toggleWriteups() {
+            const grid = document.getElementById('htb-grid');
+            const btn = document.getElementById('show-more-btn');
+            const expanded = grid.classList.toggle('capped');
+
+            if (expanded) {
+                btn.innerHTML =
+                    'Show More ';
+                btn.classList.remove('expanded');
+                // Scroll back to the grid top
+                grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                btn.innerHTML =
+                    'Show Less ';
+                btn.classList.add('expanded');
+            }
+        }
+
+        // Hide button if 6 or fewer cards
+        (function () {
+            const grid = document.getElementById('htb-grid');
+            const wrap = document.getElementById('show-more-wrap');
+            if (grid && wrap) {
+                const count = grid.querySelectorAll('.writeup-card').length;
+                if (count <= 6) wrap.style.display = 'none';
+            }
+        })();
+        document.getElementById('writeup-search')
+            .addEventListener('input', function () {
+                const q = this.value.toLowerCase().trim();
+                const cards = document.querySelectorAll('.writeup-card');
+                let shown = 0;
+
+                // If searching, show ALL tabs so cross-tab results appear
+                if (q.length > 0) {
+                    document.querySelectorAll('.content-section')
+                        .forEach(s => s.style.display = 'block');
+                } else {
+                    // Restore normal tab behavior
+                    document.querySelectorAll('.content-section')
+                        .forEach(s => s.style.display = '');
+                    document.querySelectorAll('.content-section')
+                        .forEach(s => s.classList.contains('active')
+                            ? s.style.display = 'block'
+                            : s.style.display = 'none');
+                }
+
+                cards.forEach(card => {
+                    if (!q) {
+                        card.classList.remove('search-hidden');
+                        shown++;
+                        return;
+                    }
+                    const text = card.textContent.toLowerCase();
+                    const tags = card.querySelectorAll('.tag');
+                    const tagMatch = [...tags].some(t =>
+                        t.textContent.toLowerCase().includes(q)
+                    );
+                    if (text.includes(q) || tagMatch) {
+                        card.classList.remove('search-hidden');
+                        shown++;
+                    } else {
+                        card.classList.add('search-hidden');
+                    }
+                });
+
+                const counter = document.getElementById('search-count');
+                counter.textContent = q
+                    ? shown + ' result' + (shown !== 1 ? 's' : '')
+                    : '';
+            });
     </script>
 </body>
 
