@@ -810,22 +810,26 @@
                     <div class="finding-card">
                         <span class="fc-icon"><i class="fas fa-folder-open"></i></span>
                         <h4><span class="vuln-label vuln-smb">SMB</span> Anonymous Access</h4>
-                        <p>The <code>Replication</code> share allows anonymous read access, exposing SYSVOL-like Group Policy data including GPP credentials.</p>
+                        <p>The <code>Replication</code> share allows anonymous read access, exposing SYSVOL-like Group
+                            Policy data including GPP credentials.</p>
                     </div>
                     <div class="finding-card">
                         <span class="fc-icon"><i class="fas fa-key"></i></span>
                         <h4><span class="vuln-label vuln-gpp">GPP</span> cPassword Exposure</h4>
-                        <p><code>Groups.xml</code> contains an AES-encrypted password — trivially decryptable since Microsoft published the key (MS14-025).</p>
+                        <p><code>Groups.xml</code> contains an AES-encrypted password — trivially decryptable since
+                            Microsoft published the key (MS14-025).</p>
                     </div>
                     <div class="finding-card">
                         <span class="fc-icon"><i class="fas fa-ticket-alt"></i></span>
                         <h4><span class="vuln-label vuln-kerb">Kerberoasting</span></h4>
-                        <p>The <code>SVC_TGS</code> service account allows any authenticated user to request a TGS ticket for the Administrator, crackable offline.</p>
+                        <p>The <code>SVC_TGS</code> service account allows any authenticated user to request a TGS
+                            ticket for the Administrator, crackable offline.</p>
                     </div>
                     <div class="finding-card">
                         <span class="fc-icon"><i class="fas fa-terminal"></i></span>
                         <h4><span class="vuln-label vuln-rce">SYSTEM</span> via PsExec</h4>
-                        <p>Cracked Administrator credentials allow a full SYSTEM shell via <code>impacket-psexec</code>.</p>
+                        <p>Cracked Administrator credentials allow a full SYSTEM shell via <code>impacket-psexec</code>.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -841,13 +845,15 @@
                 </p>
 
                 <div class="code-block">
-                    <div class="code-bar"><i class="fas fa-terminal"></i> nmap — full TCP scan with service detection</div>
+                    <div class="code-bar"><i class="fas fa-terminal"></i> nmap — full TCP scan with service detection
+                    </div>
                     <pre><span class="c-cmd">sudo nmap</span> <span class="c-flag">-A</span> [TARGET IP] <span class="c-flag">-p-</span></pre>
                 </div>
 
                 <div class="img-frame">
                     <div class="img-bar"><i class="fas fa-image"></i> Nmap scan results</div>
-                    <img src="image.png" alt="Nmap full port scan results showing AD Domain Controller services" loading="lazy">
+                    <img src="image.png" alt="Nmap full port scan results showing AD Domain Controller services"
+                        loading="lazy">
                 </div>
 
                 <div class="callout">
@@ -864,13 +870,17 @@
                 </p>
 
                 <div class="code-block">
-                    <div class="code-bar"><i class="fas fa-terminal"></i> enum4linux — null session share enumeration</div>
+                    <div class="code-bar"><i class="fas fa-terminal"></i> enum4linux — null session share enumeration
+                    </div>
                     <pre><span class="c-cmd">enum4linux</span> <span class="c-flag">-a -u</span> <span class="c-val">""</span> <span class="c-flag">-p</span> <span class="c-val">""</span> [TARGET IP]</pre>
                 </div>
 
                 <div class="img-frame">
-                    <div class="img-bar"><i class="fas fa-image"></i> enum4linux — share enumeration &amp; mapping results</div>
-                    <img src="image 1.png" alt="enum4linux share enumeration showing Replication share with anonymous access" loading="lazy">
+                    <div class="img-bar"><i class="fas fa-image"></i> enum4linux — share enumeration &amp; mapping
+                        results</div>
+                    <img src="image 1.png"
+                        alt="enum4linux share enumeration showing Replication share with anonymous access"
+                        loading="lazy">
                 </div>
 
                 <p>
@@ -951,7 +961,8 @@
 
                 <h3><i class="fas fa-lock-open"></i> Decrypting the cPassword</h3>
                 <div class="code-block">
-                    <div class="code-bar"><i class="fas fa-terminal"></i> gpp-decrypt — decrypting the AES cPassword</div>
+                    <div class="code-bar"><i class="fas fa-terminal"></i> gpp-decrypt — decrypting the AES cPassword
+                    </div>
                     <pre><span class="c-cmd">gpp-decrypt</span> <span class="c-url">"edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ"</span>
 
 <span class="c-val">GPPstillStandingStrong2k18</span></pre>
@@ -977,7 +988,9 @@
 
                 <div class="img-frame">
                     <div class="img-bar"><i class="fas fa-image"></i> smbmap — authenticated share permissions</div>
-                    <img src="image 3.png" alt="smbmap showing READ access to NETLOGON, SYSVOL, Users with SVC_TGS credentials" loading="lazy">
+                    <img src="image 3.png"
+                        alt="smbmap showing READ access to NETLOGON, SYSVOL, Users with SVC_TGS credentials"
+                        loading="lazy">
                 </div>
 
                 <div class="callout success">
@@ -997,6 +1010,12 @@
                 <div class="code-block">
                     <div class="code-bar"><i class="fas fa-terminal"></i> smbclient — accessing Users share</div>
                     <pre><span class="c-cmd">smbclient</span> <span class="c-url">//[TARGET IP]/Users</span> <span class="c-flag">-U</span> <span class="c-val">'active.htb\SVC_TGS%GPPstillStandingStrong2k18'</span></pre>
+                </div>
+                <div class="img-frame">
+                    <div class="img-bar"><i class="fas fa-image"></i> smbclient — Connect to the 'Users' share with the SVC_TGS credential</div>
+                    <img src="image 4.png"
+                        alt="Connect to the 'Users' share with the SVC_TGS credential"
+                        loading="lazy">
                 </div>
 
                 <p>
@@ -1047,7 +1066,8 @@
                     </div>
 
                     <p style="margin-left: 3.8rem; margin-bottom: 1.2rem; font-size: 0.9rem; color: var(--muted);">
-                        This returns a TGS ticket hash for the <strong style="color: var(--accent);">Administrator</strong>
+                        This returns a TGS ticket hash for the <strong
+                            style="color: var(--accent);">Administrator</strong>
                         account — the highest value target.
                     </p>
 
@@ -1121,7 +1141,8 @@
                 <h3><i class="fas fa-star"></i> Key Takeaways</h3>
                 <ul>
                     <li>Always check for anonymous/null session access on SMB shares — even "non-standard" shares like
-                        <code>Replication</code> can mirror sensitive SYSVOL content.</li>
+                        <code>Replication</code> can mirror sensitive SYSVOL content.
+                    </li>
                     <li>GPP credentials (Groups.xml) are trivially decryptable — Microsoft published the AES key.
                         Any legacy GPP files left on SYSVOL are free credentials.</li>
                     <li>Service account names like <code>SVC_TGS</code> are a direct hint toward Kerberoasting —
