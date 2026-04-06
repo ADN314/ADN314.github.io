@@ -34,6 +34,12 @@
             color: var(--text);
             line-height: 1.7;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        html {
+            overflow-x: hidden;
+            /* ADD THIS new rule */
         }
 
         /* ── NAV ── */
@@ -197,14 +203,9 @@
             }
 
             .sidebar {
-                order: -1;
+                position: static;
+                top: auto;
             }
-        }
-
-        /* ── SIDEBAR ── */
-        .sidebar {
-            position: sticky;
-            top: 90px;
         }
 
         .sidebar-card {
@@ -496,8 +497,8 @@
         }
 
         .screenshot-block img {
-            width: 100%;
-            display: block;
+            max-width: 100%;
+            height: auto;
         }
 
         /* ── CASE BOX (JSON payload) ── */
@@ -627,6 +628,176 @@
             width: 0%;
             transition: width 0.1s;
         }
+
+        /* ── MOBILE RESPONSIVE (phones only, PC untouched) ── */
+        @media (max-width: 900px) {
+
+            nav {
+                padding: 0.8rem 1rem;
+            }
+
+            .logo {
+                font-size: 1rem;
+            }
+
+            .back-btn {
+                padding: 0.4rem 0.7rem;
+                font-size: 0.8rem;
+            }
+
+            .back-btn span,
+            .logo i+* {
+                display: inline;
+            }
+
+            .writeup-hero {
+                .hero-inner {
+                    max-width: 100%;
+                    overflow: hidden;
+                }
+
+                .writeup-hero h1 {
+                    font-size: 1.5rem;
+                }
+
+                .writeup-hero p.subtitle {
+                    font-size: 0.92rem;
+                }
+
+                .hero-meta {
+                    gap: 0.8rem;
+                }
+
+                .hero-meta span {
+                    font-size: 0.8rem;
+                }
+
+                .hero-badges {
+                    gap: 0.4rem;
+                }
+
+                .badge {
+                    font-size: 0.7rem;
+                    padding: 0.25rem 0.6rem;
+                }
+
+                .content-wrap {
+                    grid-template-columns: 1fr;
+                }
+
+                .section-block {
+                    margin-bottom: 2.5rem;
+                }
+
+                .section-block h2 {
+                    font-size: 1.25rem;
+                    flex-wrap: wrap;
+                }
+
+                .section-block h3 {
+                    font-size: 1rem;
+                }
+
+                .section-block p {
+                    font-size: 0.92rem;
+                }
+
+                /* Grids collapse to single column */
+                .alert-grid,
+                .mindset-grid {
+                    grid-template-columns: 1fr;
+                    gap: 0.8rem;
+                }
+
+                .alert-field,
+                .mindset-card {
+                    padding: 1rem;
+                }
+
+                /* Tables scroll horizontally instead of squishing */
+                .class-table-wrap {
+                    margin: 1rem 0;
+                    padding: 0;
+                    max-width: 100%;
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                }
+
+                table {
+                    font-size: 0.8rem;
+                    min-width: 500px;
+                }
+
+                thead th,
+                tbody td {
+                    padding: 0.6rem 0.7rem;
+                }
+
+                /* Workflow timeline tighter */
+                .workflow-steps::before {
+                    left: 18px;
+                }
+
+                .step {
+                    gap: 0.8rem;
+                }
+
+                .step-num {
+                    width: 36px;
+                    height: 36px;
+                    min-width: 36px;
+                    font-size: 0.7rem;
+                }
+
+                .step-body {
+                    padding: 0.8rem 1rem;
+                }
+
+                .step-body h4 {
+                    font-size: 0.9rem;
+                }
+
+                /* Case box + code blocks */
+                .case-box {
+                    padding: 1.2rem;
+                }
+
+                .alert-block {
+                    max-width: 100%;
+                    overflow-x: auto;
+                }
+
+                .pro-tip {
+                    padding: 1rem 1.2rem;
+                }
+
+                .pro-tip p {
+                    font-size: 0.85rem;
+                }
+
+                .takeaway-box {
+                    padding: 1.2rem;
+                }
+
+                .takeaway-box li {
+                    font-size: 0.87rem;
+                }
+
+                /* Sidebar cards tighter */
+                .sidebar-card {
+                    padding: 1.2rem;
+                }
+
+                .skill-pill {
+                    font-size: 0.72rem;
+                }
+
+                footer {
+                    padding: 1.5rem 1rem;
+                    font-size: 0.8rem;
+                }
+            }
+        }
     </style>
 </head>
 
@@ -681,7 +852,8 @@
                 </p>
 
                 <div class="screenshot-block">
-                    <div class="caption-bar"><i class="fas fa-image"></i> PCAP as the "Gold Standard" of Network Evidence</div>
+                    <div class="caption-bar"><i class="fas fa-image"></i> PCAP as the "Gold Standard" of Network
+                        Evidence</div>
                     <img src="image.png" alt="PCAP overview" loading="lazy">
                 </div>
 
@@ -695,7 +867,8 @@
                     <div class="alert-field">
                         <span class="field-icon"><i class="fas fa-unlock"></i></span>
                         <h4>Unencrypted Payloads</h4>
-                        <p>For protocols like HTTP or DNS, you can read the actual text — URLs visited and form data entered.</p>
+                        <p>For protocols like HTTP or DNS, you can read the actual text — URLs visited and form data
+                            entered.</p>
                     </div>
                     <div class="alert-field">
                         <span class="field-icon"><i class="fas fa-stopwatch"></i></span>
@@ -705,7 +878,8 @@
                     <div class="alert-field">
                         <span class="field-icon"><i class="fas fa-file-code"></i></span>
                         <h4>File Signatures</h4>
-                        <p>You can see the <code class="inline">MZ</code> header of an executable or the <code class="inline">PK</code> header of a Zip file in flight.</p>
+                        <p>You can see the <code class="inline">MZ</code> header of an executable or the <code
+                                class="inline">PK</code> header of a Zip file in flight.</p>
                     </div>
                 </div>
 
@@ -719,15 +893,20 @@
                 <div class="mindset-grid">
                     <div class="mindset-card">
                         <h4><i class="fas fa-lock"></i> Encryption — The "Locked Box"</h4>
-                        <p>PCAP shows the connection (Who/Whom) but not the payload inside. <strong>Solution:</strong> use <code class="inline">SSLKEYLOGFILE</code> decryption or check decrypted server-side logs.</p>
+                        <p>PCAP shows the connection (Who/Whom) but not the payload inside. <strong>Solution:</strong>
+                            use <code class="inline">SSLKEYLOGFILE</code> decryption or check decrypted server-side
+                            logs.</p>
                     </div>
                     <div class="mindset-card">
                         <h4><i class="fas fa-user-secret"></i> Process Context — The "Invisible Actor"</h4>
-                        <p>PCAP identifies the machine, but not the program (Chrome vs <code class="inline">malware.exe</code>). <strong>Solution:</strong> correlate with EDR/Sysmon to get the PID.</p>
+                        <p>PCAP identifies the machine, but not the program (Chrome vs <code
+                                class="inline">malware.exe</code>). <strong>Solution:</strong> correlate with EDR/Sysmon
+                            to get the PID.</p>
                     </div>
                     <div class="mindset-card">
                         <h4><i class="fas fa-question-circle"></i> User Intent — The "Why"</h4>
-                        <p>PCAP records the action, not the justification. A 5GB transfer could be a backup or a data breach. <strong>Solution:</strong> cross-reference Identity/HR logs.</p>
+                        <p>PCAP records the action, not the justification. A 5GB transfer could be a backup or a data
+                            breach. <strong>Solution:</strong> cross-reference Identity/HR logs.</p>
                     </div>
                 </div>
 
@@ -833,7 +1012,8 @@
                     <h4><i class="fas fa-lightbulb"></i> Pro-Tip — Reading Failed Connections</h4>
                     <p>
                         If you see a <strong>SYN</strong> followed by an <strong>RST</strong>, the connection was
-                        refused — the port is closed. If you see <strong>SYN</strong> followed by <strong>nothing</strong>,
+                        refused — the port is closed. If you see <strong>SYN</strong> followed by
+                        <strong>nothing</strong>,
                         the packet was most likely dropped by a firewall or the server is offline.
                     </p>
                 </div>
@@ -855,24 +1035,31 @@
                         breakdown of each field:
                     </p>
                     <div class="alert-block">
-                        <div><span class="alert-key">"task"   : </span><span class="alert-val">"idle"</span>   <span style="color:var(--muted);"># waiting for instructions</span></div>
-                        <div><span class="alert-key">"jitter" : </span><span class="alert-val">5</span>        <span style="color:var(--muted);"># randomise beacon interval</span></div>
-                        <div><span class="alert-key">"pad"    : </span><span class="alert-val">"AAAA..."</span> <span style="color:var(--muted);"># padding to normalise size</span></div>
+                        <div><span class="alert-key">"task" : </span><span class="alert-val">"idle"</span> <span
+                                style="color:var(--muted);"># waiting for instructions</span></div>
+                        <div><span class="alert-key">"jitter" : </span><span class="alert-val">5</span> <span
+                                style="color:var(--muted);"># randomise beacon interval</span></div>
+                        <div><span class="alert-key">"pad" : </span><span class="alert-val">"AAAA..."</span> <span
+                                style="color:var(--muted);"># padding to normalise size</span></div>
                     </div>
                 </div>
 
                 <div class="mindset-grid">
                     <div class="mindset-card">
                         <h4><i class="fas fa-pause-circle"></i> <code class="inline">"task": "idle"</code></h4>
-                        <p>The malware is in a "waiting" state. If this changed to <code class="inline">"cmd": "whoami"</code>, you would know the attacker is actively hands-on-keyboard.</p>
+                        <p>The malware is in a "waiting" state. If this changed to <code
+                                class="inline">"cmd": "whoami"</code>, you would know the attacker is actively
+                            hands-on-keyboard.</p>
                     </div>
                     <div class="mindset-card">
                         <h4><i class="fas fa-random"></i> <code class="inline">"jitter": 5</code></h4>
-                        <p>An evasion technique. Without jitter, a beacon every exactly 300s creates a visible heartbeat on a graph. Jitter makes the traffic look like noisy, human-driven activity.</p>
+                        <p>An evasion technique. Without jitter, a beacon every exactly 300s creates a visible heartbeat
+                            on a graph. Jitter makes the traffic look like noisy, human-driven activity.</p>
                     </div>
                     <div class="mindset-card">
                         <h4><i class="fas fa-expand-arrows-alt"></i> <code class="inline">"pad": "AAAA..."</code></h4>
-                        <p>Ensures every packet is the same size. Many IDS systems look for "small, frequent packets" as a sign of C2 — padding makes the traffic blend in with standard web activity.</p>
+                        <p>Ensures every packet is the same size. Many IDS systems look for "small, frequent packets" as
+                            a sign of C2 — padding makes the traffic blend in with standard web activity.</p>
                     </div>
                 </div>
             </div>
@@ -881,12 +1068,17 @@
             <div class="takeaway-box">
                 <h3><i class="fas fa-star"></i> Key Takeaways</h3>
                 <ul>
-                    <li>PCAP is the gold standard of network evidence — but only for the "what," not the "how" or "why."</li>
-                    <li>Encryption, process context, and user intent are the three blind spots every PCAP analysis must fill from other log sources.</li>
-                    <li>A successful connection = successful TCP 3-way handshake + successful TLS handshake. Know which layer failed when troubleshooting.</li>
+                    <li>PCAP is the gold standard of network evidence — but only for the "what," not the "how" or "why."
+                    </li>
+                    <li>Encryption, process context, and user intent are the three blind spots every PCAP analysis must
+                        fill from other log sources.</li>
+                    <li>A successful connection = successful TCP 3-way handshake + successful TLS handshake. Know which
+                        layer failed when troubleshooting.</li>
                     <li>SYN → RST means refused; SYN → nothing means firewall drop or dead host.</li>
-                    <li>C2 beacons are defined by regularity — jitter and padding exist specifically to defeat that signature.</li>
-                    <li>Always correlate suspicious network flows with EDR and identity logs before reaching a verdict.</li>
+                    <li>C2 beacons are defined by regularity — jitter and padding exist specifically to defeat that
+                        signature.</li>
+                    <li>Always correlate suspicious network flows with EDR and identity logs before reaching a verdict.
+                    </li>
                 </ul>
             </div>
 
@@ -1009,7 +1201,8 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script>
         window.addEventListener('scroll', () => {
             const doc = document.documentElement;
