@@ -1,0 +1,91 @@
+[
+  {
+    "id": "soc-fundamentals",
+    "title": "Security Operations Fundamental",
+    "emoji": "🔵",
+    "badge": "SOC-101",
+    "date": "Jan 5, 2026",
+    "category": "Blue Team",
+    "timeLabel": "Core Theory",
+    "description": "A structured breakdown of what makes a high-quality security alert, how to classify outcomes (TP/FP/NMI/FN), the SOC analyst mindset, the full 8-step detection-to-feedback workflow, and a real-world impossible travel case study.",
+    "tags": [
+      "Alert Triage",
+      "5W1H",
+      "SIEM",
+      "Incident Response",
+      "Impossible Travel",
+      "IOC Analysis"
+    ],
+    "url": "Homework - Day 2 (05 01 2026)/soc-fundamentals.html",
+    "series": "SOC Training",
+    "day": 2
+  },
+  {
+    "id": "nsm-fundamentals",
+    "title": "Network Security Monitoring (NSM)",
+    "emoji": "📡",
+    "badge": "SOC-101",
+    "date": "Jan 9, 2026",
+    "category": "Blue Team",
+    "timeLabel": "Core Theory",
+    "description": "A deep dive into NSM fundamentals — the three types of network evidence, Zeek log analysis, and pro-level detection techniques for beaconing, DNS tunneling, DGA hunting, and JA3 fingerprinting.",
+    "tags": [
+      "NSM",
+      "Zeek",
+      "Beaconing",
+      "C2 Detection",
+      "DNS Tunneling",
+      "JA3",
+      "Threat Hunting"
+    ],
+    "url": "Homework - Day 3 (09 01 2026)/nsm-fundamentals.html",
+    "series": "SOC Training",
+    "day": 3
+  },
+  {
+    "id": "pcap-tcp-analysis",
+    "title": "PCAP & TCP Conversation Analysis",
+    "emoji": "🔍",
+    "badge": "SOC-101",
+    "date": "Jan 12, 2026",
+    "category": "Blue Team",
+    "timeLabel": "Core Theory",
+    "description": "A deep dive into packet captures as the gold standard of network forensics — what they reveal, what they hide, the anatomy of a TCP/TLS conversation, and how to spot C2 beaconing patterns hidden inside seemingly benign traffic.",
+    "tags": [
+      "PCAP",
+      "Wireshark",
+      "TCP Handshake",
+      "TLS",
+      "C2 Beaconing",
+      "Network Forensics",
+      "IDS Evasion"
+    ],
+    "url": "Homework - Day 4 (12 01 2026)/pcap-tcp-analysis.html",
+    "series": "SOC Training",
+    "day": 4
+  },
+  {
+    "id": "phishing-malware-detection",
+    "title": "Phishing & Malware Detection",
+    "emoji": "🎣",
+    "badge": "SOC-101",
+    "date": "Jan 16, 2026",
+    "category": "Blue Team",
+    "timeLabel": "Core Theory + Case Studies",
+    "description": "A practical walkthrough of phishing mechanics, email header authentication, and real-world case analysis — two live phishing emails dissected end-to-end using SPF/DKIM/DMARC triage, VirusTotal, and malicious URL decomposition.",
+    "tags": [
+      "Phishing",
+      "SPF",
+      "DKIM",
+      "DMARC",
+      "Email Forensics",
+      "QR Phishing",
+      "IOC Analysis",
+      "URL Decomposition",
+      "Credential Harvesting"
+    ],
+    "url": "Homework - Day 5 (16 01 2026)/phishing-malware-detection.html",
+    "series": "SOC Training",
+    "day": 5
+  }
+]
