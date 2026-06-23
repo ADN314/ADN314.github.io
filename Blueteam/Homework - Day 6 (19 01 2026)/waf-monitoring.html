@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAF Engineering & SOC Detection | PLSCARRYME</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue: #4d94ff;
+            --blue-dark: #0d6efd;
+            --blue-glow: rgba(13, 110, 253, 0.35);
+            --blue-subtle: rgba(13, 110, 253, 0.1);
+            --bg: #0a0d12;
+            --bg2: #0f1318;
+            --surface: rgba(255, 255, 255, 0.04);
+            --surface2: rgba(255, 255, 255, 0.07);
+            --text: #d4dbe8;
+            --muted: #7a8799;
+            --border: rgba(77, 148, 255, 0.18);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        html { overflow-x: hidden; }
+
+        /* ── NAV ── */
+        header {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid var(--blue-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--blue-subtle);
+            box-shadow: 0 0 15px var(--blue-glow);
+        }
+
+        /* ── HERO ── */
+        .writeup-hero {
+            background: linear-gradient(135deg, #0a0d12 0%, #0d1620 50%, #091422 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 3.5rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .writeup-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(13, 110, 253, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .writeup-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(13, 110, 253, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge.blue { background: var(--blue-dark); color: #fff; }
+        .badge.outline { border: 1px solid var(--border); color: var(--muted); background: transparent; }
+
+        .writeup-hero h1 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            color: var(--blue);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            line-height: 1.2;
+            text-shadow: 0 0 40px rgba(77, 148, 255, 0.3);
+        }
+
+        .writeup-hero p.subtitle {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 700px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .hero-meta i { color: var(--blue); }
+
+        /* ── LAYOUT ── */
+        .content-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .content-wrap { grid-template-columns: 1fr; }
+            .sidebar { position: static; top: auto; }
+        }
+
+        .sidebar { position: sticky; top: 80px; }
+
+        .sidebar-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-card h4 {
+            color: var(--blue);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .toc-list { list-style: none; }
+
+        .toc-list li {
+            border-left: 2px solid var(--border);
+            padding: 0.4rem 0 0.4rem 0.9rem;
+            margin-bottom: 0.2rem;
+            transition: border-color 0.2s;
+        }
+
+        .toc-list li:hover { border-color: var(--blue); }
+
+        .toc-list a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: color 0.2s;
+        }
+
+        .toc-list a:hover { color: var(--blue); }
+
+        .skill-pill {
+            display: inline-block;
+            background: var(--blue-subtle);
+            color: var(--blue);
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            margin: 0.2rem;
+        }
+
+        /* ── MAIN CONTENT ── */
+        .section-block { margin-bottom: 3.5rem; }
+
+        .section-block h2 {
+            font-size: 1.6rem;
+            color: var(--blue);
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .section-block h3 {
+            font-size: 1.15rem;
+            color: #a8c8ff;
+            margin: 1.8rem 0 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-block p {
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        /* ── FEATURE GRID ── */
+        .alert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .alert-field {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .alert-field:hover {
+            border-color: var(--blue-dark);
+            background: var(--surface2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px var(--blue-glow);
+        }
+
+        .alert-field .field-icon {
+            font-size: 1.4rem;
+            color: var(--blue);
+            margin-bottom: 0.6rem;
+            display: block;
+        }
+
+        .alert-field h4 { color: #c8daff; font-size: 0.95rem; margin-bottom: 0.4rem; }
+        .alert-field p { font-size: 0.85rem; color: var(--muted); margin: 0; }
+
+        /* ── TABLE ── */
+        .class-table-wrap {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+
+        thead th {
+            background: rgba(13, 110, 253, 0.15);
+            color: var(--blue);
+            padding: 0.9rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--blue-dark);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+        }
+
+        tbody td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: top;
+        }
+
+        tbody tr:hover td { background: var(--surface); }
+
+        code.inline {
+            background: rgba(13, 110, 253, 0.12);
+            color: var(--blue);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* ── MINDSET CARDS ── */
+        .mindset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .mindset-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.3rem;
+            border-left: 3px solid var(--blue-dark);
+            transition: all 0.3s;
+        }
+
+        .mindset-card:hover {
+            transform: translateX(4px);
+            box-shadow: -4px 0 20px var(--blue-glow);
+        }
+
+        .mindset-card h4 { color: var(--blue); font-size: 0.95rem; margin-bottom: 0.5rem; }
+        .mindset-card p { font-size: 0.85rem; color: var(--muted); margin: 0; }
+
+        /* ── WORKFLOW STEPS ── */
+        .workflow-steps {
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .workflow-steps::before {
+            content: '';
+            position: absolute;
+            left: 22px;
+            top: 28px;
+            bottom: 28px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--blue-dark), transparent);
+        }
+
+        .step {
+            display: flex;
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+
+        .step-num {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            background: var(--blue-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: #fff;
+            box-shadow: 0 0 20px var(--blue-glow);
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .step-body {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            flex: 1;
+            transition: all 0.3s;
+        }
+
+        .step-body:hover { background: var(--surface2); border-color: var(--blue-dark); }
+        .step-body h4 { color: #c8daff; font-size: 0.95rem; margin-bottom: 0.3rem; }
+        .step-body p { font-size: 0.85rem; color: var(--muted); margin: 0; }
+
+        /* ── CASE BOX ── */
+        .case-box {
+            background: linear-gradient(135deg, rgba(13, 110, 253, 0.08), rgba(13, 110, 253, 0.04));
+            border: 1px solid rgba(13, 110, 253, 0.3);
+            border-radius: 14px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .case-box h3 {
+            color: var(--blue);
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-top: 0;
+        }
+
+        .alert-block {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(77, 148, 255, 0.2);
+            border-radius: 10px;
+            padding: 1.2rem 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.9;
+        }
+
+        .alert-key { color: var(--blue); font-weight: 700; }
+        .alert-val { color: #c8daff; }
+        .alert-highlight { color: #ff8c8c; }
+        .alert-comment { color: var(--muted); }
+
+        /* ── PRO TIP ── */
+        .pro-tip {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.06), rgba(255, 193, 7, 0.02));
+            border: 1px solid rgba(255, 193, 7, 0.25);
+            border-left: 3px solid #ffc107;
+            border-radius: 10px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .pro-tip h4 {
+            color: #ffc107;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pro-tip p { font-size: 0.9rem; color: var(--text); margin: 0; }
+
+        /* ── WARNING BOX ── */
+        .warn-tip {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.06), rgba(220, 53, 69, 0.02));
+            border: 1px solid rgba(220, 53, 69, 0.25);
+            border-left: 3px solid #dc3545;
+            border-radius: 10px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .warn-tip h4 {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .warn-tip p { font-size: 0.9rem; color: var(--text); margin: 0; }
+
+        /* ── KEY TAKEAWAYS ── */
+        .takeaway-box {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.06), rgba(13, 110, 253, 0.06));
+            border: 1px solid rgba(90, 205, 122, 0.2);
+            border-radius: 12px;
+            padding: 1.8rem;
+            margin-top: 2rem;
+        }
+
+        .takeaway-box h3 {
+            color: #5acd7a;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .takeaway-box ul { list-style: none; }
+
+        .takeaway-box li {
+            padding: 0.4rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+            color: var(--text);
+            font-size: 0.93rem;
+        }
+
+        .takeaway-box li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #5acd7a;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 2rem 1.5rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        footer a { color: var(--blue); text-decoration: none; }
+
+        #progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #0d6efd, #4d94ff);
+            z-index: 9999;
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* ── INTEROP TABLE ROWS ── */
+        .layer-tag {
+            display: inline-block;
+            background: var(--blue-subtle);
+            color: var(--blue);
+            border: 1px solid var(--border);
+            padding: 0.15rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 900px) {
+            nav { padding: 0.8rem 1rem; }
+            .logo { font-size: 1rem; }
+            .back-btn { padding: 0.4rem 0.7rem; font-size: 0.8rem; }
+            .writeup-hero { padding: 2rem 1rem; }
+            .writeup-hero h1 { font-size: 1.5rem; }
+            .writeup-hero p.subtitle { font-size: 0.92rem; }
+            .hero-meta { gap: 0.8rem; }
+            .hero-meta span { font-size: 0.8rem; }
+            .content-wrap { padding: 2rem 1rem; }
+            .section-block { margin-bottom: 2.5rem; }
+            .section-block h2 { font-size: 1.25rem; }
+            .section-block h3 { font-size: 1rem; }
+            .section-block p { font-size: 0.92rem; }
+            .alert-grid, .mindset-grid { grid-template-columns: 1fr; gap: 0.8rem; }
+            .class-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            table { font-size: 0.8rem; min-width: 500px; }
+            thead th, tbody td { padding: 0.6rem 0.7rem; }
+            .workflow-steps::before { left: 18px; }
+            .step { gap: 0.8rem; }
+            .step-num { width: 36px; height: 36px; min-width: 36px; font-size: 0.65rem; }
+            .step-body { padding: 0.8rem 1rem; }
+            .case-box { padding: 1.2rem; }
+            .alert-block { overflow-x: auto; }
+            footer { padding: 1.5rem 1rem; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="progress"></div>
+
+    <header>
+        <nav>
+            <a href="../../index.html" class="logo"><i class="fas fa-terminal"></i> ANDY - Cybersecurity Portfolio</a>
+            <a href="../../index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <div class="writeup-hero">
+        <div class="hero-inner">
+            <div class="hero-badges">
+                <span class="badge blue"><i class="fas fa-shield-alt"></i> &nbsp;Blue Team</span>
+                <span class="badge outline">Detection Engineering</span>
+                <span class="badge outline">Jan 19, 2026</span>
+            </div>
+            <h1>WAF Engineering, SOC Detection & Log Analysis</h1>
+            <p class="subtitle">
+                From deploying and tuning Web Application Firewalls to engineering detection rules that catch
+                attackers probing for bypasses — plus command injection hardening, PowerShell forensics,
+                and how the five-layer security stack fits together in a mature SOC.
+            </p>
+            <div class="hero-meta">
+                <span><i class="fas fa-layer-group"></i> Core Theory</span>
+                <span><i class="fas fa-list-check"></i> 5 Sections</span>
+                <span><i class="fas fa-tag"></i> WAF · SIEM · EDR · SOAR · Command Injection · Log Analysis</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main layout -->
+    <div class="content-wrap">
+
+        <article>
+
+            <!-- 1. WAF Engineering -->
+            <div class="section-block" id="s1">
+                <h2><i class="fas fa-shield-virus"></i> 1. WAF Engineering &amp; Monitoring</h2>
+                <p>
+                    The WAF is your first line of telemetry — not just a blocking tool. Understanding how to deploy,
+                    tune, and monitor it correctly is foundational to shifting from a reactive to a proactive security
+                    posture.
+                </p>
+
+                <h3><i class="fas fa-map-marked-alt"></i> Strategic Deployment</h3>
+                <p>
+                    Cloud WAFs are operationally convenient but carry a critical blind spot: if an attacker discovers
+                    your <strong>Origin IP</strong> through DNS history, certificate transparency logs, or other means,
+                    they can route requests directly to your server — completely bypassing the WAF.
+                </p>
+
+                <div class="alert-grid">
+                    <div class="alert-field">
+                        <span class="field-icon"><i class="fas fa-eye-slash"></i></span>
+                        <h4>The Visibility Gap</h4>
+                        <p>Cloud WAFs can be fully circumvented if an attacker finds the Origin IP and hits it directly.
+                            All your rules and logging are bypassed in a single move.</p>
+                    </div>
+                    <div class="alert-field">
+                        <span class="field-icon"><i class="fas fa-lock"></i></span>
+                        <h4>Defence: IP Whitelisting</h4>
+                        <p>Configure the origin server's firewall to <em>only</em> accept inbound traffic from the
+                            WAF's published IP ranges. All other sources get dropped at the network level.</p>
+                    </div>
+                    <div class="alert-field">
+                        <span class="field-icon"><i class="fas fa-chart-bar"></i></span>
+                        <h4>Count Mode Before Block</h4>
+                        <p>Always run new WAF rules in <strong>"Count / Log"</strong> mode first. Calculate the False
+                            Positive Rate before switching to "Block" — otherwise you risk disrupting legitimate
+                            traffic.</p>
+                    </div>
+                </div>
+
+                <h3><i class="fas fa-sliders-h"></i> Tuning Security Models</h3>
+
+                <div class="mindset-grid">
+                    <div class="mindset-card">
+                        <h4><i class="fas fa-check-double"></i> Positive Model (Strict) — API Endpoints</h4>
+                        <p>Define exactly what is allowed. Use <strong>JSON Schema validation</strong> on endpoints
+                            like <code class="inline">/api/v1/login</code> to reject any unexpected keys or field
+                            types. Anything outside the schema is blocked by default.</p>
+                    </div>
+                    <div class="mindset-card">
+                        <h4><i class="fas fa-ban"></i> Negative Model (Signature) — Legacy Apps</h4>
+                        <p>Define what is <em>not</em> allowed. Essential for legacy applications that cannot be
+                            easily refactored. Requires <strong>weekly virtual patching</strong> as new
+                            CVE-specific signatures emerge.</p>
+                    </div>
+                </div>
+
+                <div class="case-box">
+                    <h3><i class="fas fa-database"></i> Operational Insight — SQLi: Reactive to Proactive</h3>
+                    <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 1.2rem;">
+                        A common failure is detecting a SQLi bypass only <em>after</em> Threat Intel reports it.
+                        The fix is a SIEM correlation rule that catches the bypass in real time:
+                    </p>
+                    <div class="alert-block">
+                        <div><span class="alert-key">Rule Logic:</span></div>
+                        <div>&nbsp; <span class="alert-val">WAF_Log.payload</span> <span class="alert-highlight"> CONTAINS </span><span class="alert-val">("UNION" OR "SELECT")</span></div>
+                        <div>&nbsp; <span class="alert-highlight">AND</span> <span class="alert-val">HTTP_Response.status</span> == <span class="alert-val">"200 OK"</span></div>
+                        <div>&nbsp; <span class="alert-highlight">AND</span> <span class="alert-val">HTTP_Response.body_size</span> &gt; <span class="alert-val">BASELINE_THRESHOLD</span></div>
+                        <div>&nbsp;</div>
+                        <div><span class="alert-key">Action:</span> <span class="alert-val">Trigger HIGH-PRIORITY alert</span> <span class="alert-comment"># potential successful data leak</span></div>
+                    </div>
+                    <p style="color: var(--muted); font-size: 0.88rem; margin-top: 0.8rem; margin-bottom: 0;">
+                        The key insight: a SQL keyword alone is noise. A SQL keyword that returns <strong>HTTP 200
+                        with an abnormally large response body</strong> signals the payload may have executed
+                        and data is leaking out.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 2. WAF Detection & Bypasses -->
+            <div class="section-block" id="s2">
+                <h2><i class="fas fa-search"></i> 2. Detecting WAF Probing &amp; Bypass Attempts</h2>
+                <p>
+                    Attackers don't jump straight to exploitation — they probe limits first. Recognising this
+                    recon phase early is what separates a good SOC from a great one.
+                </p>
+
+                <h3><i class="fas fa-exclamation-triangle"></i> High-Fidelity Detection Indicators</h3>
+
+                <div class="alert-grid">
+                    <div class="alert-field">
+                        <span class="field-icon"><i class="fas fa-code"></i></span>
+                        <h4>Impedance Mismatch</h4>
+                        <p>Monitor URL parameters containing <code class="inline">/*</code> and <code class="inline">*/</code>.
+                            These characters are used to "sandwich" payloads between comment delimiters, confusing
+                            WAF parsers that process differently from the backend.</p>
+                    </div>
+                    <div class="alert-field">
+                        <span class="field-icon"><i class="fas fa-network-wired"></i></span>
+                        <h4>Protocol Anomalies</h4>
+                        <p>Alert on <code class="inline">Transfer-Encoding: chunked</code> combined with high-risk keywords.
+                            Treat double-encoded characters like <code class="inline">%2527</code> as high-fidelity
+                            attack indicators — legitimate clients almost never produce them.</p>
+                    </div>
+                    <div class="alert-field">
+                        <span class="field-icon"><i class="fas fa-expand-arrows-alt"></i></span>
+                        <h4>Payload Padding / Size Evasion</h4>
+                        <p>If your WAF has a 10KB inspection limit, create a <strong>"Size Limit Exceeded"</strong>
+                            alert. Attackers prepend junk data to push malicious payloads past the inspection
+                            buffer threshold.</p>
+                    </div>
+                </div>
+
+                <h3><i class="fas fa-database"></i> Database Behaviour Monitoring</h3>
+                <p>
+                    Even if a WAF bypass succeeds, anomalous database behaviour is your second detection
+                    opportunity. Instrument your database audit logs with these rules:
+                </p>
+
+                <div class="mindset-grid">
+                    <div class="mindset-card">
+                        <h4><i class="fas fa-tachometer-alt"></i> Query Volume Spike</h4>
+                        <p>Alert when the web-app service account executes a high volume of queries within a
+                            short time window — a hallmark of automated data extraction or blind SQLi enumeration.</p>
+                    </div>
+                    <div class="mindset-card">
+                        <h4><i class="fas fa-table"></i> High-Value Table Access</h4>
+                        <p>Alert when the service account touches tables like <code class="inline">users</code>,
+                            <code class="inline">configs</code>, or <code class="inline">secrets</code> that standard
+                            API logic has no business reason to query directly.</p>
+                    </div>
+                </div>
+
+                <div class="pro-tip">
+                    <h4><i class="fas fa-lightbulb"></i> Detection Philosophy — 403 vs 200</h4>
+                    <p>
+                        A surge of <strong>403</strong> responses means the WAF is working correctly. A
+                        <strong>403 followed by a 200 OK</strong> on a slightly modified version of the same
+                        payload is the smoking gun for a successful bypass. Build a SIEM correlation rule on
+                        this exact sequence.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 3. Command Injection -->
+            <div class="section-block" id="s3">
+                <h2><i class="fas fa-terminal"></i> 3. Command Injection Mitigation</h2>
+                <p>
+                    Instead of playing whack-a-mole with payload signatures, focus on the
+                    <strong>execution context</strong> and <strong>process lineage</strong>. A web server
+                    should <em>never</em> be spawning a shell — if it does, that's your signal regardless
+                    of what payload triggered it.
+                </p>
+
+                <h3><i class="fas fa-hard-hat"></i> Hardening &amp; Prevention</h3>
+
+                <div class="workflow-steps">
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-body">
+                            <h4>Least Privilege Process Accounts</h4>
+                            <p>Run web services under <code class="inline">www-data</code> or <code class="inline">nobody</code>.
+                                Even if command injection succeeds, the attacker inherits minimal filesystem and
+                                network permissions.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-body">
+                            <h4>PHP Hardening — Disable Dangerous Functions</h4>
+                            <p>In <code class="inline">php.ini</code>, add to <code class="inline">disable_functions</code>:
+                                <code class="inline">exec</code>, <code class="inline">passthru</code>,
+                                <code class="inline">shell_exec</code>, <code class="inline">system</code>,
+                                <code class="inline">proc_open</code>, <code class="inline">popen</code>.
+                                These are virtually never needed in production.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-body">
+                            <h4>Internal Command Mapping</h4>
+                            <p>Never pass raw user input as a filename or shell argument. Instead, accept a numeric
+                                ID (<code class="inline">input=1</code>) and map it server-side to a known-safe
+                                value. The user never controls what reaches the shell.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3><i class="fas fa-robot"></i> Detection Engineering — PowerShell &amp; SOAR Automation</h3>
+                <p>
+                    Manual decoding of obfuscated PowerShell is a bottleneck that inflates MTTR.
+                    The goal is to automate the tedious parts so analysts can focus on intent.
+                </p>
+
+                <div class="case-box">
+                    <h3><i class="fas fa-cogs"></i> Case Study — Automating PowerShell Triage</h3>
+
+                    <div class="alert-block">
+                        <div><span class="alert-key">EDR Process Lineage Rule:</span></div>
+                        <div>&nbsp; <span class="alert-val">Parent_Process</span> IN <span class="alert-highlight">(w3wp.exe, httpd.exe, nginx.exe)</span></div>
+                        <div>&nbsp; <span class="alert-highlight">AND</span> <span class="alert-val">Child_Process</span> IN <span class="alert-highlight">(powershell.exe, cmd.exe)</span></div>
+                        <div>&nbsp;</div>
+                        <div><span class="alert-key">Production Action:</span> <span class="alert-val">AUTO-TERMINATE / BLOCK</span> <span class="alert-comment"># not just alert</span></div>
+                        <div>&nbsp;</div>
+                        <div><span class="alert-key">SOAR Enrichment (on Base64/EncodedCommand detection):</span></div>
+                        <div>&nbsp; 1. Extract Base64 string from log</div>
+                        <div>&nbsp; 2. Decode: <span class="alert-val">From Base64</span> → <span class="alert-val">UTF-16LE</span></div>
+                        <div>&nbsp; 3. Append plaintext to analyst ticket automatically</div>
+                    </div>
+
+                    <p style="color: var(--muted); font-size: 0.88rem; margin-top: 0.8rem; margin-bottom: 0;">
+                        SOAR automation handles the mechanical decoding; the analyst's job is to classify
+                        <em>intent</em> — not to run CyberChef manually on every alert.
+                    </p>
+                </div>
+
+                <h3><i class="fas fa-ghost"></i> Fileless / LOLBin Signatures to Monitor</h3>
+                <div class="mindset-grid">
+                    <div class="mindset-card">
+                        <h4><i class="fas fa-download"></i> Downloader Pattern</h4>
+                        <p>Watch command lines for <code class="inline">Net.WebClient</code>,
+                            <code class="inline">DownloadString</code>, <code class="inline">iwr</code> (Invoke-WebRequest).
+                            These pull remote payloads into memory without touching disk.</p>
+                    </div>
+                    <div class="mindset-card">
+                        <h4><i class="fas fa-bolt"></i> In-Memory Execution</h4>
+                        <p><code class="inline">IEX</code> (Invoke-Expression) executes strings directly — the
+                            canonical "download and run" pattern. Alert on any occurrence combined with a URL
+                            or decoded payload.</p>
+                    </div>
+                    <div class="mindset-card">
+                        <h4><i class="fas fa-window-minimize"></i> Hidden Window Flag</h4>
+                        <p><code class="inline">-WindowStyle Hidden</code> or <code class="inline">-W Hidden</code>
+                            suppresses the PowerShell console from appearing. Legitimate admin scripts almost
+                            never need this in production environments.</p>
+                    </div>
+                </div>
+
+                <h3><i class="fas fa-diagnoses"></i> Onion Recovery — When You Find EncodedCommand in Logs</h3>
+                <div class="workflow-steps">
+                    <div class="step">
+                        <div class="step-num">EXT</div>
+                        <div class="step-body">
+                            <h4>Extract</h4>
+                            <p>Pull the Base64 string from the SIEM log field — usually found in
+                                <code class="inline">CommandLine</code> or <code class="inline">ProcessArgs</code>.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">DEC</div>
+                        <div class="step-body">
+                            <h4>Decode</h4>
+                            <p>Use CyberChef: <code class="inline">From Base64</code> → <code class="inline">Decode Text (UTF-16LE)</code>.
+                                PowerShell's <code class="inline">-EncodedCommand</code> always uses UTF-16LE encoding.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">INT</div>
+                        <div class="step-body">
+                            <h4>Classify Intent</h4>
+                            <p>Is it a <strong>Downloader</strong>? (Look for <code class="inline">Net.WebClient</code>
+                                or <code class="inline">iwr</code>.) A <strong>Reverse Shell</strong>? (IP + port.)
+                                <strong>Persistence</strong>? (Registry keys or Scheduled Tasks.)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Log Analysis -->
+            <div class="section-block" id="s4">
+                <h2><i class="fas fa-scroll"></i> 4. SOC Log Analysis — Separating Noise from Signal</h2>
+                <p>
+                    Raw logs are noise. A SOC analyst's core skill is building mental (and automated) models
+                    that filter noise and surface true signals. The "Forensic Onion" approach layers evidence
+                    sources to build an accurate picture.
+                </p>
+
+                <h3><i class="fas fa-file-alt"></i> Access Log Triage</h3>
+
+                <div class="class-table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>What You See in Logs</th>
+                                <th>What It Likely Means</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Surge of <strong>403</strong> responses on similar paths</td>
+                                <td>WAF is blocking an automated scanner or attacker probing</td>
+                                <td>Monitor — WAF is working. Enrich with GeoIP &amp; ASN.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>403</strong> → <strong>200 OK</strong> on modified payload</td>
+                                <td>Attacker found a WAF bypass — possible successful exploit</td>
+                                <td><strong>HIGH PRIORITY</strong> — Escalate immediately. Pull PCAP.</td>
+                            </tr>
+                            <tr>
+                                <td>POST requests with no body in logs</td>
+                                <td>POST data not captured — blind spot in your logging pipeline</td>
+                                <td>Enable PCAP or RASP to capture request bodies.</td>
+                            </tr>
+                            <tr>
+                                <td><code class="inline">EncodedCommand</code> in Windows Event 4688</td>
+                                <td>Obfuscated PowerShell — almost always malicious in production</td>
+                                <td>Base64 decode → classify intent → escalate if downloader/shell.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="warn-tip">
+                    <h4><i class="fas fa-exclamation-circle"></i> POST Data Blind Spot</h4>
+                    <p>
+                        Web server access logs typically capture URL, headers, and status codes — but
+                        <strong>not POST body content</strong>. If your attacker sent a SQLi payload in
+                        a POST body and your logs show only a 200, you need <strong>PCAP</strong> or
+                        <strong>RASP (Runtime Application Self-Protection)</strong> to see what was
+                        actually submitted.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 5. Interoperability -->
+            <div class="section-block" id="s5">
+                <h2><i class="fas fa-layer-group"></i> 5. Security Tool Interoperability</h2>
+                <p>
+                    No single tool sees everything. A mature SOC operates across five distinct layers —
+                    each catching what the others miss. Understanding which layer is responsible for
+                    which detection is what makes alert triage fast and accurate.
+                </p>
+
+                <div class="class-table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Layer</th>
+                                <th>Component</th>
+                                <th>Blue Team Responsibility</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="layer-tag">Edge</span></td>
+                                <td><strong>WAF</strong></td>
+                                <td>Filter ~90% of internet noise and automated scans before they reach
+                                    application logic. First line of telemetry.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="layer-tag">App</span></td>
+                                <td><strong>RASP / ADR</strong></td>
+                                <td>Verify whether a payload actually triggered a vulnerable internal function.
+                                    Confirms exploitation vs. mere delivery.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="layer-tag">Host</span></td>
+                                <td><strong>EDR</strong></td>
+                                <td>Catch lateral movement or unauthorised process spawning — e.g.
+                                    <code class="inline">nginx → sh</code>. Process lineage is the gold standard
+                                    for post-exploitation detection.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="layer-tag">Data</span></td>
+                                <td><strong>DB Audit Logs</strong></td>
+                                <td>Monitor for exfiltration patterns and unauthorised table access.
+                                    Catches successful SQLi that the WAF missed.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="layer-tag">Network</span></td>
+                                <td><strong>Egress Filtering</strong></td>
+                                <td>Block unauthorised outbound connections (e.g. Burp Collaborator callbacks,
+                                    reverse shells). Prevents C2 establishment and data exfiltration even
+                                    after initial compromise.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pro-tip">
+                    <h4><i class="fas fa-lightbulb"></i> The Layered Defence Mindset</h4>
+                    <p>
+                        When triaging an alert, always ask: <em>"Which layer caught this, and what does that tell me
+                        about the attacker's current stage?"</em> A WAF alert means attempted delivery. An EDR
+                        process alert means successful execution. A DB audit alert means successful exploitation.
+                        Each layer narrows the blast radius assessment.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Takeaways -->
+            <div class="takeaway-box">
+                <h3><i class="fas fa-star"></i> Key Takeaways</h3>
+                <ul>
+                    <li>Cloud WAFs must be paired with origin IP whitelisting — otherwise a discovered Origin IP
+                        renders the WAF useless.</li>
+                    <li>Always run new WAF rules in Count mode first; calculate false positive rate before blocking.</li>
+                    <li>A 403 → 200 sequence on similar payloads is the strongest signal for a successful WAF bypass
+                        — build a SIEM rule specifically for this pattern.</li>
+                    <li>SQLi detection is most reliable when WAF logs are correlated with DB response size, not
+                        just keyword matching.</li>
+                    <li>Process lineage (web server spawning a shell) is more reliable than payload signatures for
+                        command injection detection — set to auto-terminate in production.</li>
+                    <li>SOAR should auto-decode Base64 / EncodedCommand strings and attach the plaintext to analyst
+                        tickets to reduce MTTR.</li>
+                    <li>Classify decoded PowerShell by intent: Downloader, Reverse Shell, or Persistence — each
+                        has a different response playbook.</li>
+                    <li>POST body content is invisible in standard access logs — use PCAP or RASP to close this
+                        visibility gap.</li>
+                    <li>Five-layer stack (WAF → RASP → EDR → DB Audit → Egress) — know what each layer sees
+                        and what it misses.</li>
+                </ul>
+            </div>
+
+        </article>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h4><i class="fas fa-list"></i> &nbsp;Table of Contents</h4>
+                <ul class="toc-list">
+                    <li><a href="#s1">1. WAF Engineering &amp; Monitoring</a></li>
+                    <li><a href="#s2">2. Detecting WAF Probing</a></li>
+                    <li><a href="#s3">3. Command Injection</a></li>
+                    <li><a href="#s4">4. SOC Log Analysis</a></li>
+                    <li><a href="#s5">5. Tool Interoperability</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-card">
+                <h4><i class="fas fa-tag"></i> &nbsp;Topics Covered</h4>
+                <span class="skill-pill">WAF</span>
+                <span class="skill-pill">Origin IP</span>
+                <span class="skill-pill">False Positive Rate</span>
+                <span class="skill-pill">SIEM Correlation</span>
+                <span class="skill-pill">SQLi Detection</span>
+                <span class="skill-pill">WAF Bypass</span>
+                <span class="skill-pill">Command Injection</span>
+                <span class="skill-pill">Process Lineage</span>
+                <span class="skill-pill">PowerShell LOLBins</span>
+                <span class="skill-pill">SOAR Automation</span>
+                <span class="skill-pill">Base64 Decode</span>
+                <span class="skill-pill">Log Analysis</span>
+                <span class="skill-pill">RASP</span>
+                <span class="skill-pill">Egress Filtering</span>
+                <span class="skill-pill">MTTR Reduction</span>
+            </div>
+
+            <div class="sidebar-card">
+                <h4><i class="fas fa-tools"></i> &nbsp;Tools Referenced</h4>
+                <span class="skill-pill">SIEM</span>
+                <span class="skill-pill">SOAR</span>
+                <span class="skill-pill">EDR</span>
+                <span class="skill-pill">CyberChef</span>
+                <span class="skill-pill">Sysmon</span>
+                <span class="skill-pill">RASP / ADR</span>
+                <span class="skill-pill">Wireshark / PCAP</span>
+            </div>
+
+            <div class="sidebar-card" id="series-nav-card">
+                <h4><i class="fas fa-link"></i> &nbsp;Series</h4>
+                <div id="series-nav-list">
+                    <span style="color:var(--muted);font-size:0.82rem;">Loading…</span>
+                </div>
+            </div>
+
+            <script>
+                (function () {
+                    const CURRENT_ID = 'waf-engineering-monitoring';
+                    const REGISTRY_URL = '../blueteam-writeups.json';
+
+                    fetch(REGISTRY_URL + '?t=' + Date.now())
+                        .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+                        .then(writeups => {
+                            const thisPage = writeups.find(w => w.id === CURRENT_ID);
+                            if (!thisPage) return;
+
+                            const seriesItems = writeups
+                                .filter(w => w.series === thisPage.series)
+                                .sort((a, b) => a.day - b.day);
+
+                            const container = document.getElementById('series-nav-list');
+                            container.innerHTML = '';
+
+                            seriesItems.forEach(item => {
+                                const isCurrent = item.id === CURRENT_ID;
+                                const p = document.createElement('p');
+                                p.style.cssText = 'font-size:0.83rem; line-height:1.9; margin:0;';
+
+                                if (isCurrent) {
+                                    p.innerHTML = `
+                                        <strong style="color:var(--blue)">Day ${item.day}</strong>
+                                        <span style="color:var(--text)"> — ${item.title}</span>
+                                        <span style="
+                                            display:inline-block;
+                                            background:rgba(13,110,253,0.15);
+                                            color:#4d94ff;
+                                            border:1px solid rgba(13,110,253,0.3);
+                                            border-radius:10px;
+                                            padding:0 0.45rem;
+                                            font-size:0.7rem;
+                                            margin-left:0.3rem;
+                                            vertical-align:middle;
+                                        ">YOU ARE HERE</span>`;
+                                } else {
+                                    const depth = window.location.pathname.split('/').length - 2;
+                                    const prefix = depth > 0 ? '../'.repeat(depth) : '';
+                                    p.innerHTML = `<a href="${prefix}${item.url}" style="color:var(--blue);text-decoration:none;">
+                                        <strong>Day ${item.day}</strong> — ${item.title}
+                                    </a>`;
+                                }
+                                container.appendChild(p);
+                            });
+
+                            const maxDay = Math.max(...seriesItems.map(w => w.day));
+                            if (thisPage.day === maxDay) {
+                                const p = document.createElement('p');
+                                p.style.cssText = 'font-size:0.83rem;line-height:1.9;margin:0;opacity:0.4;';
+                                p.textContent = `Day ${maxDay + 1} — Coming soon…`;
+                                container.appendChild(p);
+                            }
+                        })
+                        .catch(() => {
+                            document.getElementById('series-nav-list').innerHTML =
+                                '<span style="color:var(--muted);font-size:0.82rem;">Could not load series.</span>';
+                        });
+                })();
+            </script>
+        </aside>
+
+    </div>
+
+    <footer>
+        <p>
+            <a href="../../index.html"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+            &nbsp;·&nbsp;
+            PLSCARRYME Cybersecurity Portfolio &copy; 2025
+        </p>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const doc = document.documentElement;
+            const scrolled = doc.scrollTop / (doc.scrollHeight - doc.clientHeight) * 100;
+            document.getElementById('progress').style.width = scrolled + '%';
+        });
+    </script>
+
+</body>
+</html>

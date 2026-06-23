@@ -472,6 +472,11 @@
             border-color: rgba(220, 53, 69, 0.4);
         }
 
+        .code-block.attack-step-code {
+            margin-left: calc(44px + 1.2rem);
+            margin-bottom: 1.2rem;
+        }
+
         .step-body h4 {
             color: #ffd0d5;
             font-size: 0.95rem;
@@ -1010,7 +1015,6 @@
                 font-size: 1.05rem;
             }
         }
-
     </style>
 </head>
 
@@ -1021,7 +1025,8 @@
     <header>
         <nav>
             <a href="../index.html" class="logo"><i class="fas fa-terminal"></i> ANDY - Cybersecurity Portfolio</a>
-            <a href="../index.html" class="back-btn"><i class="fas fa-arrow-left"></i> <span>Back to Portfolio</span></a>
+            <a href="../index.html" class="back-btn"><i class="fas fa-arrow-left"></i> <span>Back to
+                    Portfolio</span></a>
         </nav>
     </header>
 
@@ -1068,7 +1073,8 @@
                     <p>
                         <strong style="color: var(--accent);">Client:</strong> Sumace Consulting GmbH<br>
                         <strong style="color: var(--accent);">Target:</strong> Main company website (single host)<br>
-                        <strong style="color: var(--accent);">Objective:</strong> Gain Remote Code Execution and retrieve
+                        <strong style="color: var(--accent);">Objective:</strong> Gain Remote Code Execution and
+                        retrieve
                         the flag from the <code>/</code> root directory of the filesystem.<br>
                         <strong style="color: var(--accent);">Prior findings:</strong> Zero (previous year) — new attack
                         surface: job application form.
@@ -1569,7 +1575,8 @@ include "./regions/" . $region . ".php";</pre>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script>
         window.addEventListener('scroll', () => {
             const doc = document.documentElement;
